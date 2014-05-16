@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="quesEditor">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HR4E Survey Editor</title>
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap lang="en" -->
     <link href="/static/SurveyEditor/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -48,9 +48,23 @@
 
   <body>
     <h2 align="center">Welcome to the HR4E Survey Editor!</h2>
+    <div ng-controller="QuesCtrl">
+      <p>test2</p>
+      {% block content %}
+      {% verbatim %}
+        {{ hello }}
+      {% endverbatim %}
+      {% endblock %}
+    </div>
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="/static/SurveyEditor/js/bootstrap.min.js"></script>
+    <script src="/static/SurveyEditor/js/lib/angular/angular.js"></script>
+    <script src="/static/SurveyEditor/js/lib/angular.ng-modules.js"></script>
+    <script src="/static/SurveyEditor/js/lib/bootstrap.min.js"></script>
+    <script src="/static/SurveyEditor/js/lib/kinetic-v5.1.0.min.js"></script>
+    <script src="/static/SurveyEditor/js/app.js"></script>
+    <script src="/static/SurveyEditor/js/controllers.js"></script>
   </body>
 </html>

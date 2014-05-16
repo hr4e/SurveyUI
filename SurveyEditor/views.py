@@ -10,6 +10,7 @@ def index(request):
     world = "Django World"
     context = RequestContext(request, {
         'arb_name': world,
+        'hello': 'oooooo wow',
 
     })
     return HttpResponse(template.render(context))
