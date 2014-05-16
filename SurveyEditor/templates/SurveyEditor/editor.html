@@ -58,6 +58,13 @@
             <h3 class="panel-title" align="center">Survey Editor</h3>
           </div>
           <div id="QuesCanvas" class="panel-body"></div>
+
+          <div class="btn-group" >
+            <button type="button" ng-click="surprise()" class="btn btn-default">New<span class="glyphicon"></span></button>
+            <button type="button" class="btn btn-default">Delete<span class="glyphicon"></span></button>
+            <button type="button" class="btn btn-default">Edit<span class="glyphicon"></span></button>
+          </div>
+
           <form ng-submit="surprise()">
             <input id="SaveBtn" type="submit" value="Save" class="btn btn-default navbar-btn"></input>
           </form>

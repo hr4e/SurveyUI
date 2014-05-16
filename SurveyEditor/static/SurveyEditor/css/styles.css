@@ -12,3 +12,7 @@
 	width: 80%;
 	padding: 55;
 }
+
+#ToolBar {
+	display: inline;
+}

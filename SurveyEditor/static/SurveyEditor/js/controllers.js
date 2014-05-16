@@ -5,7 +5,7 @@
 // camelCase for function names
 ques_editor.controller('QuesCtrl', function ($scope) {
 
-	var addQues = function (layer) {
+	var drawQues = function (layer) {
 		
 		var ques = new Kinetic.Group({
 			draggable: true
@@ -54,8 +54,8 @@ ques_editor.controller('QuesCtrl', function ($scope) {
 	}
 
 	$scope.surprise = function() {
-		$scope.msg = "surprise!";
-		addQues();
+		$scope.msg = $scope.windowWidth;
+		drawQues();
 	}
 
 
