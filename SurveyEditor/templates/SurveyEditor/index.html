@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html ng-app="quesEditor">
+<html lang="en" ng-app="QuesEditorApp">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HR4E Survey Editor</title>
 
-    <!-- Bootstrap lang="en" -->
-    <link href="/static/SurveyEditor/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="/static/SurveyEditor/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/SurveyEditor/css/styles.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -48,10 +49,24 @@
 
   <body>
     <h2 align="center">Welcome to the HR4E Survey Editor!</h2>
+
+    <!-- Question Editor App -->
     <div ng-controller="QuesCtrl">
-      <p>test2</p>
+      <p>test3</p>
       {% block content %}
       {% verbatim %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title" align="center">Survey Editor</h3>
+          </div>
+          <div class="panel-body">
+            <div id="ques_canvas"></div>
+          </div>
+        </div>
+
+        <div ng-init="initCanvas()"></div>
+        <p ng-repeat="ques in ques_list">
+          {{ ques }}</p>
         {{ hello }}
       {% endverbatim %}
       {% endblock %}

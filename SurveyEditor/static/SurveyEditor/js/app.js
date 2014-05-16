@@ -2,5 +2,10 @@
 
 
 // Declare app level module which depends on filters, and services
-// var page_editor
-var quesEditor = angular.module('quesEditor', []);
+// The page_editor app will allow users to add/del and arrange the
+//  order of pages for this survey
+// var page_editor = angular.module('page_editor', []);
+
+// The ques_editor app will allow users to add/del/mod questions
+//  for a chosen page.
+var ques_editor = angular.module('QuesEditorApp', []);
