@@ -1,0 +1,6 @@
+
+{% extends "base.html" %}{% load staticfiles %}
+{% block content %}
+	<div ng-include="'{{ STATIC_URL }}partials/index.html'"></div>
+	<h2 align="center">Welcome to the HR4E Survey Editor!</h2>
+{% endblock content %}
