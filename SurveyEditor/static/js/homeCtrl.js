@@ -1,4 +1,7 @@
-var ModalDemoCtrl = function ($scope, $modal, $log) {
+var ModalDemoCtrl = function ($scope, $modal, $log, Nav) {
+
+
+  Nav.selectPage('Home');
 
   $scope.items = ['item1', 'item2', 'item3'];
 
@@ -39,9 +42,4 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
-};
-
-var IndexController = function ($scope) {
-  $scope.msg = "woooooow";
-
 };

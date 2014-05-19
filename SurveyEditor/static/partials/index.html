@@ -1,6 +1,7 @@
 
 <!-- Angular Handlebars here do not need to be wrapped in verbatim tags -->
 <div ng-controller="ModalDemoCtrl">
+
     <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
             <h3 class="modal-title">Im a modal!</h3>
@@ -24,4 +25,5 @@
     <button class="btn btn-default" ng-click="open('lg')">Large modal</button>
     <button class="btn btn-default" ng-click="open('sm')">Small modal</button>
     <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+    
 </div>
