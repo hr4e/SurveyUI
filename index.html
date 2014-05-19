@@ -2,11 +2,118 @@
 <html lang="en" ng-app>
 <head>
   <meta charset="utf-8">
-  <title>HR4E Template</title>
+  <title>HR4E Admin Panel | Projects</title>
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="css/style.css">
   <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+  <script src="js/app.js"></script>
 </head>
 <body>
-  <p>Hello {{"world" + "!!"}}</p>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <a href="/" class="navbar-brand">HR4E</a>
+      <ul class="nav navbar-nav">
+	<li class="active"><a href="#" class="crumbitem">Projects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="content" class="panel panel-default">
+      <div class="panel-heading">
+	<h1>Select a project:</h1>
+	<form class="navbar-form navbar-right" role="search">
+	  <div class="form-group">
+	    <!--<span class="glyphicon glyphicon-search projectsearch"></span>-->
+	    <input ng-model="query" class="form-control navbar-right projectsearch" placeholder="Type a project name...">
+	  </div>
+	</form>
+      </div>
+      <div class="panel-body">
+	<table class="table table-bordered table-hover">
+	  <thead>
+	    <tr>
+	      <th>Name</th>
+	      <th>Quick Description</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td><a href="#">Amber</a></td>
+	      <td>A colorful project: Amber</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Blue</a></td>
+	      <td>A colorful project: Blue</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Cerulean</a></td>
+	      <td>A colorful project: Cereulean</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Coral</a></td>
+	      <td>A colorful project: Coral</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Cyan</a></td>
+	      <td>A colorful project: Cyan</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Eggplant</a></td>
+	      <td>A colorful project: Eggplant</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Eggshell</a></td>
+	      <td>A colorful project: Eggshell</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Gray</a></td>
+	      <td>A colorful project: Gray</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Green</a></td>
+	      <td>A colorful project: Green</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Lavender</a></td>
+	      <td>A colorful project: Lavender</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Magenta</a></td>
+	      <td>A colorful project: Magenta</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Mauve</a></td>
+	      <td>A colorful project: Mauve</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Orange</a></td>
+	      <td>A colorful project: Orange</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Pink</a></td>
+	      <td>A colorful project: Pink</td>
+	    </tr>
+	    <tr>
+	      <td><a href="#">Puce</a></td>
+	      <td>A colorful project: Puce</td>
+	    </tr>
+	  </tbody>
+	</table>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <div class="container">
+      <ul class="nav navbar-nav">
+	<li><a href="#">About</a></li>
+	<li><a href="#">Help</a></li>
+      </ul>
+      <p class="navbar-text pull-right">Version 0.0.1</p>
+    </div>
+  </div>
+
+  <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 </body>
 </html>

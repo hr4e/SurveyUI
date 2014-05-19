@@ -1,0 +1,23 @@
+#content{
+    margin-top: 70px;
+}
+
+#content h1{
+    display: inline-block;
+}
+
+#footer{
+    background-color: #ccc;
+}
+
+.crumbitem{
+    float: left;
+}
+
+span.crumbitem{
+    margin-top: 1.2em;
+}
+
+.projectsearch{
+    margin-top: 1em;
+}
