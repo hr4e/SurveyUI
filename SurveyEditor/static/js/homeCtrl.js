@@ -5,7 +5,7 @@ var ModalDemoCtrl = function ($scope, $modal, $log) {
   $scope.open = function (size) {
 
     var modalInstance = $modal.open({
-      templateUrl: '../../templates/SurveyEditor/index.html',
+      templateUrl: 'myModalContent.html',
       controller: ModalInstanceCtrl,
       size: size,
       resolve: {
@@ -27,7 +27,6 @@ var ModalDemoCtrl = function ($scope, $modal, $log) {
 // It is not the same as the $modal service used above.
 
 var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
-
   $scope.items = items;
   $scope.selected = {
     item: $scope.items[0]
@@ -40,4 +39,9 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
+};
+
+var IndexController = function ($scope) {
+  $scope.msg = "woooooow";
+
 };
