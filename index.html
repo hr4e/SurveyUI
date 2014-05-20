@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="HR4ESurvey">
 <head>
   <meta charset="utf-8">
   <title>HR4E Admin Panel | Projects</title>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="css/style.css">
   <script src="bower_components/angular/angular.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/controllers.js"></script>
 </head>
 <body>
   <div class="navbar navbar-inverse navbar-fixed-top">
@@ -19,13 +19,13 @@
   </div>
 
   <div class="container">
-    <div id="content" class="panel panel-default">
+    <div id="content" class="panel panel-default" ng-controller="ProjectListCtrl">
       <div class="panel-heading">
 	<h1>Select a project:</h1>
 	<form class="navbar-form navbar-right" role="search">
 	  <div class="form-group">
 	    <!--<span class="glyphicon glyphicon-search projectsearch"></span>-->
-	    <input ng-model="query" class="form-control navbar-right projectsearch" placeholder="Type a project name...">
+	    <input class="form-control navbar-right projectsearch" placeholder="Type a project name..." ng-model="query">
 	  </div>
 	</form>
       </div>
@@ -38,65 +38,9 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	      <td><a href="#">Amber</a></td>
-	      <td>A colorful project: Amber</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Blue</a></td>
-	      <td>A colorful project: Blue</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Cerulean</a></td>
-	      <td>A colorful project: Cereulean</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Coral</a></td>
-	      <td>A colorful project: Coral</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Cyan</a></td>
-	      <td>A colorful project: Cyan</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Eggplant</a></td>
-	      <td>A colorful project: Eggplant</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Eggshell</a></td>
-	      <td>A colorful project: Eggshell</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Gray</a></td>
-	      <td>A colorful project: Gray</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Green</a></td>
-	      <td>A colorful project: Green</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Lavender</a></td>
-	      <td>A colorful project: Lavender</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Magenta</a></td>
-	      <td>A colorful project: Magenta</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Mauve</a></td>
-	      <td>A colorful project: Mauve</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Orange</a></td>
-	      <td>A colorful project: Orange</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Pink</a></td>
-	      <td>A colorful project: Pink</td>
-	    </tr>
-	    <tr>
-	      <td><a href="#">Puce</a></td>
-	      <td>A colorful project: Puce</td>
+	    <tr ng-repeat="project in projects | filter:query">
+	      <td><a href="#">{{project.name}}</a></td>
+	      <td>{{project.desc}}</td>
 	    </tr>
 	  </tbody>
 	</table>
