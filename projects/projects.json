@@ -9,6 +9,14 @@
      "desc": "A colorful project: Coral"},
     {"name": "Cyan",
      "desc": "A colorful project: Cyan"},
-    {"name": "Eggplant",
-     "desc": "A colorful project: Eggplant"}
+	{"name": "Eggplant",
+     "desc": "A colorful project: Eggplant"},
+	{"name": "Eggshell",
+     "desc": "A colorful project: Eggshell"},
+	{"name": "Gray",
+     "desc": "A colorful project: Gray"},
+	{"name": "Green",
+     "desc": "A colorful project: Green"},
+	{"name": "Lavender",
+     "desc": "A colorful project: Lavender"}
 ]
