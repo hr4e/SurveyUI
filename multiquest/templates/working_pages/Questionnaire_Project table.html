@@ -1,0 +1,35 @@
+
+<!--Displays questionnaire data. Include this file into html
+Depends upon view.displayQuestionnairesAndProjects()
+Input:
+	allQuestionnaireInfo is output from function view.displayQuestionnairesAndProjects()
+-->
+{% if allQuestionnaireInfo %}
+	<table width='100%' border=1>
+		<td>Select</td>
+		<td>Short Name</td>
+		<td>Title</td>
+		<td>Version</td>
+		<td>Version Date</td>
+<!--		<td>Enable/Disable</td>-->
+		<td>Language</td>
+		<td>Project</td>
+		{% for shortTag,pageTitle, description, version, versionDate, lastUpdate, questEnabled, language, project in allQuestionnaireInfo %}
+		<tr>
+			<td><input type="submit" name="SelectQuestionnaire" value="Select {{forloop.counter}}"></td>
+			<td>{{shortTag}}</td>
+			<td>{{pageTitle}}</td>
+			<td>{{version}}</td>
+			<td>{{versionDate}}</td>
+<!--		{% if allowToggleEnable %}
+			<td><input type="submit" name="ToggleDisable" value="{{questEnabled}}_{{forloop.counter}}"></td>
+		{% else %}
+			<td>{{questEnabled}}</td>
+		{% endif %}
+-->
+			<td>{{language}}</td>
+			<td>{{project}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endif %}

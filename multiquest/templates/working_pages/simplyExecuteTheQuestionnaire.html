@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Run the Questionnaire</title>
+</head>
+<body>
+<style type="text/css">
+    dt {margin: 50;padding: 20; text-indent:5%;}
+    dd {margin: 50;padding: 20; text-indent:4%;}
+    ul {list-style-type: none;}
+    li {list-style-type: none;}
+</style>
+<h3>Run the Questionnaire</h3>
+<h4>The current Questionnaire is:  {{workingQuestionnaireTag}}</h4>
+{% if workingProjectTag %}
+<h4>The current Project is:  {{workingProjectTag}}</h4>
+{% endif %}
+<ul>
+<li>Page title:  {{pageTitle}}</li>
+<li>Page subtitle:  {{pageSubTitle}}</li>
+<li>Description:  {{description}}</li>
+<li>Footer text:  {{footerText}}</li>
+<li>Version:  {{version}}</li>
+<li>Version date:  {{versionDate}}</li>
+<li>Last updated:  {{lastUpdate}}</li>
+<li>Enabled/disabled flag:  {{questEnabled}}</li>
+<li>Language:  {{language}}</li>
+<li>First page:  {{firstPageTag}}</li>
+</ul>
+
+
+<form action="" method="post" >{% csrf_token %}
+	{% if errMsg %}
+		{% for emess in errMsg %}
+			<p style="color: red;">
+			{{emess }}
+			</p>
+		{% endfor %}
+	{% endif %}
+	<p>Click on the name to run:  
+	<input type="submit" name="runQuestionnaire" value={{workingQuestionnaireTag}}>
+	</p>
+</form>
+<a href="{{url_base}}intro/" >{{back_to_intro}}</a>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

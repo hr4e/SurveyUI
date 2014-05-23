@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<div style="text-align: left; ">
+<title>{{pageTitle}}</title>
+<h3>{{bannerText}}</h3>
+<p>
+</p>
+	<a href="{{back_to}}" >{{back_toPrompt}}</a>
+
+<div class="indented">
+	{% autoescape off %}
+
+{% if not errMsg %}
+<table frame='border' border='5px' width='100%'>
+	{% if allValues %}
+		<h3>{{bannerText1}}</h3>
+		{% for cHeader in colList %}
+			<td>{{cHeader}}</td>
+		{% endfor %}
+		{% for item in allValues %}
+		<tr>
+			{% for fieldName in item %}
+			<td>{{ fieldName }}</td>
+			{% endfor %}
+		</tr>
+		{% endfor %}
+	{% endif %}
+</table>
+{% if allValues2 %}
+	<a href="{{back_to}}" >{{back_toPrompt}}<</a>
+{% endif %}
+
+<table frame='border' border='1px' width='100%'>
+{% if allValues2 %}
+	<h3>{{bannerText2}}</h3>
+	{% for cHeader in colList2 %}
+		<td>{{cHeader}}</td>
+	{% endfor %}
+	{% for item in allValues2 %}
+	<tr>
+		{% for fieldName in item %}
+		<td>{{ fieldName }}</td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+{% endif %}
+</table>
+{% else %}
+		<p style="color: red;">
+    	{{errMsg }}
+		</p>
+{% endif %}
+<p>
+</p>
+	{% endautoescape %}
+
+</div>
+	<a href="{{back_to}}" >{{back_toPrompt}}</a>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

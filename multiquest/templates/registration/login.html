@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Login to the Questionnaire Editor</title>
+</head>
+<body>
+<h2>Login to the Questionnaire Editor</h2>
+
+<form action="" method="post">{% csrf_token %}
+<p>
+			{{form.as_p }}
+</p>
+	<input type="submit" value="login" />
+	<input type="hidden" name="next" value="{{ next|escape }}" />
+</form>
+
+</body>

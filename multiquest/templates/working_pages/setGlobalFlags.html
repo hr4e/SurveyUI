@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Set global flags - based upon question response</title>
+</head>
+<body>
+<h2>Set a global flag based upon question response</h2>
+<p>This page provides the user interface to set global flags for a questionnaire</p>
+<p>Please follow these steps:</p>
+	<ul>
+	<li>Select a page,</li>
+	<li>select or create a global flag,</li>
+	<li>then select the question response which sets the global flag when the questionnaire is run.</li>
+	</ul>
+
+	<h4>The current Questionnaire is "{{workingQuestionnaireTag}}": {{barTitle}}</h4>
+	<h4>The current Page is "{{workingPageTag}}"</h4>
+	
+	<form action="" method="post" >{% csrf_token %}
+		
+		
+		<h4> These are the pages with questions. Click a Page button to change the current page: </h4>
+		
+		{% for tag in allPageTags %}
+			<input type="submit" name="currentPageButton" value="{{tag}}">
+		{% endfor %}
+		{% if testConditionTransitionList %}
+			<p>
+			<h3>The following lists all the global flags set by this page.</h3>
+			</p>
+			<table>
+				<tr>
+					<th>if the question response:</th>
+					<th>then set the flag:</th>
+					<th>with the priority:</th>
+				</tr>
+				{% for cond, theGFlag, theGFlagPriority in testConditionTransitionList %}
+					<tr>
+					<td>{{cond}}</td>
+					<td>{{theGFlag}}</td>
+					<td>{{theGFlagPriority}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
+		<p>
+		<h3>Please select the global flag.</h3>
+		</p>
+		{% for aFlag in allGlobalFlags %}
+			<input type="submit" name="globalFlagSelectButton" value="{{aFlag}}">
+		{% endfor %}
+		{% if globalFlagExists %}
+		<h3 style="color: red;">
+		The global flag "{{theGlobalFlag}}" with priority "{{theGlobalFlagPriority}}" has been selected for page "{{workingPageTag}}"
+		</h3>
+		{% endif %}
+		<p>
+		<h3>Or enter a new global flag, and it's priority. Use letters "a, b, c" etc. to indicate the priority of the flag.</h3>
+		</p>
+		{% if theForm.errors %}
+			<p style="color: red;">
+				Please correct the error{{ theForm.errors|pluralize }} below.
+			</p>
+		{% endif %}
+		{{theForm}}
+		<p>
+			<input type="submit" name="globalFlagEnteredButton" value="Enter a new global flag">
+		</p>
+		
+		{% if errMsgs %}
+			<p style="color: red;">
+			{% for msg in errMsgs %}
+			{{msg }}
+			{% endfor %}
+			</p>
+		{% endif %}
+		
+		{% if theQForm %}
+			<h2>The questions on this page are:</h2>
+		{% endif %}
+		{% if theQForm.errors %}
+			<p style="color: red;">
+				Please correct the error{{ theQForm.errors|pluralize }} below.
+			</p>
+		{% endif %}
+
+		{% for field in theQForm %}
+			<div class="fieldWrapper">
+				{{ field.errors }}
+				{{ field.label_tag }}: {{ field }}
+			</div>
+		{% endfor %}
+		<input type="submit" name="SubmitResponsesButton" value="Submit responses to questions">
+		
+		{% if otherAnalysisOption == "YesNoField" %}
+		<p>
+		<h2>Other analysis options:</h2>
+		</p>
+		<p> Rather than requiring specific results for each question as above, for "yes/no" questions, other options are:
+		</p>
+		<ul>
+			<li><input type="submit" name="analysisAlternatives" value="{{allYesButton}}"></li>
+			<li><input type="submit" name="analysisAlternatives" value="{{anyYesButton}}"></li> <!-- includes All Yes result -->
+			<li><input type="submit" name="analysisAlternatives" value="{{allNoButton}}"></li>
+			<li><input type="submit" name="analysisAlternatives" value="{{anyNoButton}}"> </li><!-- includes All No result -->
+		</ul>
+		{% endif %}
+		{% if otherAnalysisOption == "MultipleChoiceField" %}
+		<p>
+		<h2>Other analysis options:</h2>
+		</p>
+		<p> Rather than requiring specific results for each question as above, for multiple choice questions other options are:
+		</p>
+		<ul>
+			<li><input type="submit" name="analysisAlternatives" value="{{anySelectedButton}}"></li> <!-- includes All Yes result -->
+			<li><input type="submit" name="analysisAlternatives" value="{{noneSelectedButton}}"></li>
+		</ul>
+		{% endif %}
+
+
+		{% if flagAndConditionMsg %}
+		<p style="color: red;">
+		The global flag "{{theGlobalFlag}}" and the test condition were successfully saved.
+		</p>
+		{% endif %}
+		<h3>The following lists all the global flags belonging to this questionnaire.</h3>
+		<table width='100%'>
+			<td>Delete</td>
+			<td>Page where defined</td>
+			<td>Question response required before setting the global flag</td>
+			<td>Global flag</td>
+			<td>Global flag priority</td>
+			{% for pageID,testCondition,testResultFlag, testResultFlagPriority in allGlobalFlagsRecordList %}
+			<tr>
+				<td><input type="submit" name="deleteSelection" value="Del_{{forloop.counter0}}"></td>
+				<td>{{pageID}}</td>
+				<td>{{testCondition}}</td>
+				<td>{{testResultFlag}}</td>
+				<td>{{testResultFlagPriority}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		<p>
+		<input type="submit" name="submitButton" value="Return to the administration page">
+		</p>
+	</form>
+
+</body>	
+</html>
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+    }
+    .errorlist li {
+        background-color: red;
+        color: white;
+        display: block;
+        font-size: 10px;
+        margin: 0 0 3px;
+        padding: 4px 5px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+<!--
+Copyright 2013 Health Records for Everyone
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->

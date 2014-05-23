@@ -1,0 +1,27 @@
+{% extends "base_page.html" %}
+{% block title %}Edit Project{% endblock %}
+{% block content %}
+  <h1>Edit the current default Project</h1>
+{% if errMsg %}
+	{% for emess in errMsg %}
+		<p style="color: red;">
+		{{emess }}
+		</p>
+	{% endfor %}
+{% endif %}
+	<h3>Your login is associated with the Project:  {{theProject.shortTag}}</h3>
+	<form action="" method="post">{% csrf_token %}
+	{% if theForm.errors %}
+		<p style="color: red;">
+			Please correct the error{{ theForm.errors|pluralize }} below.
+		</p>
+	{% endif %}
+	<p>
+	{{theForm.as_p}}
+	</p>
+		<input type="submit" name="submitButton" value="accept Project Edits">
+	<p>
+		<input type="submit" name="returnToHome" value="Return to the Home Page">
+	</p>
+	</form>
+{% endblock %}

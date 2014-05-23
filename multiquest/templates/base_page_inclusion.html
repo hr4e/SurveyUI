@@ -1,0 +1,124 @@
+<!-- -->
+{% include 'header.html' %}
+<head>
+<style>
+	body {
+	font-size:100%;
+	font-family:"arial",Georgia,Serif;
+	}
+	p {
+	font-size:{{fontSize}};
+	}
+	li {
+	font-size:{{fontSize}};
+	}
+.ctlbtn {
+	background-color:white;
+	font-size:{{fontSize}};
+	font-family:"Times New Roman",Times,serif;
+    }
+.inlineLabels {
+		list-style-type:none;
+		background-color : white;
+    	font-size:{{fontSizeTextBox}};
+    }
+</style>
+</head>
+
+	<form action="" method="post" >{% csrf_token %}
+<!--	<fieldset class="inlineLabels"> -->
+	{% block preamble %}{% endblock  %}<!-- preamble -->
+
+    {% if errmsg %}
+		<p style="color: red;">
+    	{{errmsg }}
+		</p>
+    {% endif %}
+	<table >
+	
+	{% if theForm.errors %}
+		<p style="color: red;">
+			Please correct the error{{ theForm.errors|pluralize }} below.
+		</p>
+	{% endif %}
+	<tr>
+		<td>
+		{% if field_style == 'as_table' %}		
+			<table frame='border' border='{{field_border}}px' width='100%'>
+	{% autoescape off %}
+				{{theForm.as_table}}
+	{% endautoescape %}
+			</table>
+		{% elif field_style == 'as_p' %}
+	{% autoescape off %}
+			{{theForm.as_p }}
+	{% endautoescape %}
+		{% elif field_style == 'as_ul' %}
+			<ul >
+	{% autoescape off %}
+				{{theForm.as_ul}}
+	{% endautoescape %}
+			</ul>
+		{% elif field_style == 'no_style'%} <!-- no decorations -->
+	{% autoescape off %}
+				{{theForm}}
+	{% endautoescape %}
+		{% endif %}
+	{% block postamble %}{% endblock  %}
+		</td>
+	{% block pageImage %}{% endblock  %}
+	</tr>
+	</table>
+	{% if not buttons_not_enabled %}
+	{% if not back_not_enabled %}
+	<input class="ctlbtn" type="submit" name="submitButton" value="Back">
+	{% endif %}
+	<input  class="ctlbtn" type="submit" name="submitButton" value="Next">
+	{% endif %}
+	</form>
+{% include 'footer.html' %}
+{% if debugOn %}
+Page tag: "{{thisPageTag}}", record number: {{thisPageRecNum}}
+{% endif %}
+
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+        color: red;
+    }
+    .errorlist li {
+        color: red;
+        font-size: 18px;
+        margin: 0 0 1px;
+        padding: 0px 20px;
+    }
+</style>
+
+
+<!--
+Copyright 2013 Health Records for Everyone
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Need later?
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+	ul {
+		list-style-type:none;
+		padding:0px;
+		margin:0px;
+	}
+
+-->

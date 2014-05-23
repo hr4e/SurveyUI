@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>View Questionnaire Responses</title>
+</head>
+<body>
+<h2>Select and view questionnaire responses</h2>
+
+{% if errMsg %}
+	{% for emess in errMsg %}
+		<p style="color: red;">
+		{{emess }}
+		</p>
+	{% endfor %}
+{% endif %}
+
+<form action="" method="post" >{% csrf_token %}
+	{% if theProject %}
+		The current project is "{{theProject.shortTag}}".
+	{% endif %}
+		<input type="submit" name="returnToHome" value="Return to the Home Page">
+	<h4> Existing Submissions are: </h4>
+	<table width='100%'>
+		<tr>
+		{% for aCol in submitTableCols %}
+			<th>{{aCol}}</th>
+		{% endfor %}
+		</tr>
+		
+		{% for item in submitTable %}
+		<tr>
+			{% for fieldValue in item %}
+			{% if forloop.first%}
+				<td><input type="submit" name="deleteSelected" value="{{fieldValue}}"></td>
+			{% else %}
+				<td>{{ fieldValue }}</td>
+			{% endif %}
+			{% endfor %}
+		</tr>
+		{% endfor %}
+	</table>
+
+
+		{% if resultMessage %}
+			<p style="color: red;">
+			Results:
+			{% for aLine in resultMessage %}
+				<p style="color: red;">{{aLine }}</p>
+			{% endfor %}
+			</p>
+		{% endif %}
+</form>
+
+</body>	
+</html>
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+    }
+    .errorlist li {
+        background-color: red;
+        color: white;
+        display: block;
+        font-size: 10px;
+        margin: 0 0 3px;
+        padding: 4px 5px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+
+<!--
+Copyright 2013 Health Records for Everyone
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->

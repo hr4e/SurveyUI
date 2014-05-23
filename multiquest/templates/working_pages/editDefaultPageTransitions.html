@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Edit Default page transitions</title>
+</head>
+<body>
+<h2>Change page order</h2>
+
+{% if workingQuestionnaireTag %}
+<h4>The current Project/Questionnaire is "{{theProjectTag}}/{{workingQuestionnaireTag}}".</h4>
+{% else %}
+<h4>No questionnaire has been selected</h4>
+{% endif %}
+	<form action="" method="post" >{% csrf_token %}
+{% if firstPageInQuestTag %}
+	<p>The start page for this Questionnaire is: "{{firstPageInQuestTag}}". Click the page tag below to change the start page.</p>
+{% else %}
+	<h4>No start page for this Questionnaire. Please select a start page from the pages in the questionnaire</h4>
+{% endif %}
+{% for aTag in allPageTags %}
+	<input type="submit" name="startPage" value="{{aTag}}">
+{% endfor %}
+
+	
+	<p>The page transition table determines which page is the "Next" page in the Questionnaire.
+	The transition table is displayed in two formats on this page:  an editable page sequence, and 
+	a non-editable "from" "to" for each page.</p>
+	<p>Make sure that each page has a place in the new transition table, with no added pages, and none lost.
+	For ease of editing, consider copying the table into your favorite editor, then pasting the results.
+	</p>
+		
+		<ul>
+		</ul>
+		{% if errMsg %}
+		{% for err in errMsg %}
+			<p style="color: red;">
+			{{err }}
+			</p>
+		{% endfor %}
+		{% endif %}
+	<p>Here is the page transition table as a sequence of pages which is easier to edit.
+	<br>The text area can be enlarged by stretching the lower right corner.</p>
+
+		{% if theForm.errors %}
+			<p style="color: red;">
+				Please correct the error{{ theForm.errors|pluralize }} below.
+			</p>
+		{% endif %}
+		{{ theForm.non_field_errors }}
+   <div class="fieldWrapper">
+        {{ theForm.id_ptlString.errors }}
+        <label for="id_ptlString"></label>
+        {{ theForm.ptlString }}
+    </div>
+		<input type="submit" name="acceptEdits" value="accept Default transition edits">
+		<input type="submit" name="returnToHome" value="Return to the Home Page">
+		<input type="submit" name="executeQuestionnaire" value="Execute the Questionnaire">
+	</form>
+	{% if defaultPT %}
+	
+	<h4>The default Page Transition Table is: </h4>
+<!--<table frame='border' border='5px' width='30%'>-->
+<table width='30%'>
+	<th>From page:</th><th>To page:</th>
+	{% for fromPg, toPg in defaultPT %}
+	<tr>
+		<td>{{fromPg}}</td><td>{{toPg}}</td>
+	</tr>
+	{% endfor %}
+</table>
+	{% endif %}
+
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+        color: red;
+    }
+    .errorlist li {
+        color: red;
+        font-size: 18px;
+        margin: 0 0 1px;
+        padding: 0px 20px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

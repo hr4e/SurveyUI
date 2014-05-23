@@ -1,0 +1,36 @@
+    <table> <!-- respondent identification -->
+		<tr valign='top' width='50%'>
+		<th>Questionnaire completed for:  </th>
+		</tr>
+		<tr>
+		<td>Respondent name: {{respondentName}}</td>
+		</tr>
+		{% if respondentCallbackNumber %}
+		<tr>
+		<td>Respondent phone: {{respondentCallbackNumber}}</td>
+		</tr>
+		{% endif %}
+		{% if callbackReq %}
+		<tr>
+		<td>Call back requested.</td>
+		</tr>
+		{% endif %}
+		{% if contactEmail %}
+		<tr>
+		<td>Respondent e-mail: {{contactEmail}}</td>
+		</tr>
+		{% endif %}
+
+		{% if contactPhone %}
+		<tr>
+		<td>Respondent phone: {{contactPhone}}</td>
+		</tr>
+		{% endif %}
+
+		<tr>
+		<td>Birthdate: {{birthDate}}</td>
+		</tr>
+		<tr>
+		<td>Today's date: {{current_date}}</td>
+		</tr>
+    </table>

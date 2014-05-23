@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Create transition logic - based upon question response</title>
+</head>
+<body>
+<h2>Create transition logic to move from one page to another based upon question response</h2>
+<p>Define the next page of the Questionnaire in terms of the response to questions on the current page.<br>Start with one page, then the "next" button transitions to another page.</p>
+	<form action="" method="post" >{% csrf_token %}
+		
+{% if workingQuestionnaire %}
+<h4>The current Project/Questionnaire is "{{workingProject.shortTag}}/{{workingQuestionnaire.shortTag}}".</h4>
+{% else %}
+<h4>No questionnaire has been selected</h4>
+{% endif %}
+		
+		<h3> Step 1:  Click a Page button to change the <b>CURRENT</b> page which is "{{workingPageTag}}": </h3>
+
+		{% for tag in allPageTagsQs %}
+			<input type="submit" name="currentPage" value="{{tag}}">
+		{% endfor %}
+		Only pages with questions are listed.
+		<p>
+		<p>The current Page is "{{workingPageTag}}"{% if newNextPageTag %} with <b>default</b> transition to "{{defaultNextPageTag}}"{% endif %}. 
+		{% if not testConditionTransitionList %}
+		No <b>question response</b> transitions have been set for the page "{{workingPageTag}}"
+		{% endif %}
+		</p>
+		</p>
+		{% if not pageQuestionsExist %}
+			<p style="color: red;">
+			No questions can be found for the page "{{workingPageTag}}". Select another "current page".
+			</p>
+		{% endif %}
+		
+		{% if testConditionTransitionList %}
+			<p>
+			<p>The following lists the conditions and transitions set for this page:</h3>
+			</p>
+			<table border = "1"  width='100%' >
+				<td>Delete</td>
+				<td>If question response on this page "{{workingPageTag}}" is</td>
+				<td>then transition to the next page</td>
+			{% for irec, cond, condPage in testConditionTransitionList %}<!-- toss irec -->
+				<tr>
+					<td><input type="submit" name="deleteSelection" value="{{forloop.counter0}}"></td>
+					<td>{{cond}}</td>
+					<td>{{condPage}}</td>
+				</tr>
+			{% endfor %}
+			</table>
+		{% endif %}
+		{% if pageQuestionsExist %}
+			<p>
+			<h3>Step 2:  Select the next page after responding to the questions on the <b>CURRENT</b> page.</h3>
+			</p>
+			<ul>
+			{% for tag in allPageTags %}
+				<input type="submit" name="nextPageButton" value="{{tag}}">
+			{% endfor %}
+			</ul>
+		{% else %}
+			<p style="color: red;">
+			No questions can be found for the page "{{workingPageTag}}". Select another "current page".
+			</p>
+		{% endif %}
+
+		{% if pageQuestionsExist %}
+			{% if newNextPageTag %}
+				<p>
+				Proceed to Step 3.
+				</p>
+			{% endif %}
+		{% endif %}
+		{% if errMsgs %}
+			<p style="color: red;">
+			{% for msg in errMsgs %}
+			{{msg }}
+			{% endfor %}
+			</p>
+		{% endif %}
+		{% if theQForm %}
+			{% if pluralQuestions %}
+				<h3>Step 3:  Respond to the questions on this page "{{workingPageTag}}" which transition to page "{{newNextPageTag}}":</h3>
+			{% else %}
+				<h3>Step 3:  Respond to the question on the page "{{workingPageTag}}" which transition to page "{{newNextPageTag}}":</h3>
+			{% endif %}
+		{% endif %}
+		{% if theQForm.errors %}
+			<p style="color: red;">
+				Please correct the error{{ theQForm.errors|pluralize }} below.
+			</p>
+		{% endif %}
+			<!-- short tag specifying the type of analysis -->
+
+		<!-- *** remove debug code -->
+		{% for field in theQForm %}
+			<div class="fieldWrapper">
+		        {{ field.errors }} <p>{{ field.label_tag }}: {{ field }} (Question tag: {{ field.html_name }})</p>
+			</div>
+		{% endfor %}
+		<h3>Step 4:  Click the button to save the question response:</h3>
+		<input type="submit" name="Save responses to questions" value="Save responses to questions">
+		<p style="color: red;">
+		{{nextPAndConditionMsg}}
+		</p>
+		<p>
+		<input type="submit" name="returnToHome" value="Return to the the Home Page">
+		</p>
+		{% if calculatedTransitionList %}
+			<p>
+			<h3>The following lists all the question responses which affect page 
+			transition in this Questionnaire.</h3>
+			</p>
+			<table width='100%'>
+				<tr>
+				<th>If for the page:</th>
+				<th>the test condition is True:</th>
+				<th>then the next page is:</th>
+				</tr>
+				{% for recID, fromPage, testCondition, nextPage in calculatedTransitionList %}
+					<tr>
+					<td>{{fromPage}}</td>
+					<td>{{testCondition}}</td>
+					<td>{{nextPage}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
+	</form>
+
+</body>	
+</html>
+<style type="text/css">
+    th {
+        text-align: left;
+    }
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+    }
+    .errorlist li {
+        background-color: red;
+        color: white;
+        display: block;
+        font-size: 10px;
+        margin: 0 0 3px;
+        padding: 4px 5px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+<!--
+Copyright 2013 Health Records for Everyone
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->

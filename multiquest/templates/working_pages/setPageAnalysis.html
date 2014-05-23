@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Create or Edit Page Analysis</title>
+</head>
+<body>
+<h2>Page analysis sets flags depending upon question response.</h2>
+<p>Page analysis "belongs to" a Questionnaire. If the following Questionnaire is not what you wish, then click <a href="{{workingPageURL_base}}setSessionProjectQuestionnaireDefault/">here</a> to select from the available Questionnaires.</p>
+	<form action="" method="post" >{% csrf_token %}
+		<p>The current Questionnaire is <b>"{{workingQuestionnaireTag}}"</b>
+		{% if firstPageInQuestTag %} with a first page of "{{firstPageInQuestTag}}"{% endif %}, written in {{language}}. The window bar title is:  "{{barTitle}}".
+		</p>
+			<input type="submit" name="explanationButton" value="{{explainAnalysisButton}}">
+		
+		{% if describeAnalysisProcess %}
+		<p>Page Analysis sets a flag used in defining the "next page" target for a subsequent page. 
+		<ul>The <b>Analysis flag</b> is considered first in the logic defining the transition 
+		to the next page. Once set, the Analysis flag is visible to all pages. Any page 
+		may use any Analysis flag in determining the "next page". "If the flag is set,
+		then go to a page" is the course of logic.
+		</ul>
+		<ul>The <b>question triggers</b> are considered next in defining the "next page". 
+		A question trigger is a set of question responses from that page which is used to 
+		determine the "next page". Question triggers are visible only to the page where
+		they are defined.
+		</ul>
+		<ul>The <b>default</b> "next page" defined for that page is applied if neither 
+		Analysis flags or question triggers apply. A default is required for each page
+		added to a questionnaire.
+		</ul>
+		</p>
+		{% endif %}<!--describeAnalysisProcess-->
+		
+		<h4> Click a Page button to Edit Page analysis: </h4>
+		<ul>
+		{% for tag in allPageTags %}
+			<input type="submit" name="setDefaultPage" value="{{tag}}">
+		{% endfor %}
+		</ul>
+		<h4> Or select a page from a detailed list of available pages: </h4>
+		<input type="submit" name="selectPage" value="{{displayListofAllPagesButton}}">
+		{% if detailedPageList %}
+	<table width='100%'>
+		{% for aCol in pageListCols %}
+			<td>{{aCol}}</td>
+		{% endfor %}<!--pageListCols-->
+		
+		{% for aRow in detailedPageList %}
+		<tr>
+			{% for fieldValue in aRow %}
+			{% if forloop.first%}
+				<td><input type="submit" name="pageListSelection" value="{{fieldValue}}"></td>
+			{% else %}
+				<td>{{ fieldValue }}</td>
+			{% endif %}
+			{% endfor %}
+		</tr>
+		{% endfor %}<!--detailedPageList-->
+	</table>
+		{% endif %}<!--detailedPageList-->
+
+		<p>
+		<h2>The current Page is "{{workingPageTag}}"{% if pgNext %} with transition to "{{pgNext}}"{% endif %}.</h2>
+		</p>
+		<input type="submit" name="submitButton" value="{{detailedPageInfoQ}}">
+		{% if displaySelectedPageInfo %}
+		<table width='100%'>
+			{% for fieldName, fieldValue in pageFieldsDetail %}
+				<ul><b>{{fieldName}}:</b>  {{fieldValue}}</ul>
+			{% endfor %}
+		</table>
+
+		{% endif %}<!--displaySelectedPageInfo-->
+		
+		
+	<p>
+		
+		{% if analFlags %}
+		<p> The current set of analysis flags are: </p>
+		<ul>
+		{% for tag in analFlags %}
+			{{tag}}
+		{% endfor %}
+		</ul>
+		{% else %}
+		<p> No analysis flags are currently set for this page.</p>
+		{% endif %}
+		
+		<p>
+		<h2>Enter text to define an analysis flag:</h2>
+		</p>
+
+		
+		{% if errmsg %}
+			<p style="color: red;">
+			{{errmsg }}
+			</p>
+		{% endif %}
+
+
+		{% if theForm.errors %}
+			<p style="color: red;">
+				Please correct the error{{ theForm.errors|pluralize }} below.
+			</p>
+		{% endif %}
+			<p><!-- short tag specifying analysis flag-->
+				{{theForm.as_p }}
+			</p>
+			
+		<input type="submit" name="submitButton" value="{{returnButton}}">
+		<input type="submit" name="submitButton" value="{{newFieldButton}}">
+
+	</form>
+	<a href="{{url_base}}intro/" >{{back_to_intro}}</a>
+
+</body>	
+</html>
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+    }
+    .errorlist li {
+        background-color: red;
+        color: white;
+        display: block;
+        font-size: 10px;
+        margin: 0 0 3px;
+        padding: 4px 5px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+<!--
+Copyright 2013 Health Records for Everyone
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->

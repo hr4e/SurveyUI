@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<html>
+<body>
+
+<div style="text-align: left; ">
+	<head>
+		<title> Multi-questionnaire administration</title>
+	</head>
+</div>
+
+<STYLE TYPE="text/css">
+.indented
+   {padding-left: 40pt;
+   padding-right: 50pt;
+   }
+h4.nonindented
+   {padding-left: 15pt;
+   padding-right: 50pt;
+   }
+.indented2
+   {padding-left: 60pt;
+   padding-right: 50pt;
+   font-size:90%;
+   }
+</STYLE>
+<h2>This page is being dismantled</h2>
+<p>
+ 	This computer's host name: {{ thishost }}. {{ current_date }} 
+</p>
+
+{% if projectName or questionnaireName %}
+<p>{% if projectName %}The current Project is:  {{projectName}}. {% endif %}
+{% if questionnaireName %} The current Questionnaire is:  {{questionnaireName}}. {% endif %}
+</p>
+{% endif %}
+
+<div>
+<h4>Select and Run a questionnaire:</h4>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}setSessionProjectQuestionnaireDefault/">here</a> to select a Questionnaire default.</p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}selectProjectsQuestionnairesToExecute/">here</a> to select and <u>run</u> a Questionnaire.</p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}simplyExecuteTheQuestionnaire/">here</a> to run the default Questionnaire.</p>
+
+<h4>View or dump Respondent data:</h4>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}savecsv/">here</a> to dump questionnaire data to a spreadsheet file.</p>
+<p class="indented2"><i>Downloads file "Questionnaire Responses..."</i></p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}savecsvDecoder/">here</a> to dump a tag decoder file for the spreadsheet file.</p>
+<p class="indented2"><i>Downloads file "Questionnaire tag decoder..."</i></p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}responseViewer/">here</a> to select and view responses.</p>
+
+<h4>View or dump Respondent data:</h4>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}dumpSubmissionTable/">here</a> to dump the Submission table.</p>
+<!--
+<p class="indented">Click <a href="{{workingPageURL_base}}scrn/listReferrals/">here</a> to list the patients to be referred. (stub)</p>
+-->
+
+<h4>Create and edit a Questionnaire:</h4>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}editQuestionnaire/">here</a> to create a new Questionnaire, or edit an existing Questionnaire.</p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}selectPages/">here</a> to select existing Pages to add to a Questionnaire.</p>
+
+<h4>Create and edit a Page:</h4>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}displayAndEditPage/">here</a> to Create a new page, or Edit an existing page.</p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}displayAndEditQuestion/">here</a> to Create a new question, or Edit an existing question.</p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}bulkPageEdit/">here</a> to edit all pages in a Questionnaire (bulk edit).</p>
+
+<!--
+<h4 class="nonindented">Create special pages:</h4>
+
+<p class="nonindented">Click <a href="{{workingPageURL_base}}editSummaryAndAnalysisPage/">here</a> to Create a new summary and analysis page, or Edit an existing summary and analysis page.</p>
+-->
+<h4>List information about all pages and questions (whether or not they are in a questionnaire):</h4>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}listQuestions/">here</a> to list the available Questions.</p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}listPages/">here</a> to list the available Pages.</p>
+
+<h4>Specify the order of execution of pages (transition logic):</h4>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}setPageToPageTransitionCalculated/">here</a> to Create page transition logic based upon question response.</p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}setGlobalFlags/">here</a> to Set global flags based upon question response.</p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}setPageToPageTransitionGlobalFlags/">here</a> to Use global flags to trigger page transition.</p>
+
+<h4>Delete a questionnaire:</h4>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}deleteQuestionnaireView/">here</a> to delete an existing Questionnaire.</p>
+
+<h4>Accounts:</h4>
+
+<p class="indented">Click <a href="{{registrationURL_base}}createNewAccount/">here</a> to create an account.</p>
+
+<p class="indented">Click <a href="{{registrationURL_base}}login/">here</a> to login to the Questionnaire Editor.</p>
+
+<p class="indented">Click <a href="{{registrationURL_base}}logout/">here</a> to logout of the Questionnaire Editor.</p>
+
+<p class="indented">Click <a href="{{registrationURL_base}}listRegistration/">here</a> to list all registered members of all groups.</p>
+
+{% if thishost != "www.screengenes.org" %}
+<h4>The following are debug menu items.</h4>
+
+<!--<p class="indented">Click <a href="{{workingPageURL_base}}scrn/setDebugOptions/">here</a> to set debug options.</p>
+-->
+<p class="indented">Click <a href="{{workingPageURL_base}}dumpSessionData/">here</a> to display session data.</p>
+
+<p class="indented">Click <a href="{{urlprefix}}admin/">here</a> to login to view ALL DATA. (multiQuest, narrow2)</p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}testing/">here</a> for a testpage.</p>
+
+<p class="indented">Click <a href="{{workingPageURL_base}}savepdf/">here</a> to dump pdf file containing images of all the pages in the default Questionnaire.</p>
+
+{% endif %}
+
+</div>
+
+{% include 'footer.html' %}
+

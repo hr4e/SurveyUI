@@ -14,6 +14,10 @@ To view the database structures via Django admin
 3. You can press enter to skip fields such as email
 4. visit http://127.0.0.1:8000/admin/ to view database
 
+Questionnaire Editor Python Dependencies
+1. pip install python-dateutil
+2. pip install reportlab
+
 Troubleshooting:
 
 Ensure you have Django installed on your machine, otherwise step 2 will fail.

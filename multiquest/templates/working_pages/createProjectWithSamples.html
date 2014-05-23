@@ -1,0 +1,27 @@
+{% extends "base_page.html" %}
+{% block title %}Questionnaire Editor:  Create a new Sample Questionnaire{% endblock %}
+{% block content %}
+  <h1>Questionnaire Editor:  Create a new Sample Questionnaire</h1>
+  <p>This page provides for the creation of a sample questionnaires within the current
+  Project which is "{{theProject.shortTag}}".</p>
+{% if errMsg %}
+	{% for emess in errMsg %}
+		<p style="color: red;">
+		{{emess }}
+		</p>
+	{% endfor %}
+{% endif %}
+<p>The name of the sample questionnaire will be "{{questionnaireTagforTarget}}", or a slight
+variation if there is already a questionnaire with that name.</p>
+{% if existingQuestionnaireTags %}
+	{% for aquest in existingQuestionnaireTags %}
+		<p>
+		{{aquest }}
+		</p>
+	{% endfor %}
+{% endif %}
+<form method="post" >{% csrf_token %}
+	<p><input type="Submit" name="CreateSampleQuestionnaire" value="Create a Sample Questionnaire" /></p>
+	<p><input type="Submit" name="returnToHome" value="Return to the Home Page" /></p>
+</form>
+{% endblock %}

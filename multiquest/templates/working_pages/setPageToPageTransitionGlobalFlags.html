@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Create transition logic - based upon global flags</title>
+</head>
+<body>
+<h2>Create transition logic to move from one page to another based upon global flags</h2>
+<p>Start with one page, then the "next" button transitions to another page.</p>
+<p>This page defines the next page in terms of the existence or not of global flags.</p>
+	<form action="" method="post" >{% csrf_token %}
+		
+		<h4>The current Questionnaire is "{{workingQuestionnaireTag}}": {{barTitle}}</h4>
+		
+		<h5> Click a Page button to change the <b>CURRENT</b> page: </h5>
+		<ul>
+		{% for tag in allPageTags %}
+			<input type="submit" name="submitButton" value="{{tag}}">
+		{% endfor %}
+		</ul>
+		<p>
+		<h3>The current Page is "{{workingPageTag}}"{% if pgNext %} with default transition to "{{pgNext}}"{% endif %}.</h3>
+		{% if globalFlagExist %}
+		<h3>Select a global flag</h3>
+			{% for aFlag in allGlobalFlags %}
+				<input type="submit" name="globalFlagSelectButton" value="{{aFlag}}">
+			{% endfor %}
+		{% else %}
+			No global flags exist.
+		{% endif %}
+
+		{% if errMsgs %}
+			<p style="color: red;">
+			{% for msg in errMsgs %}
+			{{msg }}
+			{% endfor %}
+			</p>
+		{% endif %}
+
+		<p>
+		{% if globalFlagSelect %}
+			<p>
+			Selected global flag: "{{globalFlagSelect}}". {% if nextPageGlobalFlag %}
+			When this flag is set, the next page is: {{nextPageGlobalFlag}} {% endif %}
+			</p>
+		{% endif %}
+		{% if not globalFlagSelect %}
+			<p>
+			No global flag is selected.
+			</p>
+		{% endif %}
+		<p style="color:red">
+		{{nextPAndConditionMsg}}
+		</p>
+		<p style="color:red">
+		{{flagAndConditionMsg}}
+		</p>
+		{% if globalFlagExist %}
+			{% if globalFlagSelect %}
+				<h5> Click a Page button to select the <b>NEXT</b> page based upon the existence of the global flag: "{{globalFlagSelect}}"</h5>
+			{% else %}
+				<h5> Click a Page button to select the <b>NEXT</b> page based upon the existence of the global flag to be selected.</h5>
+			{% endif %}
+		{% endif %}
+		<ul>
+		{% if globalFlagExist %}
+			{% for tag in allPageTags %}
+				<input type="submit" name="nextPageGlobalFlagButton" value="{{tag}}">
+			{% endfor %}
+			</ul>
+		{% endif %}
+		<p>
+		{% if globalFlagExist %}
+			{% if globalFlagSelect%}
+				<h3>The next Page based upon the existence of the global flag "{{globalFlagSelect}}" is "{{nextPageGlobalFlag}}"</h3>
+			{% else %}
+				{% if nextPageGlobalFlag%}
+					<h3>The next Page based upon the existence of a global flag is "{{nextPageGlobalFlag}}"</h3>
+				{% else %}
+					<h3>Please select the "next page"</h3>
+				{% endif %}
+			{% endif %}
+		{% endif %}
+
+		{% if needMsg %}
+			{% for aMess in needMsg %}
+				<li>{{aMess}}</li>
+			{% endfor %}
+		{% endif %}
+
+		<input type="submit" name="saveToDBButton" value="Save to the database">
+		</p>
+		{% if transitionGlobalFlags %}
+			<p>
+			<h3>The following lists all the global flags which affect page transition.</h3>
+			</p>
+			<table width='100%'>
+				<tr>
+				<th>Delete</th>
+				<th>If the global flag is set:</th>
+				<th>then the page:</th>
+				<th>will transition to:</th>
+				<th>Priority for multiple flags:</th>
+				<th>Flag description:</th>
+				</tr>
+				{% for recID, theGFlag, fromPage, nextPage, flagPriority, flagDescription in transitionGlobalFlags %}
+					<tr>
+					<td><input type="submit" name="deleteSelection" value="{{forloop.counter}}"></td>
+					<td>{{theGFlag}}</td>
+					<td>{{fromPage}}</td>
+					<td>{{nextPage}}</td>
+					<td>{{flagPriority}}</td>
+					<td>{{flagDescription}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
+		<p>
+		<input type="submit" name="submitButton" value="Return to the administration page">
+		</p>
+	</form>
+
+</body>	
+</html>
+<style type="text/css">
+    th {
+        text-align: left;
+    }
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+    }
+    .errorlist li {
+        background-color: red;
+        color: white;
+        display: block;
+        font-size: 10px;
+        margin: 0 0 3px;
+        padding: 4px 5px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+<!--
+Copyright 2013 Health Records for Everyone
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->

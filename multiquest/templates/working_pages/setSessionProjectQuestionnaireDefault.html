@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Set default Questionnaire and Project</title>
+</head>
+<body>
+<h2>Select Questionnaire and Project combination as a default.</h2>
+
+<p>This function displays a list of Questionnaires and Projects for the user to select
+	as a default. "Default" means that the identities of the Questionnaire and Project
+	are saved in Session Data for later retrieval during the life of this browser Session.
+	This is a convenience since other functions assume the default identities
+	set by this function.
+</p>
+<p>A questionnaire may or may not have a Project. The Project makes no difference when editing the
+questionnaire, however, a Project is required to actually execute the questionnaire.
+</p>
+
+{% if workingQuestionnaireTag %}
+<h4>The current default Questionnaire is "{{workingQuestionnaireTag}}"
+{% if workingProjectTag %}
+with Project {{workingProjectTag}}.
+{% else %}
+with no Project.
+{% endif %}
+</h4>
+<p>
+The name of the Questionnaire is:  "{{questName}}"
+{% if firstPageInQuestTag %} with a first page of "{{firstPageInQuestTag}}"{% endif %}, written in {{language}}. The Questionnaire window bar title is:  "{{barTitle}}"
+</p>
+<p>If the questionnaire "{{workingQuestionnaireTag}}" is not what you wish to set as a default, then click on a different questionnaire button.</p>
+
+{% else %}
+<h4>No questionnaire has been selected</h4>
+<p>To select a default, click a questionnaire button.</p>
+{% endif %}
+
+	<form action="" method="post" >{% csrf_token %}
+{% include 'working_pages/Questionnaire_Project table.html' %}
+
+{% if errMsg %}
+    {% for aLine in errMsg %}
+		<p style="color: red;">
+    	{{aLine }}
+		</p>
+    {% endfor %}
+{% endif %}
+	<p>
+		<input type="submit" name="returnToHome" value="Return to the Home Page">
+	</p>
+	</form>
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+        color: red;
+    }
+    .errorlist li {
+        color: red;
+        font-size: 18px;
+        margin: 0 0 1px;
+        padding: 0px 20px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

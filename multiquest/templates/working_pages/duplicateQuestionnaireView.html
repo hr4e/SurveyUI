@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Select a Questionnaire to run</title>
+</head>
+<body>
+
+
+<form action="" method="post" >{% csrf_token %}
+	
+	<h3>The following lists Questionnaires for this Project. Click "Select" to duplicate.</h3>
+	
+	<p>The current project is "{{theProject.shortTag}}" with the name: "{{theProject.name}}".</p>
+	{% if errMsg %}
+		{% for emess in errMsg %}
+			<p style="color: red;">
+			{{emess }}
+			</p>
+		{% endfor %}
+	{% endif %}
+	{% if newQuestionnaire %}
+		<p style="color: red;">
+		The name of the duplicated questionnaire is: "{{newQuestionnaire.shortTag}}".
+		</p>
+	{% endif %}
+	<p>Click on the "Select" button to duplicate the Questionnaire.
+	The Questionnaire will have a unique name which can changed on another page.
+	</p>
+{% include 'working_pages/Questionnaire_Project table.html' %}
+	<p>
+		<input type="submit" name="returnToHome" value="Return to the Home Page">
+	</p>
+
+</form>
+<p>
+
+{% if debugOn %}
+{% if theUser %}User: {{theUser.username}}<br>{% endif %}
+{% if theProject %}Current project: {{theProject.shortTag}}{% endif %}
+{% endif %}
+</p>
+<script>
+function myFunction()
+{
+var x = document.getElementById("myCheck");
+x.checked = true;
+}
+</script>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

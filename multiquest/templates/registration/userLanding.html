@@ -1,0 +1,88 @@
+{% extends "base_page.html" %}
+{% block title %}Welcome to the Questionnaire Editor!{% endblock %}
+{% block content %}
+  <h1>Welcome to the Questionnaire Editor</h1>
+  <h3>Your Home Page for editing and executing a Questionnaire</h3>
+
+<p>Software updated as of 4:44PM Tuesday, May 20</p>
+{% if errMsg %}
+	{% for emess in errMsg %}
+		<p style="color: red;">
+		{{emess }}
+		</p>
+	{% endfor %}
+{% endif %}
+<p>Your username is:  {{theUser.username}}.
+{% if theProject %}
+	Your login is associated with the Project:  {{theProject.shortTag}}</p>
+{% endif %}
+<form method="post" >{% csrf_token %}
+{% if theQuestionnaire %}
+<p>The Questionnaire you have selected is:  
+<td><input type="submit" name="runTheQuestionnaire" value="{{theProject.shortTag}}/{{theQuestionnaire.shortTag}}" /></td></p>
+{% endif %}
+<p>
+Please send comments and excoriations to:
+<a href="mailto:webscreen@ScreenGenes.org?Subject=Ideas%20and%20comments%20for%20the%20Questionnaire" target="_top">
+webscreen@ScreenGenes.org</a>
+</p>
+
+	<h4>Select and run a Questionnaire</h4>
+<table >
+	<tr>
+	<td><input type="submit" name="displayRunQuestionnaire" value="Run questionnaires associated with any Project" /></td>
+	<td><input type="submit" name="selectQuestionnaireDefault" value="Select a default Questionnaire for the Project: {{theProject.shortTag}}" /></td>		
+	</tr>
+</table>
+	<h4>Project management</h4>
+<table >
+	<tr>
+	<td><input type="submit" name="differentProject" value="Select a different Project" /></td>
+	<td><input type="submit" name="editProject" value="Edit your Project information:  {{theProject.shortTag}}" /></td>		
+	</tr>
+	<tr>
+	<td><input type="submit" name="createProjectWithSamples" value="Create a new Sample Questionnaire"/></td>
+	<td><input type="submit" name="duplicateQuestionnaireView" value="Select and Duplicate a Questionnarie" /></td>		
+	</tr>
+	<tr>
+	<td><input type="submit" name="uploadDownloadQuestionnaire" value="Upload or Download the contents of the default Questionnaire"/></td>
+	</tr>
+</table>
+	<h4>Edit the Questionnaire information</h4>
+<table >
+	<tr>
+	<td><input type="submit" name="editQuestionnaireInfo" value="Edit information about the Questionnaire:  {{theQuestionnaire.shortTag}}" /></td>
+	<td><input type="submit" name="deleteQuestionnaireView" value="Select then delete a Questionnaire." /></td>		
+	</tr>
+</table>
+	<h4>Edit Pages and Questions in the Questionnaire</h4>
+<table >
+	<tr>
+	<td><input type="submit" name="bulkPageEdit" value="Edit the pages in the Questionnaire:  {{theQuestionnaire.shortTag}}" /></td>
+	<td><input type="submit" name="editQuestionNames" value="Edit Question information"/></td>
+	</tr>
+</table>
+	<h4>Edit the Page Transitions</h4>
+<table >
+	<tr>
+	<td><input type="submit" name="createPageTransition" value="Choose next page based upon question response" /></td>
+	<td><input type="submit" name="editDefaultPageTransitions" value="Reshuffle the page sequence" /></td>		
+	</tr>
+</table>
+	<h4>Get Questionnaire results</h4>
+<table >
+	<tr>
+	<td><input type="submit" name="responseViewer" value="Select and view responses to the Questionnaires" /></td>
+	<td><input type="submit" name="dumpSubmissionDataForProject" value="Dump responses data to a spreadsheet file for Project {{theProject.shortTag}}" /></td>
+	</tr>
+	<tr>
+	<td><input type="submit" name="responseDelete" value="Delete responses to the Questionnaires" /></td>
+	<td><input type="submit" name="savecsvDecoder" value="Dump a tag decoder file for the spreadsheet file" /></td>
+	</tr>
+	
+	
+</table>
+<p>	<input type="submit" name="logout" value="Logout of the Questionnaire Editor" /> </p>
+
+	</form>
+{% endblock %}

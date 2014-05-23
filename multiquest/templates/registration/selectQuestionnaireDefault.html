@@ -1,0 +1,38 @@
+{% extends "base_page.html" %}
+{% block title %}Select a Default Questionnaire to Edit and Run{% endblock %}
+{% block content %}
+  <h1>Select a Default Questionnaire to Edit and Run</h1>
+{% if errMsg %}
+	{% for emess in errMsg %}
+		<p style="color: red;">
+		{{emess }}
+		</p>
+	{% endfor %}
+{% endif %}
+ <form action="" method="post">{% csrf_token %}
+  	<h3>The following lists all the Questionnaires for this project "{{workingProject.shortTag}}":</h3>
+
+{% if allQuestionnaires %}
+	<table width='100%' border=1>
+		<td>Select</td>
+		<td>Short name</td>
+		<td>Description</td>
+		<td>Version</td>
+		<td>Version date</td>
+		{% for aQuestionnaire in allQuestionnaires %}
+		<tr>
+			<td><input type="submit" name="SelectQuestionnaire" value="Select {{forloop.counter}}"></td>
+			<td>{{aQuestionnaire.shortTag}}</td>
+			<td>{{aQuestionnaire.description}}</td>
+			<td>{{aQuestionnaire.version}}</td>
+			<td>{{aQuestionnaire.versionDate}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endif %}
+	<p>
+		<input type="submit" name="returnToHome" value="Return to the Home Page">
+	</p>
+
+  </form>
+{% endblock %}

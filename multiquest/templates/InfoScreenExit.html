@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Return to Home page</title>
+	</head>
+<body>
+	    <h2>Return to Home page.</h2>
+
+    {% if errMsg %}
+    {% for aLine in errMsg %}
+		<p style="color: red;">
+    	{{aLine }}
+		</p>
+    {% endfor %}
+    {% endif %}
+url is:  /{{wsgiPrefix}}/multiquest/registration/userLanding/
+{% if altURL and altURLannot %}
+<p>Click <a href=altURL>here</a> {{altURLannot}}</p>
+{% else %}
+<p>Click <a href="http://localhost:8000/multiquest/registration/userLanding/">here</a> to return to the home page</p>
+{% endif %}
+
+</body>
