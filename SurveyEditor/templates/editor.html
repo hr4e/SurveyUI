@@ -27,9 +27,19 @@
       <div id="msg" resize>
         window.height: {{windowHeight}}<br />
         window.width: {{windowWidth}}
-        {{ msg }}
+        test2
+
       </div>
 
     {% endverbatim %}
+    {% for field in hum %}
+      <div>
+        {{ field.value }}
+        {{ field.html_name }}
+        <br>
+        {{ field }}
+      </div>
+    {% endfor %}
+            
   </div>
 {% endblock content %}
