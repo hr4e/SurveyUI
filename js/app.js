@@ -10,9 +10,15 @@ HR4ESurvey.config(["$routeProvider",
 			   when("/projects",{
 			       templateUrl: "partials/projects.html",
 			       controller: "ProjectListCtrl"
-			   })/*.
+			   }).
+			   when("/specific-project",{
+    			       templateUrl: "partials/specific-project.html"
+  			   }).
+			   when("/editor",{
+    			       templateUrl: "partials/editor.html"
+  			   }).
 			   otherwise({
     			       redirectTo: "/projects"
-  			   });*/
+  			   });
 		   }
 ]);
