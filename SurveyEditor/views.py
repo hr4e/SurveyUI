@@ -5,10 +5,16 @@ from django.contrib.auth.views import login as auth_login, logout as auth_logout
 from django.shortcuts import render, render_to_response
 
 from django.forms import ModelForm
+from multiquest.models import Question
 
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
+
+class QuestionForm(ModelForm):
+    class Meta:
+        model = Question
+        fields = ['questionTag', 'questionText', 'helpText', 'explanation']
 
 def login(request):
     state = next = username = password = ''
@@ -45,6 +51,11 @@ def login(request):
     )
 
 @login_required()
+def logout(request):
+    auth_logout(request, request.user)
+    return HttpResponseRedirect('/test')
+
+@login_required()
 def index(request):
     template = loader.get_template('home.html')
     context = RequestContext(request, {
@@ -55,6 +66,9 @@ def index(request):
 @login_required()
 def editor(request):
     template = loader.get_template('editor.html')
+    form = QuestionForm()
     context = RequestContext(request, {
+        'hum' : form,
     })
+
     return HttpResponse(template.render(context))

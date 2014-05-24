@@ -17,4 +17,5 @@ urlpatterns = patterns('',
     # Home
     url(r'^home/', views.index, name='home'),
     url(r'^editor/', views.editor, name='editor'),
+    url(r'^logout/', views.logout, name='logout'),
 )
