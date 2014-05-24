@@ -64,6 +64,14 @@ def index(request):
     return HttpResponse(template.render(context))
 
 @login_required()
+def newQuestion(request):
+    if request.method == "POST":
+        q = QuestionForm(request.POST)
+        if q.is_valid():
+            new_ques = q.save()
+    return HttpResponseRedirect('/test/editor')
+
+@login_required()
 def editor(request):
     template = loader.get_template('editor.html')
     form = QuestionForm()

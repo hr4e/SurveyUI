@@ -32,14 +32,15 @@
       </div>
 
     {% endverbatim %}
-    {% for field in hum %}
-      <div>
-        {{ field.value }}
-        {{ field.html_name }}
-        <br>
-        {{ field }}
-      </div>
-    {% endfor %}
+
+
+<form action="../newQuestion/" method="post">{% csrf_token %}
+{{ hum.as_p }}
+<input type="submit" value="Submit" />
+</form>
+
+
+
             
   </div>
 {% endblock content %}
