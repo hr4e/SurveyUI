@@ -1,8 +1,5 @@
 SurveyUI
 ========
-If you have npm and want some convenience with setup, the command "npm install" gets all dependencies along with http-server and bower for you.
-=======
-
 Development Server Setup
 
 1. From the command line, cd into this repo's root directory
