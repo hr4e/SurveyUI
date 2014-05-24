@@ -19,6 +19,9 @@ var EditorApp = angular.module('EditorApp', [
 EditorApp.config(["$routeProvider",
 		   function($routeProvider){
 		       $routeProvider.
+			   when("/",{
+			       templateUrl: "/static/partials/home.html",
+			   }).
 			   when("/login",{
 			       templateUrl: "/static/partials/login.html",
 			   }).
