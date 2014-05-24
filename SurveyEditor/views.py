@@ -5,7 +5,7 @@ from django.contrib.auth.views import login as auth_login, logout as auth_logout
 from django.shortcuts import render, render_to_response
 
 from django.forms import ModelForm
-from multiquest.models import Question
+from multiquest.models import Question, Project
 
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
@@ -14,7 +14,7 @@ from django.template import RequestContext, loader
 class QuestionForm(ModelForm):
     class Meta:
         model = Question
-        fields = ['questionTag', 'questionText', 'helpText', 'explanation']
+        fields = ['language', 'questionTag', 'questionText', 'helpText', 'explanation']
 
 def login(request):
     state = next = username = password = ''
@@ -73,10 +73,81 @@ def newQuestion(request):
 
 @login_required()
 def editor(request):
+
+    allProjects = Project.objects.all()
+
     template = loader.get_template('editor.html')
     form = QuestionForm()
     context = RequestContext(request, {
         'hum' : form,
+        'allProjects' : allProjects,
     })
 
     return HttpResponse(template.render(context))
+
+
+def associateUserToProject(theProject, theUser):
+    """
+    Adds or updates a record in UserProject connecting User and Project.
+    Allow only one Project associate per user.
+    
+    Database
+    Sets and association between User and Project in UserProject.
+    The combination of theProject + theUser must be unique
+    
+    Session data
+    Untouched.
+    """
+    # check if already existing record.
+    allSAObjs = UserProject.objects.filter(
+        userID=theUser,
+        )
+    if len(allSAObjs)>1:
+        # delete the extra records and replace with a new one
+        UserProject.objects.filter(
+            userID=theUser,
+            ).delete()
+        UserProject.objects.create(
+            userID=theUser,
+            projectID=theProject
+            )
+    elif len(allSAObjs)==1:
+        # update the existing record. Don't bother checking if the Project has changed.
+        theSArec = allSAObjs[0]
+        theSArec.projectID=theProject
+        theSArec.save()
+    elif len(allSAObjs)==0:
+        # No records exist for this User, so create one
+        UserProject.objects.create(
+            userID=theUser,
+            projectID=theProject
+            )
+    return True
+
+def getAssociatedProjectForUser(theUser):
+    """
+    Adds or updates a record in UserProject connecting User and Project.
+    Allow only one Project associate per user.
+    
+    Database
+    Reads UserProject.
+    The combination of theProject + theUser must be unique
+    
+    Session data
+    Untouched.
+    """
+    try:
+        allSAObjs = UserProject.objects.filter(
+            userID=theUser,
+            )
+        if len(allSAObjs)>=1:
+            # Should not be greater than 1! So select 1st one in the list.
+            theUSObj = allSAObjs[0]
+            if len(allSAObjs)>1:
+                DebugOut('getAssociatedProjectForUser:  syserrmsg: Found more than one project in UserProject table for user: %s'%theUser.username)
+            theProject = theUSObj.projectID
+        elif len(allSAObjs)==0:
+            theProject=None
+    except:
+        theProject=None
+    return theProject

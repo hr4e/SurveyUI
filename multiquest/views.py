@@ -1257,6 +1257,32 @@ def displayQuestionnairesAndProjects(limitScope, limitProjectView, thisProject):
 	DebugOut('displayQuestionnairesAndProjects:  exit')
 	return allQuestionnaireInfo # list
 		
+def getAllProjectsWithinScope(): # scope defined in ProjectAttribues table
+	"""Return a QuerySet with all Projects within scope allowed by 
+	the ProjectAttribues table. Does not determine if the project is the latest!
+	
+	"Active" project is the record with the latest update with a given tag
+	earlier records with the same tag are assumed to be earlier edits.
+
+	Args:
+		none.
+	Returns:
+		a QuerySet containing all Project objects
+	Raises:
+		No exceptions raised.
+	"""
+	rawProjects= getAllProjects()
+	allIDs = [] # collect the shortTags into a list
+	for theProject in rawProjects:
+		# get the corresponding Attributes
+		theProjectAttributes = getProjectAttributes(theProject)
+		if 'Display' in theProjectAttributes:
+			allIDs.append(theProject.id)
+		elif 'DoNotDisplay' not in theProjectAttributes:
+			allIDs.append(theProject.id)
+	allUniqueProjects = retrieveBulk( Project, allIDs )
+	return allUniqueProjects
+		
 @login_required()
 def deleteQuestionnaireView(request):
 	"""Delete a Questionnaire.
