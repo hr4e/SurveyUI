@@ -58,8 +58,11 @@ def logout(request):
 @login_required()
 def index(request):
     template = loader.get_template('home.html')
+
+    allProjects = Project.objects.all()
+    
     context = RequestContext(request, {
-        'msg' : 'whhyyyyy',
+        'allProjects' : allProjects,
     })
     return HttpResponse(template.render(context))
 
@@ -74,13 +77,11 @@ def newQuestion(request):
 @login_required()
 def editor(request):
 
-    allProjects = Project.objects.all()
 
     template = loader.get_template('editor.html')
     form = QuestionForm()
     context = RequestContext(request, {
         'hum' : form,
-        'allProjects' : allProjects,
     })
 
     return HttpResponse(template.render(context))

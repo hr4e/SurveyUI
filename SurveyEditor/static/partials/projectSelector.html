@@ -1,0 +1,33 @@
+<div ng-controller="HomeCtrl">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <!--<span class="glyphicon glyphicon-search projectsearch"></span>-->
+          <input class="form-control navbar-right projectsearch" placeholder="Type a project name..." ng-model="query">
+        </div>
+      </form>
+      <h1>Select a project:</h1>
+      
+    </div>
+
+    <div class="panel-body">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Quick Description</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr ng-repeat="project in projects | filter:query">
+            {{ msg }}
+            <td>{{ project.abbrev }}</td>
+            <td>{{ project.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

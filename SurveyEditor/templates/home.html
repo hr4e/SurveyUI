@@ -3,17 +3,33 @@
 {% block content %}
 
 
-    <div class="jumbotron">
-      <div class="container">
-        <h1>Welcome to the HR4E Survey Editor</h1>
-        <p>A tool for creating medical surveys with ease!</p>
-        <!--
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Welcome to the HR4E Survey Editor</h1>
+      <p>A tool for creating medical surveys with ease!</p>
+      <!--
         	trying to get the modals to work with within the jumbotron
 			so i just moved the ng-include div within this jumbotron and changed the text in partials/index.html
-        -->
-		<div ng-include="'{{ STATIC_URL }}partials/selectSurveyOption.html'"></div>
-      {{ msg }}
-      </div>
+      -->
+      <div ng-include="'{{ STATIC_URL }}partials/selectSurveyOption.html'"></div>
     </div>
+  </div>
+
+  <script type="text/javascript">
+  var HomeCtrl = function($scope) {
+    $scope.projects = [];
+    {% for project in allProjects %}
+      $scope.projects.push({
+        abbrev: '{{project.abbrev}}',
+        name: '{{project.name}}',
+      });
+    {% endfor %}
+  };
+
+
+  </script>
+
+  <div ng-include="'{{ STATIC_URL }}partials/projectSelector.html'"></div>
+
 {{ yes }}
 {% endblock content %}
