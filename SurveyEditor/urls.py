@@ -9,6 +9,5 @@ from django.views.generic.base import RedirectView
 from SurveyEditor import views
 
 urlpatterns = patterns('',
-    url(r'^$', views.index, name='index'),
-    (r'editor/', TemplateView.as_view(template_name='editor.html')), #this line should go away soon
+    url(r'^$', views.index, name='index')
 )
