@@ -7,6 +7,9 @@ var HR4ESurvey = angular.module("HR4ESurvey", [
 HR4ESurvey.config(["$routeProvider",
 		   function($routeProvider){
 		       $routeProvider.
+			   when("/login",{
+			       templateUrl: "partials/login.html",
+			   }).
 			   when("/projects",{
 			       templateUrl: "partials/projects.html",
 			       controller: "ProjectListCtrl"
