@@ -10,7 +10,8 @@
 //  for a chosen page.
 var EditorApp = angular.module('EditorApp', [
     "ngRoute",
-    "ui.bootstrap"
+    "ui.bootstrap",
+	"projectsController"
 ]);
 
 /* routing with ngRoute implemented here */
@@ -32,6 +33,17 @@ EditorApp.config(["$routeProvider",
     			       templateUrl: "/static/partials/editor.html"
   			   });
 		   }
+]);
+
+/* projectsCtrl.js */
+var projectsControllers = angular.module("projectsController", []);
+
+projectsControllers.controller("ProjectListCtrl", ["$scope", "$http",
+						 function($scope, $http){
+  							$http.get("/static/projects-data/projects.json").success(function(data){
+    								$scope.projects = data;
+  							})
+						 }
 ]);
 
 EditorApp.factory('Nav', function(){
