@@ -24,10 +24,7 @@ else:
 
 # User login authentication
 # Login URL
-LOGIN_URL = WSGI_URL_PREFIX + 'multiquest/registration/login/'
-# redirect after login
-LOGIN_REDIRECT_URL = WSGI_URL_PREFIX + 'multiquest/registration/userLanding/'
-
+LOGIN_URL = 'login'
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

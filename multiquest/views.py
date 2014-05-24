@@ -29,6 +29,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group, User, Permission
 from django.contrib.auth.decorators import login_required
 from operator import itemgetter, attrgetter # used for sorting & selecting from a list
+from django.template import RequestContext
+from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 
 import csv
 import unicodedata
@@ -93,44 +96,46 @@ def testing(request):
 		'resultMessage' : resultMessage,
 		}
 	return
+'''
+def login(request):
+	context = RequestContext(request, {
+        'yes':'yesssssss',
+    })
+	return render(request, "registration/login.html", context)
+'''
+def userLogin(request): # not used.
+	""" User View for login.
+	Args:
+		"request" input
+	Returns:
+		return_value: html. 	
+	Raises:
+		None.
+	"""
+	DebugOut('userLogin:  enter')
+	errMsg=[]
+	# check for prior login
+	allU = getAllUsers()
+	for aUser in allU:
+		if aUser.is_authenticated():
+			errMsg.append('Current login: %s now logged out' %aUser.username)
+			logout(request)
+	username = request.POST.get('username','')
+	password = request.POST.get('password','')
+	theUser = authenticate(username=username, password=password)
+	if theUser is not None:
+		redirectURL = '/multiquest/registration/userLanding'
+		return HttpResponseRedirect(redirectURL)
+	else:
+		msg = "NOPE"
+	login(request, theUser)
+	theProject = getAssociatedProjectForUser(theUser)
 
-# def userLogin(request): # not used.
-# 	""" User View for login.
-# 	Args:
-# 		"request" input
-# 	Returns:
-# 		return_value: html. 	
-# 	Raises:
-# 		None.
-# 	"""
-# 	DebugOut('userLogin:  enter')
-# 	errMsg=[]
-# # 	# check for prior login
-# # 	allU = getAllUsers()
-# # 	for aUser in allU:
-# # 		if aUser.is_authenticated():
-# # 			errMsg.append('Current login: %s now logged out' %aUser.username)
-# # 			logout(request)
-# 	username = request.POST.get('username','')
-# 	password = request.POST.get('password','')
-# 	theUser = authenticate(username=username, password=password)
-# #	login(request, theUser)
-# 	theProject = getAssociatedProjectForUser(theUser)
-# 	if theProject == None:
-# 		# redirect to project selection
-# 		redirectURL = registrationURL_base + 'selectProjectDefault/'
-# 		DebugOut('userLogin:  redirect to %s' %redirectURL)
-# 		return HttpResponseRedirect(redirectURL)
-# 	else:
-# 		# redirect to user landing
-# 		redirectURL = registrationURL_base + 'userLanding/'
-# 		DebugOut('userLogin:  redirect to %s' %redirectURL)
-# 		return HttpResponseRedirect(redirectURL)
-# 	
-# 	DebugOut('userLogin:  exit')
-# 	return render(request, "registration/login.html", {
-# 		'errMsg' : errMsg,
-# 		})
+	DebugOut('userLogin:  exit')
+	return render(request, "registration/login.html", {
+		'msg' : msg,
+		'errMsg' : errMsg,
+		})
 
 def userLogout(request):
 	""" User View for logout.

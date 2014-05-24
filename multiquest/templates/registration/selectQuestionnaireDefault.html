@@ -12,7 +12,6 @@
  <form action="" method="post">{% csrf_token %}
   	<h3>The following lists all the Questionnaires for this project "{{workingProject.shortTag}}":</h3>
 
-{% if allQuestionnaires %}
 	<table width='100%' border=1>
 		<td>Select</td>
 		<td>Short name</td>
@@ -29,7 +28,6 @@
 		</tr>
 		{% endfor %}
 	</table>
-{% endif %}
 	<p>
 		<input type="submit" name="returnToHome" value="Return to the Home Page">
 	</p>
