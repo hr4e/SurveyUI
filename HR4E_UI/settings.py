@@ -8,11 +8,31 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
+# Django settings for scrsites project.
+import socket
+
+DEBUG = True
+DEBUG_1 = True
+RUN_UNDER_WSGI = False
+REQUIRE_LOGIN = True
+TEMPLATE_DEBUG = DEBUG
+
+if socket.gethostname() == 'screengenes.org' or RUN_UNDER_WSGI:
+    WSGI_URL_PREFIX = '/scrntest/' # required when running under wsgi
+else:
+    WSGI_URL_PREFIX = '/' # required when running the development server
+
+# User login authentication
+# Login URL
+LOGIN_URL = WSGI_URL_PREFIX + 'multiquest/registration/login/'
+# redirect after login
+LOGIN_REDIRECT_URL = WSGI_URL_PREFIX + 'multiquest/registration/userLanding/'
+
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-WSGI_URL_PREFIX = '/' # required when running the development server
 
 
 # Quick-start development settings - unsuitable for production

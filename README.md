@@ -27,3 +27,7 @@ To install Django:
 2. Install Django with `pip install django`
 
 Steps above may require root privileges.
+
+Admin credentials
+> usr = hr4e
+> pw  = pw
