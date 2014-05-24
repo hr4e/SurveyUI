@@ -19,9 +19,6 @@ HR4ESurvey.config(["$routeProvider",
   			   }).
 			   when("/editor",{
     			       templateUrl: "partials/editor.html"
-  			   }).
-			   otherwise({
-    			       redirectTo: "/projects"
   			   });
 		   }
 ]);

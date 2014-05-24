@@ -8,7 +8,31 @@
 
 // The ques_editor app will allow users to add/del/mod questions
 //  for a chosen page.
-var EditorApp = angular.module('EditorApp', ['ui.bootstrap']);
+var EditorApp = angular.module('EditorApp', [
+    "ngRoute",
+    "ui.bootstrap"
+]);
+
+/* routing with ngRoute implemented here */
+// note that /static/.. is as defined by Django's {{ STATIC_URL }} so if it changes it must be manually changed here
+EditorApp.config(["$routeProvider",
+		   function($routeProvider){
+		       $routeProvider.
+			   when("/login",{
+			       templateUrl: "/static/partials/login.html",
+			   }).
+			   when("/projects",{
+			       templateUrl: "/static/partials/projects.html",
+			       controller: "ProjectListCtrl"
+			   }).
+			   when("/specific-project",{
+    			       templateUrl: "/static/partials/specific-project.html"
+  			   }).
+			   when("/editor",{
+    			       templateUrl: "/static/partials/editor.html"
+  			   });
+		   }
+]);
 
 EditorApp.factory('Nav', function(){
   var page = 'default';

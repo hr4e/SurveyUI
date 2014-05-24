@@ -27,8 +27,6 @@ span.crumbitem{
 }
 
 body {
-  padding-top: 40px;
-  padding-bottom: 40px;
   background-color: #eee;
 }
 
@@ -65,4 +63,24 @@ body {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+/* old "styles.css" */
+#QuesCtrl {
+    padding: 20px;
+}
+
+#SaveBtn {
+	float: right;
+}
+
+#QuesEditor {
+	margin-left:auto;
+	margin-right:auto;
+	width: 80%;
+	padding: 55;
+}
+
+#ToolBar {
+	display: inline;
 }
