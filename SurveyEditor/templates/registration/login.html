@@ -1,11 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en">
-<head>
-	<title>Login to the Questionnaire Editor</title>
-</head>
-<body>
-<h2>Login to the Questionnaire Editor</h2>
+{% extends "base.html" %}{% load staticfiles %}
+
+{% block content %}
+
 {% if form.errors %}
 	<p style="color: red;">Your username and password didn't match. Please try again.</p>
 {% endif %}
@@ -16,15 +12,49 @@
 		<p>{{aMsg}}</p>
 	{% endfor %}
 {% endif %}
-{{ msg }}
+{{ msg }} 
+
+<!--
 <form action="" method="post">{% csrf_token %}
 	<label for="username">User name:</label>
 	<input type="text" name="username" value="" id="username">
 	<label for="password">Password:</label>
 	<input type="password" name="password" value="" id="password">
 	<input type="submit" value="login" />
-	<input type="hidden" name="next" value="{{ next|escape }}" />
+	<input type=
+"hidden" name="next" value="{{ next|escape }}" />
 </form>
+-->
 
+<div class="jumbotron">
+	<h2 align="center"> Please Login </h2>
+	<form class="form-horizontal" role="form">
+		<div class="form-group">
+			<label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+			<div class="col-sm-10">
+				<input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+			<div class="col-sm-10">
+				<input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<div class="checkbox">
+					<label>
+					<input type="checkbox"> Remember me </label>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default">Sign in</button>
+			</div>
+		</div>
+	</form>
+</div>
 
-</body>
+{% endblock %}
