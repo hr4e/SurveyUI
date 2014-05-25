@@ -1,4 +1,6 @@
 # git ignore file
 *.pyc
-debuginfo.txt
 db.sqlite3
+debuginfo.txt
+
+SurveyEditor/static/css/styles.css

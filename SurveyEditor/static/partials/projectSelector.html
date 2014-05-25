@@ -8,8 +8,7 @@
           <input class="form-control navbar-right projectsearch" placeholder="Type a project name..." ng-model="query">
         </div>
       </form>
-      <h1>Select a project:</h1>
-      
+      <h1>Select a Project:</h1>
     </div>
 
     <div class="panel-body">
@@ -21,14 +20,18 @@
           </tr>
         </thead>
         <tbody>
-
           <tr ng-repeat="project in projects | filter:query">
+            <a href="#">
             {{ msg }}
             <td>{{ project.abbrev }}</td>
             <td>{{ project.name }}</td>
+            </a>
           </tr>
         </tbody>
       </table>
+    </div>
+    <div>
+      <button class="btn btn-primary">OK!</button>
     </div>
   </div>
 </div>

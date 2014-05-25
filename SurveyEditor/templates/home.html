@@ -3,17 +3,18 @@
 {% block content %}
 
 <div ng-app="EditorApp">
-  <div class="jumbotron">
-    <div class="container">
-      <h1>Welcome to the HR4E Survey Editor</h1>
-      <p>A tool for creating medical surveys with ease!</p>
+
       <!--
         	trying to get the modals to work with within the jumbotron
 			so i just moved the ng-include div within this jumbotron and changed the text in partials/index.html
       -->
   <div ng-include="'{{ STATIC_URL }}partials/selectSurveyOption.html'"></div>
-  <div ng-include="'{{ STATIC_URL }}partials/projectSelector.html'"></div>
   <div ng-include="'{{ STATIC_URL }}partials/addProjectModal.html'"></div>
+  <div ng-include="'{{ STATIC_URL }}partials/selectProjectModal.html'"></div>
+
+  <script type="text/ng-template" id="selectProjectModal.html">
+      <div ng-include="'{{ STATIC_URL }}partials/projectSelector.html'"></div>
+  </script>
 
   <script type="text/ng-template" id="myModalContent.html">
       <div class="modal-header">
