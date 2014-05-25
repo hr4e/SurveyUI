@@ -2,6 +2,7 @@
 {% extends "base.html" %}{% load staticfiles %}
 {% block content %}
   <!-- Question Editor App -->
+<div ng-app="EditorApp">
   <div id="EditorCtrl" ng-controller="EditorCtrl">
     {% verbatim %}
       <div id="QuesEditor" class="panel panel-default">
@@ -39,6 +40,7 @@
 {{ hum.as_p }}
 <input type="submit" value="Submit" />
 </form>
+</div>
 
 
 
