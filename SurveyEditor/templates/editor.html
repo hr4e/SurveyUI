@@ -2,70 +2,68 @@
 {% extends "base.html" %}{% load staticfiles %}
 {% block content %}
   <!-- Question Editor App -->
-
-
   <div ng-include="'{{ STATIC_URL }}partials/addQuestionModal.html'"></div>
 
-  <div id="EditorCtrl" ng-controller="EditorCtrl">
-    {% verbatim %}
-      <div id="QuesEditor" class="panel panel-default">
+  <div ng-app="EditorApp">
+    <div id="EditorCtrl" ng-controller="EditorCtrl">
+      {% verbatim %}
+        <div id="QuesEditor" class="panel panel-default">
 
-        <div class="panel-heading">
-          <h3 class="panel-title" align="center">Survey Editor</h3>
+          <div class="panel-heading">
+            <h3 class="panel-title" align="center">Survey Editor</h3>
+          </div>
+          <div id="QuesCanvas" class="panel-body"></div>
+
+          <div class="btn-group" >
+            <button type="button" ng-click="surprise()" class="btn btn-default">New<span class="glyphicon"></span></button>
+            <button type="button" class="btn btn-default">Delete<span class="glyphicon"></span></button>
+            <button type="button" class="btn btn-default">Edit<span class="glyphicon"></span></button>
+          </div>
+
+          <form ng-submit="surprise()">
+            <input id="SaveBtn" type="submit" value="Save" class="btn btn-default navbar-btn"></input>
+          </form>
+
         </div>
-        <div id="QuesCanvas" class="panel-body"></div>
 
-        <div class="btn-group" >
-          <button type="button" ng-click="surprise()" class="btn btn-default">New<span class="glyphicon"></span></button>
-          <button type="button" class="btn btn-default">Delete<span class="glyphicon"></span></button>
-          <button type="button" class="btn btn-default">Edit<span class="glyphicon"></span></button>
+        <div ng-init="initCanvas()"></div>
+        <div id="msg" resize>
+          window.height: {{windowHeight}}<br />
+          window.width: {{windowWidth}}
+          test2
+
         </div>
 
-        <form ng-submit="surprise()">
-          <input id="SaveBtn" type="submit" value="Save" class="btn btn-default navbar-btn"></input>
-        </form>
+      {% endverbatim %}
 
-      </div>
+    {{ allProjects }}
 
-      <div ng-init="initCanvas()"></div>
-      <div id="msg" resize>
-        window.height: {{windowHeight}}<br />
-        window.width: {{windowWidth}}
-        test2
-
-      </div>
-
-    {% endverbatim %}
-
-{{ allProjects }}
-
-<form action="../newQuestion/" method="post">{% csrf_token %}
-{{ hum.as_p }}
-<input type="submit" value="Submit" />
-</form>
-
-
-<script type="text/ng-template" id="newQuestionModal.html">
-    <div class="modal-header">
-        <h3 class="modal-title">Add a new project</h3>
+    <form action="../newQuestion/" method="post">{% csrf_token %}
+    {{ hum.as_p }}
+    <input type="submit" value="Submit" />
+    </form>
     </div>
-    <div class="modal-body">
 
-        <form action="../newQuestion/" method="post">{% csrf_token %}
-            {% for field in questionForm %}
-              <div class="fieldName">{{ field.html_name }}</div>
-              <div class="fieldInput">{{ field }}</div>
-            {% endfor %}
-        <input type="submit" value="Submit" />
 
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    </div>
-</script>
-            
+    <script type="text/ng-template" id="newQuestionModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Add a new project</h3>
+        </div>
+        <div class="modal-body">
 
+            <form action="../newQuestion/" method="post">{% csrf_token %}
+                {% for field in questionForm %}
+                  <div class="fieldName">{{ field.html_name }}</div>
+                  <div class="fieldInput">{{ field }}</div>
+                {% endfor %}
+            <input type="submit" value="Submit" />
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
 
   </div>
 {% endblock content %}
