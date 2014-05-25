@@ -16,6 +16,12 @@ class QuestionForm(ModelForm):
         model = Question
         fields = ['language', 'questionTag', 'questionText', 'helpText', 'explanation']
 
+class ProjectForm(ModelForm):
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+
 def login(request):
     state = next = username = password = ''
 
@@ -60,9 +66,11 @@ def index(request):
     template = loader.get_template('home.html')
 
     allProjects = Project.objects.all()
-    
+    form = ProjectForm()
+
     context = RequestContext(request, {
         'allProjects' : allProjects,
+        'project' : form,
     })
     return HttpResponse(template.render(context))
 
@@ -73,6 +81,14 @@ def newQuestion(request):
         if q.is_valid():
             new_ques = q.save()
     return HttpResponseRedirect('/test/editor')
+
+@login_required()
+def newProject(request):
+    if request.method == "POST":
+        p = ProjectForm(request.POST)
+        if p.is_valid():
+            new_proj = p.save()
+    return HttpResponseRedirect('/test/home')
 
 @login_required()
 def editor(request):

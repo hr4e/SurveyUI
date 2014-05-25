@@ -15,21 +15,38 @@
     </div>
   </div>
 
+  <div ng-include="'{{ STATIC_URL }}partials/projectSelector.html'"></div>
+
+  <div ng-include="'{{ STATIC_URL }}partials/addProjectModal.html'"></div>
+
+  <script type="text/ng-template" id="newProjectModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Add a new project</h3>
+        </div>
+        <div class="modal-body">
+
+            <form action="../newProject/" method="post">{% csrf_token %}
+                {{ project.as_p }}
+            <input type="submit" value="Submit" />
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+
   <script type="text/javascript">
-  var HomeCtrl = function($scope) {
+  var ProjSelectCtrl = function($scope) {
     $scope.projects = [];
     {% for project in allProjects %}
       $scope.projects.push({
-        abbrev: '{{project.abbrev}}',
+        abbrev: '{{project.abbrev}}', 
         name: '{{project.name}}',
       });
     {% endfor %}
   };
-
-
   </script>
 
-  <div ng-include="'{{ STATIC_URL }}partials/projectSelector.html'"></div>
 
-{{ yes }}
 {% endblock content %}

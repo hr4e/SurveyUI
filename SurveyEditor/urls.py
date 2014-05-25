@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     # Home
     url(r'^home/', views.index, name='home'),
     url(r'^editor/', views.editor, name='editor'),
+    url(r'^newProject/', views.newProject, name='newProject'),
     url(r'^newQuestion/', views.newQuestion, name='newQuestion'),
     url(r'^logout/', views.logout, name='logout'),
 )
