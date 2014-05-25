@@ -1,0 +1,90 @@
+
+{% include 'header.html' %}
+<head>
+<style type="text/css">
+    dt {margin: 50;padding: 20; text-indent:5%;}
+    dd {margin: 50;padding: 20; text-indent:4%;}
+    ul {list-style-type: none;}
+    li {list-style-type: none;}
+.ctlbtn {
+	background-color:white;
+	font-size:{{fontSize}};
+	font-family:"Times New Roman",Times,serif;
+</style>
+<style>
+	body {font-size:100%;}
+	p {font-size:{{fontSize}};}
+	li {font-size:{{fontSize}};}
+	td {font-size:{{fontSize}};}
+</style>
+</head>
+<div >
+	<form action="" method="post" >{% csrf_token %}
+{% include 'respondent Identification.html' %}
+
+{% autoescape off %}
+	<p>
+	{{ explanation }}
+	</p>
+	<p>
+	{{ prologue }}
+	</p>
+{% endautoescape %}
+    <p>
+	{% autoescape off %}
+		{% if questionResponseList %}
+			<p>Your answers are summarized here:</p>
+        <ul>
+       	{% for listLevel, questText, questResponse, thePage in questionResponseList %}
+				{%if listLevel == 'main' %}
+					{%if questResponse == 'Yes' %}
+						<li><b style="color:red">{{questResponse}}</b> {{questText|escape}}</li>
+					{% else %}
+						<li><b>{{questResponse}}</b> {{questText|escape}}</li>
+					{% endif %}
+				{% else %}
+    			    <ul>
+					{%if questResponse == 'Yes' %}
+						<li><b style="color:red">{{questResponse}}</b> {{questText|escape}}</li>
+					{% else %}
+						<li><b>{{questResponse}}</b> {{questText|escape}}</li>
+					{% endif %}
+        			</ul>
+				{% endif %}
+			{% endfor %}
+      </ul>
+      	{% endif %}
+  {% endautoescape %}
+   </p>
+{% autoescape off %}
+    <p>
+    {{epilogue}}
+    </p>
+{% endautoescape %}
+	{% if not buttons_not_enabled %}
+	{% if not back_not_enabled %}
+	<input class="ctlbtn" type="submit" name="submitButton" value="Back">
+	{% endif %}
+	<input class="ctlbtn" type="submit" name="submitButton" value="Next">
+	{% endif %}
+	</form>
+
+{% include 'footer.html' %}
+
+</div>
+
+<!--
+Copyright 2012 Health Records for Everyone
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->

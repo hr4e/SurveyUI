@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Upload a Questionnaire</title>
+</head>
+<body>
+<h2>Upload a Questionnaire.</h2>
+
+<p>Click the button to upload a questionnaire.
+</p>
+
+
+	<form method="post" enctype="multipart/form-data" action="" >{% csrf_token %}
+		
+    {% if errMsg %}
+    {% for aLine in errMsg %}
+		<p style="color: red;">
+    	{{aLine }}
+		</p>
+    {% endfor %}
+    {% endif %}
+	{% if theForm.errors %}
+		<p style="color: red;">
+			Please correct the error{{ theForm.errors|pluralize }} below.
+		</p>
+	{% endif %}
+		<p>If you wish to upload a questionnaire, click "Choose File" below.</p>
+		<p>{{theForm.as_p}}</p>
+		<p>then click "Upload File" below.</p>
+		<input type="submit" name="UploadFile" value="Upload File">
+	<p>
+		<input type="submit" name="returnToHome" value="Return to the Home Page">
+	</p>
+	</form>
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+        color: red;
+    }
+    .errorlist li {
+        color: red;
+        font-size: 18px;
+        margin: 0 0 1px;
+        padding: 0px 20px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

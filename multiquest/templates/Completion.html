@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+
+<style>
+	body {font-size:100%;}
+	p {font-size:{{fontSize}};}
+	li {font-size:{{fontSize}};}
+	td {font-size:{{fontSize}};}
+</style>
+<head>
+<title>Questionnaire complete</title>
+</head>
+
+<h2>You have completed the Questionnaire</h2>
+
+<p>
+ 	This computer's host name: {{ thishost }}. {{ current_date }} 
+</p>
+
+<div class="indented">
+	<form action="" method="post" >{% csrf_token %}
+{% if contactEmail and not sentMail and summaryExist %}
+<p>Click to email a copy of these results to "{{contactEmail}}".</p>
+		<input type="submit" name="submitButton" value="Submit e-mail">
+{% endif %}
+<p>Return to the <input type="submit" name="submitButton" value="start"> of the questionnaire.</p>
+
+	</form>	
+
+{% if sentMail %}
+	<p style="color: red;">
+	{{sentMail }}
+	</p>
+{% endif %}
+
+
+</div>
+{% include 'footer.html' %}
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Edit Information about the Questionnaire</title>
+</head>
+<body>
+<h2>Edit Information about the Questionnaire</h2>
+	<form action="" method="post" >{% csrf_token %}
+
+{% if workingQuestionnaireTag %}
+<h4>The current Project/Questionnaire is "{{theProjectTag}}/{{workingQuestionnaireTag}}".</h4>
+{% if allProjectTags %}
+<p>
+<label for="id_ProjectSelect">Change the Project associated with this Questionnaire here:</label></th><td><select id="id_ProjectSelect" name="ProjectSelect">
+	<option selected="selected">
+	{{theProjectTag}}
+	</option>
+	{% for aProjectChoice in allProjectTags %}
+		{% if aProjectTag == aProjectChoice %}
+			<option value="{{aProjectChoice}}" selected>{{aProjectChoice}}</option>
+		{% else %}
+			<option value="{{aProjectChoice}}">{{aProjectChoice}}</option>
+		{% endif %}
+	{% endfor %}
+</select></p>
+{% endif %}
+<p>
+The longer name of the Questionnaire is:  "{{questName}}"
+{% if firstPageInQuestTag %} with a first page of "{{firstPageInQuestTag}}"{% endif %}, written in {{language}}. The Questionnaire window bar title is:  "{{barTitle}}"
+</p>
+{% else %}
+<h4>No questionnaire has been selected</h4>
+{% endif %}
+
+<p>If you wish to rename the questionnaire, enter a new name in the "short tag" field below.
+The "short tag" field uniquely identifies the questionnaire, so it must not duplicate another questionnaire name.
+The list of questionnaires for the Project "{{theProjectTag}}" is:</p>
+
+	{{questTagsList}}
+
+		
+		<ul>
+		</ul>
+		{% if errMsg %}
+		{% for err in errMsg %}
+			<p style="color: red;">
+			{{err }}
+			</p>
+		{% endfor %}
+		{% endif %}
+
+		{% if theForm.errors %}
+			<p style="color: red;">
+				Please correct the error{{ theForm.errors|pluralize }} below.
+			</p>
+		{% endif %}
+			<p><!--  -->
+				{{theForm.as_p }}
+			</p>
+		<input type="submit" name="acceptEdits" value="accept Questionnaire Edits">
+		<input type="submit" name="returnToHome" value="Return to the Home Page">
+	</form>
+
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+        color: red;
+    }
+    .errorlist li {
+        color: red;
+        font-size: 18px;
+        margin: 0 0 1px;
+        padding: 0px 20px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

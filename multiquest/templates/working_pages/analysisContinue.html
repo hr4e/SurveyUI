@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Create or Edit Page Analysis - Page 2</title>
+</head>
+<body>
+<h2>Select the question response required to set the analysis flag.</h2>
+<p>
+Analysis starts with setting flags when triggered by the response to questions on that page.
+When a flag is "set", it is visible to all the pages in the questionnaire. Analysis proceeds 
+later with the summary page selecting text corresponding to the flag settings.
+</p>
+<p>
+Select an analysis flag by clicking the button. 
+</p>
+	<form action="" method="post" >{% csrf_token %}
+		<p><h2>The current Questionnaire is "{{workingQuestionnaireTag}}"</h2>
+		</p>
+		
+		<p>
+		<h2>The current Page is "{{workingPageTag}}".</h2>
+		</p>
+		{% if globalAnalFlags %}
+		<p> The current set of analysis flags are: </p>
+			{% for tag in globalAnalFlags %}
+				<input type="submit" name="selectTag" value="{{tag}}">
+			{% endfor %}
+			{% if theAnal %}
+				<p>The analysis flag selected is: "{{theAnal}}" </p>
+			{% else %}
+				<p>Please select an analysis flag.</p>
+			{% endif %}
+		{% else %}
+		<p> No analysis flags are currently set for this page </p>
+		{% endif %}
+			
+		<h2>The questions on this page are:</h2>
+		{% if theQForm.errors %}
+			<p style="color: red;">
+				Please correct the error{{ theQForm.errors|pluralize }} below.
+			</p>
+		{% endif %}
+			<!-- short tag specifying the type of analysis -->
+
+		{% for field in theQForm %}
+			<div class="fieldWrapper">
+		        {{ field.errors }}
+        		{{ field.label_tag }}: {{ field }}
+			</div>
+		{% endfor %}
+
+		<p>Select the question choices above which, at questionnaire run-time, will 
+		reveal the flag "{{theAnal}}" to all the pages in the questionnaire.</p>
+
+		{% if testCondition %}
+		<p>The following is the test condition for the flag "{{theAnal}}"</p>
+		<p>{{testCondition}}</p>
+		{% else %}
+		<p>No test condition set for the analysis flag:  "{{theAnal}}"</p>
+		{% endif %}
+			<input type="submit" name="submitButton" value="{{returnButton}}">
+			<input type="submit" name="submitButton" value="{{viewQuestionResults}}">
+
+		<p>
+		<h2>Other analysis options:</h2>
+		</p>
+		<p> Rather than requiring specific results for each question as above, other options are:
+		</p>
+			<ul><input type="submit" name="analysisAlternatives" value="{{allYesButton}}"></ul>
+			<ul><input type="submit" name="analysisAlternatives" value="{{anyYesButton}}"></ul> <!-- includes All Yes result -->
+			<ul><input type="submit" name="analysisAlternatives" value="{{allNoButton}}"></ul>
+			<ul><input type="submit" name="analysisAlternatives" value="{{anyNoButton}}"> </ul><!-- includes All No result -->
+
+		{% if errmsg %}
+			<p style="color: red;">
+			{{errmsg }}
+			</p>
+		{% endif %}
+
+		
+		<h2>Save the analysis options:</h2>
+		<p>Click the following button when it reads the appropriate condition.
+		</p>
+		<ul><input type="submit" name="submitButton" value="{{analSaveButton}}"></ul>
+	</form>
+
+</body>	
+</html>
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+    }
+    .errorlist li {
+        background-color: red;
+        color: white;
+        display: block;
+        font-size: 10px;
+        margin: 0 0 3px;
+        padding: 4px 5px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+<!--
+Copyright 2013 Health Records for Everyone
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->

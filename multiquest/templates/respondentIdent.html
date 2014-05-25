@@ -1,0 +1,44 @@
+{% extends 'base_page_inclusion.html' %}
+
+{% block preamble %}
+	<p>
+		
+	{% autoescape off %}
+		{% if explanation %}
+            {{ explanation }}
+		{% endif %}
+        <ul>
+		{% if prologue %}
+            {{ prologue }}
+		{% endif %}
+		</ul>
+	{% endautoescape %}
+	</p>
+	{% ifequal computerT  'iPad' %}
+	<p>
+		Tap in the boxes below to display the keyboard and then type in your information.
+    </p>
+    {% endifequal %}
+
+{% endblock  %}
+
+{% block preamblepost %}
+	<p>
+	</p>
+{% endblock  %}
+
+<!--
+Copyright 2012 Health Records for Everyone
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->

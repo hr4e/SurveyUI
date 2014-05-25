@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Select a Questionnaire to run</title>
+</head>
+<body>
+
+
+<form action="" method="post" >{% csrf_token %}
+	
+	<h3>The following lists Questionnaires and corresponding Projects. Click "Select" to execute.</h3>
+	
+	{% if currentProjectDefault %}
+		<p>The current project is "{{currentProjectDefault.shortTag}}" with the name: "{{currentProjectDefault.name}}".</p>
+		<p><input type="submit" name="limitProjectViewSelection" value="Switch the view of Questionnaires to those in this project or all projects."></p>
+	{% endif %}
+	{% if errMsg %}
+		{% for emess in errMsg %}
+			<p style="color: red;">
+			{{emess }}
+			</p>
+		{% endfor %}
+	{% endif %}
+	<p>Click on the "Select" button to start the Questionnaire.
+	</p>
+{% include 'working_pages/Questionnaire_Project table.html' %}
+	<p>
+		<input type="submit" name="returnToHome" value="Return to the Home Page">
+	</p>
+
+</form>
+<p>
+
+{% if debugOn %}
+{% if theUser %}User: {{theUser.username}}<br>{% endif %}
+{% if currentProjectDefault %}Current project: {{currentProjectDefault.shortTag}}{% endif %}
+{% endif %}
+</p>
+<script>
+function myFunction()
+{
+var x = document.getElementById("myCheck");
+x.checked = true;
+}
+</script>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

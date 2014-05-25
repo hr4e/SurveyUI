@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>System error</title>
+	</head>
+<body>
+	    <h2>System error</h2>
+
+    {% if syserrmsg %}
+    {% for aLine in syserrmsg %}
+		<p style="color: red;">
+    	{{aLine }}
+		</p>
+    {% endfor %}
+    {% endif %}
+
+{% if altURL and altURLannot %}
+<p>Click <a href=altURL>here</a> {{altURLannot}}</p>
+{% else %}
+<p>Click <a href="/{{settings.WSGI_URL_PREFIX}}multiquest/working_pages/setSessionProjectQuestionnaireDefault/">here</a> to list the available Questionnaires and Projects.</p>
+{% endif %}
+
+</body>

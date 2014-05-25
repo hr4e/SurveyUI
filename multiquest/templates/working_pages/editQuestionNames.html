@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Edit Question information</title>
+</head>
+<body>
+
+<h3>The following lists the questions in the project/questionnaire:  {{theProjectTag}}/{{theQuestionnaireTag}}.</h3>
+<p>Use this page to edit the Question "Short tag" and "Description" which is not seen by the user of the questionnaire.</p>
+
+{% if errMsg %}
+	{% for emess in errMsg %}
+		<p style="color: red;">
+		{{emess }}
+		</p>
+	{% endfor %}
+{% endif %}
+
+<form action="" method="post" >{% csrf_token %}
+	
+<table frame='border' border='5px' width='100%'>
+
+	{% for cHeader in colList %}
+		<td>{{cHeader}}</td>
+	{% endfor %}
+	{% for Text, ShortTag, Explan, Descr, RType, PageTags, qRecNum in allQuestionInfo %}
+	<tr>
+		<td>{{Text}}</td>
+		<td><input type="text" name="ShortTag_Rec_{{qRecNum}}" value="{{ShortTag}}" size = "20"></td>
+		<td>{{Explan}}</td>
+		<td><input type="text" name="Descr_Rec_{{qRecNum}}" value="{{Descr}}" size = "20"></td>
+		<td>{{RType}}</td>
+		<td>{{PageTags}}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+<p>
+	<input type="submit" name="acceptEdits" value="accept Question edits"><br>
+	<input type="submit" name="returnToHome" value="Return to the Home Page">
+</p>
+
+</form>
+<script>
+function myFunction()
+{
+var x = document.getElementById("myCheck");
+x.checked = true;
+}
+</script>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

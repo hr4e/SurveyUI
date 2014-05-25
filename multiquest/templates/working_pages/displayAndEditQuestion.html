@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Create a new Question, or Edit an existing one</title>
+</head>
+<body>
+<h2>Create a new Question, or Edit an existing one</h2>
+	<form action="" method="post" >{% csrf_token %}
+<h4> Existing Question tags are: </h4>
+	<ul>
+    {% for questionTag in allQuestionTags %}
+		<input type="submit" name="questionSelection" value="{{questionTag}}">
+    {% endfor %}
+
+	</ul>
+	<p>The current Question "{{questionTag}}" was last updated: {{lastUpdate}}.
+	<p></p>
+	All buttons return to previous screen.</p>
+		<input type="submit" name="submitButton" value="Discard Question Edits">
+		<input type="submit" name="submitButton" value="Save Question Edits">
+		<input type="submit" name="submitButton" value="Delete Current Question">
+
+    {% if errmsg %}
+		<p style="color: red;">
+    	{{errmsg }}
+		</p>
+    {% endif %}
+
+	{% if theForm.errors %}
+		<p style="color: red;">
+			Please correct the error{{ theForm.errors|pluralize }} below.
+		</p>
+	{% endif %}
+		<p>
+			{{theForm.as_p }}
+		</p>
+
+	</form>
+	<a href="{{url_base}}intro/" >{{back_to_intro}}</a>
+</body>	
+</html>
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+    }
+    .errorlist li {
+        background-color: red;
+        color: white;
+        display: block;
+        font-size: 10px;
+        margin: 0 0 3px;
+        padding: 4px 5px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+
+<!--
+Copyright 2013 Health Records for Everyone
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->

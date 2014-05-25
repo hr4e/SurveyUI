@@ -1,0 +1,62 @@
+<div style="text-align: left; ">
+{% include 'header.html' %}
+<div style="text-align: left; ">
+
+<h3>{{bannerText}}</h3>
+<p>
+</p>
+<div class="indented">
+	{% autoescape off %}
+
+{% if not errMsg %}
+<table frame='border' border='5px' width='100%'>
+{% if allValues %}
+	<h3>{{bannerText1}}</h3>
+	{% for cHeader in colList %}
+		<td>{{cHeader}}</td>
+	{% endfor %}
+	{% for item in allValues %}
+	<tr>
+		{% for fieldName in item %}
+		<td>{{ fieldName }}</td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+{% endif %}
+</table>
+<table frame='border' border='1px' width='100%'>
+{% if allValues2 %}
+	<h3>{{bannerText2}}</h3>
+	{% for cHeader in colList2 %}
+		<td>{{cHeader}}</td>
+	{% endfor %}
+	{% for item in allValues2 %}
+	<tr>
+		{% for fieldName in item %}
+		<td>{{ fieldName }}</td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+{% else %}
+		<p style="color: red;">
+    	{{errMsg }}
+		</p>
+{% endif %}
+</table>
+{% endif %}
+<p>
+</p>
+	{% endautoescape %}
+
+</div>
+	<a href="{{back_to}}" >Back to the Introduction page</a>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>View Session Data</title>
+</head>
+<body>
+<h2>Clear and view Session Data</h2>
+<form action="" method="post" >{% csrf_token %}
+	<p>
+	<input type="submit" name='flushSessionData' value="Flush all session data">
+	</p>
+	<p>
+	<input type="submit" name='refreshView' value="Refresh view of session data">
+	</p>
+</form>
+{% if sessionDataDump %}
+		{% for item in sessionDataDump %}
+		<p>
+		{{item}}
+		</p>
+		{% endfor %}
+	{% else %}
+		<p>
+		No session data.
+		</p>
+{% endif %}
+</body>	
+<a href="{{url_base}}intro/" >{{back_to_intro}}</a>
+
+</html>

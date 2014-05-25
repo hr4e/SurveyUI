@@ -1,0 +1,55 @@
+{% extends "base_page.html" %}
+{% block title %}Select a Project{% endblock %}
+{% block content %}
+  <h1>Select a Project</h1>
+{% if errMsg %}
+	{% for emess in errMsg %}
+		<p style="color: red;">
+		{{emess }}
+		</p>
+	{% endfor %}
+{% endif %}
+  <form action="" method="post">{% csrf_token %}
+  	<h3>The following lists all the Projects.</h3>
+  	{% if theUser %}
+  	<p> Select a Project which will automatically be associated 
+  	with your username "{{theUser}}" whenever you login.</p>
+		{% if theCurrentDefaultProject %}
+		Your current Project is:  "{{theCurrentDefaultProject.shortTag}}".
+		{% endif %}
+  	{% else %}
+  	<p> Select a Project.</p>
+  	{% endif %}
+  	<p>All questionnaires are created and edited under a "Project". The purpose of the Project
+  	is to separate the questionnaire editing activities of each Project from the other.
+  	An edit to a questionnaire, even if it has the same name, will not affect any
+  	questionnaire of any other Project.
+  	</p>
+{% if allProjectInfo %}
+	<table width='100%' border=1>
+		<td>Select</td>
+		<td>Short Name</td>
+		<td>Name</td>
+		<td>Email</td>
+		<td>Address</td>
+		<td>Phone</td>
+		<td>Internet</td>
+		{% for shortTag, name, email, projectAddress, contactPhone, internetLocation, iRec in allProjectInfo %}
+		<tr>
+			<td><input type="submit" name="SelectProject" value="Select {{forloop.counter}}"></td>
+			<td>{{shortTag}}</td>
+			<td>{{name}}</td>
+			<td>{{email}}</td>
+			<td>{{projectAddress}}</td>
+			<td>{{contactPhone}}</td>
+			<td>{{internetLocation}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endif %}
+	<p>
+		<input type="submit" name="returnToHome" value="Return to the Home Page">
+	</p>
+
+  </form>
+{% endblock %}

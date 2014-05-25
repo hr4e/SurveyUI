@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+
+<head>
+<title>{{theQuestionnaire.barTitle}} {% if thisPageTag %}- Page {{thisPageTag}} {% endif %}</title>
+</head>
+<body>
+<STYLE TYPE="text/css">
+.rPosition {text-align:right}
+.left
+	{margin:left;
+	width:70%;
+	text-align:center;
+	}
+.indented
+   {padding-left: 40pt;
+   padding-right: 50pt;
+   }
+h4.nonindented
+   {padding-left: 15pt;
+   padding-right: 50pt;
+   }
+.indented2
+   {padding-left: 60pt;
+   padding-right: 50pt;
+   font-size:90%;
+   }
+.bigBanner
+   {
+   text-align: center;
+   font-size:150%;
+   font-style:bold;
+   }
+.theHelp
+   {
+   font-size:90%;
+   }
+.ctlbtn {
+	background-color:white;
+	font-size:{{fontSize}};
+	font-family:"Times New Roman",Times,serif;
+    }
+</STYLE>
+<h2>Edit all pages in a Questionnaire.</h2>
+
+{% if theQuestionnaire.shortTag %}
+<h4>The current Project/Questionnaire/Page is "{{theProjectTag}}/{{theQuestionnaire.shortTag}}/{{thisPageTag}}".</h4>
+{% else %}
+<h4>No questionnaire has been selected</h4>
+{% endif %}
+
+{% if sharingQuestionnaireTags %}
+<p>This page is shared with the following questionnaires. All edits will appear in these questionnaires:</p>
+<ul>
+	{% for tag in sharingQuestionnaireTags %}
+		<li>{{tag}}</li>
+	{% endfor %}
+</ul>
+{% else %}
+<p>This page is not shared with any other questionnaire. Edits will not affect any other questionnaire.</p>
+{% endif %}
+
+	<form action="" method="post" >{% csrf_token %}
+<p>If you wish to <input type="submit" name="changePageTag" value="change the name of this page">, then enter a 
+unique name: <input type="text" name="newPageTag" value="{{thisPageTag}}" size = "9">. (page record:  {{thisPageObj.id}})</p>
+
+<p><input type="submit" name="createNewPageBefore" value="Create a new page appearing before this one"><br>
+<input type="submit" name="createNewPageAfter" value="Create a new page appearing after this one"></p>
+
+<p>Or, delete the current page: <input type="submit" name="deleteThisPage" value="Delete this page: {{thisPageTag}}"></p>
+{% if pageDescription %}
+<p>Page description (does not appear to the respondent): "{{pageDescription}}"</p>
+{% else %}
+<p>Please enter a Page description below</p>
+{% endif %}
+<input class="ctlbtn" type="submit" name="Back" value="Back">
+<input  class="ctlbtn" type="submit" name="Next" value="Next">
+<p>******************************Page contents follows************************************</p>
+
+{% if errMsg %}
+	{% for aMess in errMsg %}
+		<p style="color: red;">
+		{{aMess }}
+		</p>
+	{% endfor %}
+{% endif %}
+{% if infoMsg %}
+	{% for aMess in infoMsg %}
+		<p style="color: green;">
+		{{aMess }}
+		</p>
+	{% endfor %}
+{% endif %}
+
+{% if thePageForm.errors %}
+	<p style="color: red;">
+		Please correct the error{{ thePageForm.errors|pluralize }} below.
+	</p>
+{% endif %}
+<table>
+	<tr>
+		<td style="width:10%"></td>
+		<td style="width:50%""><b>{{theQuestionnaire.pageTitle}}</b></td>
+		<td><i>Banner:  Appears at the top of every page</i></td>
+	</tr>
+	<tr>
+		<td></td>
+			{% if theQuestionnaire.pageSubTitle %}
+		<td><b>{{theQuestionnaire.pageSubTitle}}</b></td>
+			{% else %}
+		<td><b>(None)</b></td>
+			{% endif %}
+		<td><i>Sub Banner:  Appears at the top of every page</i></td>
+	</tr>
+</table>
+<table >
+{{thePageForm}}
+</table>
+	<input type="submit" name="acceptPageEdits" value="accept Page Edits">
+	<input type="submit" name="returnToHome" value="Return to the Home Page">
+	</form>
+
+<style type="text/css">
+    ul.errorlist {
+        margin: 0;
+        padding: 0;
+        color: red;
+    }
+    .errorlist li {
+        color: red;
+        font-size: 18px;
+        margin: 0 0 1px;
+        padding: 0px 20px;
+    }
+    .required {
+    	font-size: 14px;
+    	font-weight: normal
+</style>
+
+<STYLE TYPE="text/css">
+<!--
+.indented
+   {
+   padding-left: 50pt;
+   padding-right: 50pt;
+   }
+-->
+</STYLE>

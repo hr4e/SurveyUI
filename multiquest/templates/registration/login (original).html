@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>Login to the Questionnaire Editor</title>
+</head>
+<body>
+<h2>Login to the Questionnaire Editor</h2>
+{% if form.errors %}
+	<p style="color: red;">Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+
+{% if errMsg %}
+	{% for aMsg in errMsg %}
+		<p>{{aMsg}}</p>
+	{% endfor %}
+{% endif %}
+
+<form action="" method="post">{% csrf_token %}
+	<label for="username">User name:</label>
+	<input type="text" name="username" value="" id="username">
+	<label for="password">Password:</label>
+	<input type="password" name="password" value="" id="password">
+	<input type="submit" value="login" />
+	<input type="hidden" name="next" value="{{ next|escape }}" />
+</form>
+
+</body>

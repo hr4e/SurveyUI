@@ -1,2 +1,6 @@
-*~
-node_modules/
+# git ignore file
+*.pyc
+db.sqlite3
+debuginfo.txt
+
+SurveyEditor/static/css/styles.css

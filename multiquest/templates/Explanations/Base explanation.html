@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+<head>
+    <title>BRCA screening explanation</title>
+<style>
+	body {
+	font-size:100%;
+	font-family:"arial",Georgia,Serif;
+	}
+	p {
+	font-size:{{fontSize}};
+	}
+	li {
+	font-size:{{fontSize}};
+	}
+.ctlbtn {
+	background-color:white;
+	font-size:{{fontSize}};
+	font-family:"Times New Roman",Times,serif;
+    }
+.inlineLabels {
+		list-style-type:none;
+		background-color : white;
+    	font-size:{{fontSizeTextBox}};
+    }
+</style>
+</head>
+{% block theExplanation %}{% endblock  %}<!-- the explanation -->
+<form action="" method="post" >{% csrf_token %}
+    <p>
+	<input class="ctlbtn" type="submit" name="submitButton" value="Back">
+    </p>
+</form>
+</body>
+</html>
