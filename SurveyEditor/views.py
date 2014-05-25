@@ -38,7 +38,7 @@ def login(request):
                 auth_login(request, user)
                 state = "You're successfully logged in!"
                 if next == "":
-                    return HttpResponseRedirect('editor/')
+                    return HttpResponseRedirect('home/')
                 else:
                     return HttpResponseRedirect(next)
             else:
@@ -70,7 +70,7 @@ def index(request):
 
     context = RequestContext(request, {
         'allProjects' : allProjects,
-        'project' : form,
+        'projectForm' : form,
     })
     return HttpResponse(template.render(context))
 
@@ -97,7 +97,7 @@ def editor(request):
     template = loader.get_template('editor.html')
     form = QuestionForm()
     context = RequestContext(request, {
-        'hum' : form,
+        'questionForm' : form,
     })
 
     return HttpResponse(template.render(context))

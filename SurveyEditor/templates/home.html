@@ -2,7 +2,6 @@
 {% extends "base.html" %}{% load staticfiles %}
 {% block content %}
 
-
 <div ng-app="EditorApp">
   <div class="jumbotron">
     <div class="container">
@@ -12,30 +11,47 @@
         	trying to get the modals to work with within the jumbotron
 			so i just moved the ng-include div within this jumbotron and changed the text in partials/index.html
       -->
-      <div ng-include="'{{ STATIC_URL }}partials/selectSurveyOption.html'"></div>
-    </div>
-  </div>
-
+  <div ng-include="'{{ STATIC_URL }}partials/selectSurveyOption.html'"></div>
   <div ng-include="'{{ STATIC_URL }}partials/projectSelector.html'"></div>
-
   <div ng-include="'{{ STATIC_URL }}partials/addProjectModal.html'"></div>
 
+  <script type="text/ng-template" id="myModalContent.html">
+      <div class="modal-header">
+          <h3 class="modal-title">Im a modal!</h3>
+      </div>
+      <div class="modal-body">
+          <ul>
+              <li ng-repeat="item in items">
+                  <a ng-click="selected.item = item">{{ item }}</a>
+              </li>
+          </ul>
+          Selected: <b>{{ selected.item }}</b>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary" ng-click="ok()">OK</button>
+          <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      </div>
+  </script>
+
   <script type="text/ng-template" id="newProjectModal.html">
-        <div class="modal-header">
-            <h3 class="modal-title">Add a new project</h3>
-        </div>
-        <div class="modal-body">
+      <div class="modal-header">
+          <h3 class="modal-title">Add a new project</h3>
+      </div>
+      <div class="modal-body">
 
-            <form action="../newProject/" method="post">{% csrf_token %}
-                {{ project.as_p }}
-            <input type="submit" value="Submit" />
+          <form action="../newProject/" method="post">{% csrf_token %}
+              {% for field in projectForm %}
+                <div class="fieldName">{{ field.html_name }}</div>
+                <div class="fieldInput">{{ field }}</div>
+              {% endfor %}
+          <input type="submit" value="Submit" />
 
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        </div>
-    </script>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary" ng-click="ok()">OK</button>
+          <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      </div>
+  </script>
 
   <script type="text/javascript">
   var ProjSelectCtrl = function($scope) {

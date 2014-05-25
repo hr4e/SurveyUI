@@ -103,6 +103,7 @@ def login(request):
     })
 	return render(request, "registration/login.html", context)
 '''
+'''
 def userLogin(request): # not used.
 	""" User View for login.
 	Args:
@@ -136,6 +137,7 @@ def userLogin(request): # not used.
 		'msg' : msg,
 		'errMsg' : errMsg,
 		})
+'''
 
 def userLogout(request):
 	""" User View for logout.
