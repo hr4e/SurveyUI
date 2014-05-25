@@ -16,3 +16,11 @@
 #ToolBar {
 	display: inline;
 }
+
+#contentarea{
+    margin-top: 80px;
+}
+
+#footer{
+    background-color: #ccc;
+}
