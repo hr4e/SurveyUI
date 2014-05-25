@@ -2,6 +2,10 @@
 {% extends "base.html" %}{% load staticfiles %}
 {% block content %}
   <!-- Question Editor App -->
+
+
+  <div ng-include="'{{ STATIC_URL }}partials/addQuestionModal.html'"></div>
+
   <div id="EditorCtrl" ng-controller="EditorCtrl">
     {% verbatim %}
       <div id="QuesEditor" class="panel panel-default">
@@ -41,7 +45,27 @@
 </form>
 
 
+<script type="text/ng-template" id="newQuestionModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add a new project</h3>
+    </div>
+    <div class="modal-body">
 
+        <form action="../newQuestion/" method="post">{% csrf_token %}
+            {% for field in questionForm %}
+              <div class="fieldName">{{ field.html_name }}</div>
+              <div class="fieldInput">{{ field }}</div>
+            {% endfor %}
+        <input type="submit" value="Submit" />
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
             
+
+
   </div>
 {% endblock content %}
