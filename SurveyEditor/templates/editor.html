@@ -1,13 +1,16 @@
 
 {% extends "base.html" %}{% load staticfiles %}
 {% block content %}
-  <!-- Question Editor App -->
-
+ 
   <div ng-app="EditorApp">
+
     <!-- Partials -->
+
     <div ng-include="'{{ STATIC_URL }}partials/addQuestionModal.html'"></div>
 
+
     <!-- Modal Scripts -->
+
     <script type="text/ng-template" id="newQuestionModal.html">
       <div class="modal-header">
          <h3 class="modal-title">Add a new project</h3>
@@ -26,5 +29,7 @@
         <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
       </div>
     </script>
-</div>
+
+  </div>
+  
 {% endblock content %}

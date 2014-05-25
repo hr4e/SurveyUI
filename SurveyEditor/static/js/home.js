@@ -1,7 +1,4 @@
-var ModalDemoCtrl = function ($scope, $modal, $log, Nav) {
-
-
-  Nav.selectPage('Home');
+var ModalDemoCtrl = function ($scope, $modal, $log) {
 
   $scope.items = ['item1', 'item2', 'item3'];
 
@@ -45,7 +42,7 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
 };
 
 
-var SelectProjectCtrl = function ($scope, $modal, $log, Nav) {
+var SelectProjectCtrl = function ($scope, $modal, $log) {
 
 
   $scope.items = ['item1', 'item2', 'item3'];

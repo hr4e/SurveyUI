@@ -1,6 +1,4 @@
-var EditorCtrl = function ($scope, Nav) {
-
-	Nav.selectPage('Editor');
+var EditorCtrl = function ($scope) {
 
 	var drawQues = function (layer) {
 		

@@ -10,21 +10,6 @@
 //  for a chosen page.
 var EditorApp = angular.module('EditorApp', ['ui.bootstrap']);
 
-EditorApp.factory('Nav', function(){
-  var page = 'default';
-  return {
-    selected: function() {
-    	return page;
-    },
-    selectPage: function(newPage) { 
-    	page = newPage;
-    }
-  };
-});
-
-EditorApp.controller('MainCtrl', function ($scope, Nav) {
-	$scope.Nav = Nav;
-});
 
 EditorApp.directive('resize', function ($window) {
 	return function (scope, element) {
