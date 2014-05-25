@@ -63,7 +63,7 @@ def logout(request):
 
 @login_required()
 def index(request):
-    template = loader.get_template('home.html')
+    template = loader.get_template('SurveyEditor/home.html')
 
     allProjects = Project.objects.all()
     form = ProjectForm()
@@ -94,7 +94,7 @@ def newProject(request):
 def editor(request):
 
 
-    template = loader.get_template('editor.html')
+    template = loader.get_template('SurveyEditor/editor.html')
     form = QuestionForm()
     context = RequestContext(request, {
         'questionForm' : form,
