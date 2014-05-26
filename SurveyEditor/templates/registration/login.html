@@ -30,7 +30,7 @@
 
 
 <!-- Bootstrap -->
-
+<!-- Log in form - works! 
 <div class="jumbotron jumbo-login">
   <h2 align="center"> Please Login </h2>
   <form class="form-horizontal" role="form" action="" method="post">{% csrf_token %}
@@ -54,5 +54,13 @@
     </div>
   </form>
 </div>
+-->
+      <form class="form-signin" role="form"action="" method="post">{% csrf_token %}
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="username" class="form-control" name="username" value="" placeholder="Username" id="username" required autofocus>
+        <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="login">Sign in</button>
+        <input type="hidden" name="next" value="{{ next|escape }}"/>
+      </form>
 
 {% endblock %}
