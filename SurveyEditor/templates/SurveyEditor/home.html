@@ -12,8 +12,14 @@
     <div ng-include="'{{ STATIC_URL }}partials/selectProjectModal.html'"></div>
 
 
+    <form action="../selectProject/" method="post">{% csrf_token %}
+      {% for field in userProjectForm %}
+        <div class="fieldName">{{ field.html_name }}</div>
+        <div class="fieldInput">{{ field }}</div>
+      {% endfor %}
+    <input type="submit" value="Submit" />
     <!-- Django-Angular Script -->
-    
+
     <script type="text/javascript">
       var ProjSelectCtrl = function($scope) {
         $scope.projects = [];

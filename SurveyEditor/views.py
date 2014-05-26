@@ -5,7 +5,7 @@ from django.contrib.auth.views import login as auth_login, logout as auth_logout
 from django.shortcuts import render, render_to_response
 
 from django.forms import ModelForm
-from multiquest.models import Question, Project
+from multiquest.models import Question, Project, UserProject
 
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
@@ -21,6 +21,17 @@ class ProjectForm(ModelForm):
         model = Project
         fields = '__all__'
 
+class UserProjectForm(ModelForm):
+    def save(self, user=None, force_insert=False, force_update=False, commit=True):
+        up = super(UserProjectForm, self).save(commit=False)
+        up.userID = user
+        if commit:
+            up.save()
+        return up
+
+    class Meta:
+        model = UserProject
+        fields = ['projectID']
 
 def login(request):
     state = next = username = password = ''
@@ -71,15 +82,17 @@ def welcome(request):
     return HttpResponse(template.render(context))
 
 @login_required()
-def index(request):
+def home(request):
     template = loader.get_template('SurveyEditor/home.html')
 
     allProjects = Project.objects.all()
-    form = ProjectForm()
+    form1 = ProjectForm()
+    form2 = UserProjectForm()
 
     context = RequestContext(request, {
         'allProjects' : allProjects,
-        'projectForm' : form,
+        'projectForm' : form1,
+        'userProjectForm' : form2,
         'path' : request.path.split('/')[-2],
     })
     return HttpResponse(template.render(context))
@@ -99,6 +112,42 @@ def newProject(request):
         if p.is_valid():
             new_proj = p.save()
     return HttpResponseRedirect('/home')
+
+@login_required()
+def selectProject(request):
+
+
+    # If user does not have a record in the db
+    '''
+    if (serProject.objects.get(userID=request.user)):
+        record_exists = True
+    else:
+        record_exists = False
+
+    if request.method == "POST":
+
+    return HttpResponseRedirect('/home')
+    '''
+
+    # Otherwise update the existing record
+
+
+    if request.method == "POST":
+        if UserProject.objects.filter(userID=request.user):
+            # Update the existing record
+            up = UserProject.objects.get(userID=request.user)
+            p_id = request.POST.get('projectID')
+            up.projectID = Project.objects.get(id=p_id)
+            up.save()
+        else:
+            # Create a new record
+            up = UserProjectForm(request.POST)
+            if up.is_valid():
+                new_usrproj = up.save(user=request.user)
+        
+    return HttpResponseRedirect('/home')
+
+
 
 @login_required()
 def editor(request):
