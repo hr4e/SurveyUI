@@ -38,7 +38,7 @@ def login(request):
                 auth_login(request, user)
                 state = "You're successfully logged in!"
                 if next == "":
-                    return HttpResponseRedirect('home/')
+                    return HttpResponseRedirect('../home/')
                 else:
                     return HttpResponseRedirect(next)
             else:
@@ -60,7 +60,15 @@ def login(request):
 @login_required()
 def logout(request):
     auth_logout(request, request.user)
-    return HttpResponseRedirect('/test')
+    return HttpResponseRedirect('/')
+
+def welcome(request):
+    template = loader.get_template('SurveyEditor/welcome.html')
+
+    context = RequestContext(request, {
+        'path' : request.path.split('/')[-2],
+    })
+    return HttpResponse(template.render(context))
 
 @login_required()
 def index(request):
@@ -82,7 +90,7 @@ def newQuestion(request):
         q = QuestionForm(request.POST)
         if q.is_valid():
             new_ques = q.save()
-    return HttpResponseRedirect('/test/editor')
+    return HttpResponseRedirect('/editor')
 
 @login_required()
 def newProject(request):
@@ -90,7 +98,7 @@ def newProject(request):
         p = ProjectForm(request.POST)
         if p.is_valid():
             new_proj = p.save()
-    return HttpResponseRedirect('/test/home')
+    return HttpResponseRedirect('/home')
 
 @login_required()
 def editor(request):

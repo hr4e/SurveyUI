@@ -1,0 +1,29 @@
+
+{% extends "base.html" %}{% load staticfiles %}
+{% block content %}
+
+  <div ng-app="EditorApp">
+
+    <!-- Partials -->
+
+    
+
+
+
+    <!-- Django-Angular Script -->
+    
+
+
+
+    <!-- Modal Scripts -->
+
+{% if user.is_authenticated %}
+  <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
+  <p> welcome {{ user }} </p>
+{% else %}
+  <div ng-include="'{{ STATIC_URL }}partials/navbarWelcome.html'"></div>
+  <p> welcome :> </p>
+{% endif %}
+
+  </div>
+{% endblock content %}
