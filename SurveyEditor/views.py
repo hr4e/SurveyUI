@@ -5,7 +5,7 @@ from django.contrib.auth.views import login as auth_login, logout as auth_logout
 from django.shortcuts import render, render_to_response
 
 from django.forms import ModelForm
-from multiquest.models import Question, Project, UserProject, Questionnaire
+from multiquest.models import *
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
@@ -13,16 +13,6 @@ from django.template import RequestContext, loader
 from django.utils import timezone
 
 # Backend API
-class QuestionForm(ModelForm):
-	class Meta:
-		model = Question
-		fields = '__all__'
-
-class ProjectForm(ModelForm):
-	class Meta:
-		model = Project
-		fields = '__all__'
-
 class UserProjectForm(ModelForm):
 	def save(self, user=None, force_insert=False, force_update=False, commit=True):
 		up = super(UserProjectForm, self).save(commit=False)
@@ -30,10 +20,14 @@ class UserProjectForm(ModelForm):
 		if commit:
 			up.save()
 		return up
-
 	class Meta:
 		model = UserProject
 		fields = ['projectID']
+
+class ProjectForm(ModelForm):
+	class Meta:
+		model = Project
+		fields = '__all__'
 
 class QuestionnaireForm(ModelForm):
 	def save(self, force_insert=False, force_update=False, commit=True):
@@ -42,10 +36,24 @@ class QuestionnaireForm(ModelForm):
 		if commit:
 			s.save()
 		return s
-
 	class Meta:
 		model = Questionnaire
 		exclude =['versionDate']
+
+class QuestionForm(ModelForm):
+	class Meta:
+		model = Question
+		fields = '__all__'
+
+
+
+
+
+
+
+
+
+
 
 # Views
 def login(request):
@@ -132,8 +140,15 @@ def newQuestion(request):
 def newSurvey(request):
 	if request.method == "POST":
 		s = QuestionnaireForm(request.POST)
+		binding = ProjectQuestionnaire()
+
+		binding.projectID = UserProject.objects.get(userID=request.user).projectID
+
 		if s.is_valid():
 			new_surv = s.save()
+			binding.questionnaireID = new_surv
+			binding.save()
+
 	return HttpResponseRedirect('/home')
 
 @login_required()
