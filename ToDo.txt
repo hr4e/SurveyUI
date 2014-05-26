@@ -1,0 +1,6 @@
+Oddities/ToDo:
+
+Navbar
+[ ] login/out button is flushed completely right with no padding
+[ ]
+
