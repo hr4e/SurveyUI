@@ -3,4 +3,4 @@ API > Select Default Project
 - Correctly modifies database but changes not reflected in multiquest
 
 ToDo:
-[ ]
+Make title page change depending on location of website [ ]
