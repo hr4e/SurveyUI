@@ -71,6 +71,7 @@ def index(request):
     context = RequestContext(request, {
         'allProjects' : allProjects,
         'projectForm' : form,
+        'path' : request.get_full_path,
     })
     return HttpResponse(template.render(context))
 
@@ -98,6 +99,7 @@ def editor(request):
     form = QuestionForm()
     context = RequestContext(request, {
         'questionForm' : form,
+        'path' : request.get_full_path,
     })
 
     return HttpResponse(template.render(context))

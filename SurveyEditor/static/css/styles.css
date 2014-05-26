@@ -1,0 +1,17 @@
+
+#ToolBar {
+	display: inline;
+}
+
+#contentarea{
+    margin-top: 80px;
+}
+
+#footer{
+    background-color: #ccc;
+}
+
+.jumbo-login{
+	width:550px;
+	margin:0 auto;
+}
