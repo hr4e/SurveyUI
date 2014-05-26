@@ -5,18 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HR4E Survey Editor</title>
-
-    <!-- Bootstrap -->
-
     <link href="{{ STATIC_URL }}css/lib/bootstrap.min.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/styles.css" rel="stylesheet">
-
   </head>
 
   <body>
-
     <!-- Django-Angular Script -->
-    
     <script type="text/javascript">
     var NavbarCtrl = function ($scope, $location) {
       $scope.isActive = function(path) {
@@ -27,13 +21,9 @@
         }
       };
     };
-
-      
     </script>
 
-
     <!-- Content Container -->
-
     <div id="contentarea" class="container">
       {% block content %}
       {% endblock content %}
