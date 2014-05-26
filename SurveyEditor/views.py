@@ -10,6 +10,8 @@ from multiquest.models import Question, Project, UserProject, Questionnaire
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 
+from django.utils import timezone
+
 # Backend API
 class QuestionForm(ModelForm):
 	class Meta:
@@ -34,6 +36,13 @@ class UserProjectForm(ModelForm):
 		fields = ['projectID']
 
 class QuestionnaireForm(ModelForm):
+	def save(self, force_insert=False, force_update=False, commit=True):
+		s = super(QuestionnaireForm, self).save(commit=False)
+		s.versionDate = timezone.now()
+		if commit:
+			s.save()
+		return s
+
 	class Meta:
 		model = Questionnaire
 		exclude =['versionDate']
@@ -122,7 +131,7 @@ def newQuestion(request):
 @login_required()
 def newSurvey(request):
 	if request.method == "POST":
-		s = QuestionForm(request.POST)
+		s = QuestionnaireForm(request.POST)
 		if s.is_valid():
 			new_surv = s.save()
 	return HttpResponseRedirect('/home')
