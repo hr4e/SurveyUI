@@ -5,22 +5,14 @@ from django.contrib.auth.views import login as auth_login, logout as auth_logout
 from django.shortcuts import render, render_to_response
 
 from django.forms import ModelForm
-from multiquest.models import Question, Project, UserProject
+from multiquest.models import *
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 
+from django.utils import timezone
+
 # Backend API
-class QuestionForm(ModelForm):
-	class Meta:
-		model = Question
-		fields = ['language', 'questionTag', 'questionText', 'helpText', 'explanation']
-
-class ProjectForm(ModelForm):
-	class Meta:
-		model = Project
-		fields = '__all__'
-
 class UserProjectForm(ModelForm):
 	def save(self, user=None, force_insert=False, force_update=False, commit=True):
 		up = super(UserProjectForm, self).save(commit=False)
@@ -28,10 +20,40 @@ class UserProjectForm(ModelForm):
 		if commit:
 			up.save()
 		return up
-
 	class Meta:
 		model = UserProject
 		fields = ['projectID']
+
+class ProjectForm(ModelForm):
+	class Meta:
+		model = Project
+		fields = '__all__'
+
+class QuestionnaireForm(ModelForm):
+	def save(self, force_insert=False, force_update=False, commit=True):
+		s = super(QuestionnaireForm, self).save(commit=False)
+		s.versionDate = timezone.now()
+		if commit:
+			s.save()
+		return s
+	class Meta:
+		model = Questionnaire
+		exclude =['versionDate']
+
+class QuestionForm(ModelForm):
+	class Meta:
+		model = Question
+		fields = '__all__'
+
+
+
+
+
+
+
+
+
+
 
 # Views
 def login(request):
@@ -89,6 +111,7 @@ def home(request):
 	allProjects = Project.objects.all()
 	form1 = ProjectForm()
 	form2 = UserProjectForm()
+	form3 = QuestionnaireForm()
 	if UserProject.objects.filter(userID=request.user):
 		# Update the existing record
 		defaultProject = UserProject.objects.get(userID=request.user)
@@ -99,6 +122,7 @@ def home(request):
 		'allProjects' : allProjects,
 		'projectForm' : form1,
 		'userProjectForm' : form2,
+		'questionnaireForm' : form3,
 		'defaultProject' : defaultProject,
 		'path' : request.path.split('/')[-2],
 	})
@@ -111,6 +135,21 @@ def newQuestion(request):
 		if q.is_valid():
 			new_ques = q.save()
 	return HttpResponseRedirect('/editor')
+
+@login_required()
+def newSurvey(request):
+	if request.method == "POST":
+		s = QuestionnaireForm(request.POST)
+		binding = ProjectQuestionnaire()
+
+		binding.projectID = UserProject.objects.get(userID=request.user).projectID
+
+		if s.is_valid():
+			new_surv = s.save()
+			binding.questionnaireID = new_surv
+			binding.save()
+
+	return HttpResponseRedirect('/home')
 
 @login_required()
 def newProject(request):
