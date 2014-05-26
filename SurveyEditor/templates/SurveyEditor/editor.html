@@ -2,10 +2,11 @@
 {% extends "base.html" %}{% load staticfiles %}
 {% block content %}
  
-  <div>
+  <div ng-app="EditorApp">
 
     <!-- Partials -->
 
+    <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
     <div ng-include="'{{ STATIC_URL }}partials/addQuestionModal.html'"></div>
 
 

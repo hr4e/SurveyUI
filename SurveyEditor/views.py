@@ -52,6 +52,7 @@ def login(request):
         'msg':state,
         'username': username,
         'next':next,
+        'path' : request.path.split('/')[-2],
         },
         context_instance=RequestContext(request)
     )
@@ -71,7 +72,7 @@ def index(request):
     context = RequestContext(request, {
         'allProjects' : allProjects,
         'projectForm' : form,
-        'path' : request.get_full_path,
+        'path' : request.path.split('/')[-2],
     })
     return HttpResponse(template.render(context))
 
@@ -99,7 +100,7 @@ def editor(request):
     form = QuestionForm()
     context = RequestContext(request, {
         'questionForm' : form,
-        'path' : request.get_full_path,
+        'path' : request.path.split('/')[-2],
     })
 
     return HttpResponse(template.render(context))

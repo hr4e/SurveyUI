@@ -10,19 +10,5 @@
 //  for a chosen page.
 var EditorApp = angular.module('EditorApp', ['ui.bootstrap']);
 
-var NavbarCtrl = function ($scope, $location) {
 
-  $scope.isCollapsed = true;
-  $scope.msg = 'wat';
-  $scope.test = function() {
-    return 'yes';
-  }
-  $scope.isActive = function(path) {
-    if ($location.path().substr(0, path.length) == path) {
-      return "active"
-    } else {
-      return $location.path()
-    }
-  };
 
-};
