@@ -3,14 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import login as auth_login, logout as auth_logout
 
 from django.shortcuts import render, render_to_response
-
-from django.forms import ModelForm
-from multiquest.models import *
-
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 
 from django.utils import timezone
+from django.forms import ModelForm
+from multiquest.models import *
+
 
 # Backend API
 class UserProjectForm(ModelForm):
@@ -39,6 +38,11 @@ class QuestionnaireForm(ModelForm):
 	class Meta:
 		model = Questionnaire
 		exclude =['versionDate']
+
+class PageForm(ModelForm):
+	class Meta:
+		model = Page
+		fields = '__all__'
 
 class QuestionForm(ModelForm):
 	class Meta:
@@ -149,7 +153,7 @@ def newSurvey(request):
 			binding.questionnaireID = new_surv
 			binding.save()
 
-	return HttpResponseRedirect('/home')
+	return HttpResponseRedirect('/editor')
 
 @login_required()
 def newProject(request):
@@ -178,9 +182,11 @@ def selectProject(request):
 @login_required()
 def editor(request):
 	template = loader.get_template('SurveyEditor/editor.html')
-	form = QuestionForm()
+	form1 = QuestionForm()
+	form2 = PageForm()
 	context = RequestContext(request, {
-		'questionForm' : form,
+		'questionForm' : form1,
+		'pageForm' : form2,
 		'path' : request.path.split('/')[-2],
 	})
 

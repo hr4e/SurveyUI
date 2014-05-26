@@ -8,9 +8,29 @@
 
     <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
     <div ng-include="'{{ STATIC_URL }}partials/addQuestionModal.html'"></div>
+    <div ng-include="'{{ STATIC_URL }}partials/addPageModal.html'"></div>
 
 
     <!-- Modal Scripts -->
+
+    <script type="text/ng-template" id="addPageModal.html">
+      <div class="modal-header">
+         <h3 class="modal-title">Add a new page</h3>
+      </div>
+      <div class="modal-body">
+        <form action="../newPage/" method="post">{% csrf_token %}
+          {% for field in pageForm %}
+            <div class="fieldName">{{ field.html_name }}</div>
+            <div class="fieldInput">{{ field }}</div>
+          {% endfor %}
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      </div>
+    </script>
 
     <script type="text/ng-template" id="addQuestionModal.html">
       <div class="modal-header">
