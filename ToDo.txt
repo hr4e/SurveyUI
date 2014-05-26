@@ -1,4 +1,11 @@
-Oddities/ToDo:
+Oddities:
+
+API > Select Default Project
+- Correctly modifies database but changes not reflected in multiquest
+
+
+
+ToDo:
 
 Navbar
 [ ] login/out button is flushed completely right with no padding
