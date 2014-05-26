@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HR4E Survey Editor</title>
     <link href="{{ STATIC_URL }}css/lib/bootstrap.min.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/styles.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}js/lib/angular.min.js"></script>
   </head>
 
   <body>
@@ -23,26 +23,22 @@
     };
     </script>
 
-    <!-- Content Container -->
     <div id="contentarea" class="container">
-      {% block content %}
-      {% endblock content %}
-    </div><!-- /container -->
+      {% block content %}{% endblock content %}
+    </div>
 
     {% block footer %}
     <div id="footer" class="navbar navbar-fixed-bottom">
       <div class="container">
-	       <p class="navbar-text">&copy; Health Records For Everyone 2014</p>
+	<p class="navbar-text">&copy; Health Records For Everyone 2014</p>
       </div>
     </div>
     {% endblock footer %}
 
     {% block javascript %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="{{ STATIC_URL }}js/lib/angular.min.js"></script>
+    <script src="{{ STATIC_URL }}js/lib/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}js/lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/kinetic-v5.1.0.min.js"></script>
-    <script src="{{ STATIC_URL }}js/lib/ui-bootstrap-tpls-0.10.0.js"></script>
     <script src="{{ STATIC_URL }}js/app.js"></script>
     <script src="{{ STATIC_URL }}js/home.js"></script>
     <script src="{{ STATIC_URL }}js/editor.js"></script>
