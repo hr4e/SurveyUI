@@ -1,0 +1,27 @@
+{% load staticfiles %}<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Health Records for Everyone</title>
+    <link href="{{ STATIC_URL }}css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/styles.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css">
+  </head>
+  <body id="cover">
+    <div id="coverdiv">
+      <h1>Health Records For Everyone</h1>
+      <p class="lead">Easily evaluate the condition of your health</p>
+      <a href="#" class="btn btn-lg btn-info">Take a survey</a>
+      <a href="login" class="btn btn-lg btn-info">Write your own survey</a>
+    </div>
+    {% block footer %}
+    <div id="footer" class="navbar navbar-fixed-bottom cover">
+      <div class="container">
+	<span class="navbar-text pull-left"><a href="#">About</a> | <a href="https://github.com/hr4e">GitHub</a></span>
+	<p class="navbar-text pull-right">&copy; 2014 Health Records For Everyone</p>
+      </div>
+    </div>
+    {% endblock footer %}
+  </body>
+</html>

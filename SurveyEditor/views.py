@@ -75,7 +75,7 @@ def logout(request):
 	return HttpResponseRedirect('/')
 
 def welcome(request):
-	template = loader.get_template('SurveyEditor/welcome.html')
+	template = loader.get_template('cover.html')
 
 	context = RequestContext(request, {
 		'path' : request.path.split('/')[-2],
