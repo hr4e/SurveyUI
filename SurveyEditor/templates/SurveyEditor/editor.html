@@ -9,8 +9,14 @@
     <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
     <div ng-include="'{{ STATIC_URL }}partials/addQuestionModal.html'"></div>
     <div ng-include="'{{ STATIC_URL }}partials/addPageModal.html'"></div>
+    <div ng-include="'{{ STATIC_URL }}partials/selectPage.html'"></div>
 
 {{ defaultProject }}
+<div ng-controller="SurvSelectCtrl">
+  <br>
+  Selected Survey: {{ selectedSurvey }}<br>
+  {{ listPage }}
+</div>
 <br>
 {% for survey in listSurveys %}
   {{ survey.questionnaireID.shortTag }}<br>
@@ -35,6 +41,7 @@
           {% for field in pageForm %}
             <div class="fieldName">{{ field.html_name }}</div>
             <div class="fieldInput">{{ field }}</div>
+            <input type="hidden" value="{{ selectedSurvey }}" name="selected">
           {% endfor %}
           <input type="submit" value="Submit" />
         </form>
