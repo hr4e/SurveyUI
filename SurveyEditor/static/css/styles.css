@@ -85,3 +85,9 @@
     color: #aaa;
     text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.75);
 }
+
+.login-alert{
+  width:600px;
+  text-align: center;
+  margin:0 auto;
+}
