@@ -4,3 +4,5 @@ API > Select Default Project
 
 ToDo:
 Make title page change depending on location of website [ ]
+
+Test modified colors [ ]

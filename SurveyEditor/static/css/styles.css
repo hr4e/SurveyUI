@@ -69,13 +69,13 @@
     right: 0;
     padding-bottom: 20px;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.55);
+    background-color: rgba(0, 108, 81, 0.55); /* This line changed */
     color: #fff;
     text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.75);
 }
 
 #footer.cover{
-    background-color: #222;
+    background-color: rgb(0, 166, 124); /* This line changed */
     color: #aaa;
     text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.75);
 }
