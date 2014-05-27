@@ -97,17 +97,18 @@ def newPage(request):
     binding = QuestionnairePage()
 
     selected_survey = request.POST['selected']
+    if selected_survey=='False':
+      # Error, no selected survey
+      return HttpResponseRedirect('/')
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
     binding.questionnaireID = q_id
 
     if form.is_valid():
       new_page = form.save()
       binding.pageID = new_page
+      binding.nextPageID = new_page
       binding.save()
-
-
-
-  return HttpResponseRedirect('/editor')
+  return HttpResponseRedirect('/editor/?selected=' + selected_survey)
 
 @login_required()
 def newQuestion(request):

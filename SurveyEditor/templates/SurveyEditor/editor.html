@@ -18,18 +18,9 @@
   {{ listPage }}
 </div>
 <br>
-{% for survey in listSurveys %}
-  {{ survey.questionnaireID.shortTag }}<br>
-  {{ survey.questionnaireID.barTitle }}
-  <div id="description">{{ survey.questionnaireID.description }}</div>
-  <!-- Available fields i.e. {{ survey.questionnaireID.field }}
-
-  ['barTitle', 'description', 'footerText', u'id', 'imageFileName', 'imageFilePath', 'imageFileType', 'language', 'lastUpdate', 'pageSubTitle', 'pageTitle', 'pageanalysis', 'projectquestionnaire', 'questionnaireanalysis', 'questionnaireattributes', 'questionnairepage', 'shortTag', 'submission', 'version', 'versionDate']
- 
-  -->
-  <br>
+{% for page in listPages %}
+  <br>Page: {{ page.pageID }}
 {% endfor %}
-
     <!-- Modal Scripts -->
 
     <script type="text/ng-template" id="addPageModal.html">
