@@ -7,13 +7,23 @@
     <!-- Partials -->
 
     <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
-    <div ng-include="'{{ STATIC_URL }}partials/addSurveyModal.html'"></div>
+
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Welcome to the HR4E Survey Editor</h1>
+        <p>A tool for creating medical surveys with ease!</p>
+        <div ng-controller="AddSurveyModalCtrl">
+          <button class="btn btn-primary btn-lg" ng-click="open()">Create a new survey</button>
+        </div>
+        <div ng-controller="SelectSurveyCtrl">
+          <button class="btn btn-primary btn-lg" ng-click="open()">Edit an existing survey</button>
+        </div>
+      </div>
+    </div>
+
+
     <div ng-include="'{{ STATIC_URL }}partials/addProjectModal.html'"></div>
     <div ng-include="'{{ STATIC_URL }}partials/selectProjectBtn.html'"></div>
-    <div ng-include="'{{ STATIC_URL }}partials/selectSurveyBtn.html'"></div>
-
-
-
     Your default project: {{ defaultProject }}
     <form action="../selectProject/" method="post">{% csrf_token %}
       {% for field in userProjectForm %}
@@ -39,10 +49,10 @@
           });
         {% endfor %}
         $scope.setSelected = function() {
-            $scope.selected = this.project;
+            $scope.selected = this.project.abbrev;
         };
         $scope.isSelected = function() {
-          if (this.project == $scope.selected)
+          if (this.project.abbrev == $scope.selected)
             return true;
           else {
             return false;
@@ -62,10 +72,10 @@
           });
         {% endfor %}
         $scope.setSelected = function() {
-            $scope.selected = this.survey;
+            $scope.selected = this.survey.name;
         };
         $scope.isSelected = function() {
-          if (this.survey == $scope.selected)
+          if (this.survey.name == $scope.selected)
             return true;
           else {
             return false;
@@ -73,6 +83,7 @@
         };
       };
     </script>
+
 <br><br><br><br><br><br>
 
     <!-- Modal Scripts -->

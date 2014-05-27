@@ -61,19 +61,13 @@ def newProject(request):
 
 @login_required()
 def selectProject(request):
-	if request.method == "POST":
+	if request.method == "GET":
 		if UserProject.objects.filter(userID=request.user):
 			# Update the existing record
 			record = UserProject.objects.get(userID=request.user)
-			p_id = request.POST.get('projectID')
-			record.projectID = Project.objects.get(id=p_id)
+			record.projectID = Project.objects.get(abbrev=request.GET['selected'])
 			record.save()
-		else:
-			# Create a new record using form data
-			form = UserProjectForm(request.POST)
-			if form.is_valid():
-				new_usrproj = form.save(user=request.user)
-	return HttpResponseRedirect('/editor')
+	return HttpResponseRedirect('/home')
 
 @login_required()
 def newSurvey(request):
@@ -171,11 +165,11 @@ def home(request):
 	form3 = QuestionnaireForm()
 	if UserProject.objects.filter(userID=request.user):
 		# Update the existing record
-		default_project = UserProject.objects.get(userID=request.user)
-		list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
+		default_project = UserProject.objects.get(userID=request.user).projectID
 	else:
 		default_project = ''
-		list_surveys = 'No project selected'
+	
+	list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
 
 	context = RequestContext(request, {
 		'allProjects' : allProjects,

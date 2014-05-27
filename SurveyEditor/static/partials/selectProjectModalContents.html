@@ -34,9 +34,8 @@
         </tbody>
       </table>
     </div>
-    {{ selected }}
-    <div>
-      <a href="../editor"><button class="btn btn-primary">OK!</button></a>
-    </div>
+    <form action="../selectProject/" method="get">
+      <button name="selected" value="{{ selected }}">OK!</button>
+    </form>
   </div>
 </div>

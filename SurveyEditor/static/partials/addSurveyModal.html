@@ -1,16 +1,5 @@
 <!-- Angular Handlebars here do not need to be wrapped in verbatim tags -->
 <!-- Questionnaire and Survey are synonymous to the developers -->
 <div ng-controller="AddSurveyModalCtrl">
-  
-  <div class="jumbotron">
-    <div class="container">
-      <h1>Welcome to the HR4E Survey Editor</h1>
-      <p>A tool for creating medical surveys with ease!</p>
-      <p>{{ msg }}</p>
-      <button class="btn btn-primary btn-lg" ng-click="open()">Create a new survey</button> or 
-      <button class="btn btn-primary btn-lg" ng-click="open('lg')">Edit an existing survey</button>
-      <div ng-show="selected">Selection from a modal: {{ selected }}</div>
-    </div>
-  </div>
-
+  <button class="btn btn-primary btn-lg" ng-click="open()">Create a new survey</button>
 </div>
