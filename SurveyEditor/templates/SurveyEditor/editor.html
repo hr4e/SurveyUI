@@ -10,6 +10,19 @@
     <div ng-include="'{{ STATIC_URL }}partials/addQuestionModal.html'"></div>
     <div ng-include="'{{ STATIC_URL }}partials/addPageModal.html'"></div>
 
+{{ defaultProject }}
+<br>
+{% for survey in listSurveys %}
+  {{ survey.questionnaireID.shortTag }}<br>
+  {{ survey.questionnaireID.barTitle }}
+  <div id="description">{{ survey.questionnaireID.description }}</div>
+  <!-- Available fields i.e. {{ survey.questionnaireID.field }}
+
+  ['barTitle', 'description', 'footerText', u'id', 'imageFileName', 'imageFilePath', 'imageFileType', 'language', 'lastUpdate', 'pageSubTitle', 'pageTitle', 'pageanalysis', 'projectquestionnaire', 'questionnaireanalysis', 'questionnaireattributes', 'questionnairepage', 'shortTag', 'submission', 'version', 'versionDate']
+ 
+  -->
+  <br>
+{% endfor %}
 
     <!-- Modal Scripts -->
 

@@ -8,6 +8,8 @@ from django.template import RequestContext, loader
 
 from django.utils import timezone
 from django.forms import ModelForm
+
+# Reuse existing database models
 from multiquest.models import *
 
 
@@ -49,17 +51,68 @@ class QuestionForm(ModelForm):
 		model = Question
 		fields = '__all__'
 
+@login_required()
+def newProject(request):
+	if request.method == "POST":
+		form = ProjectForm(request.POST)
+		if form.is_valid():
+			new_proj = form.save()
+	return HttpResponseRedirect('/home')
+
+@login_required()
+def selectProject(request):
+	if request.method == "POST":
+		if UserProject.objects.filter(userID=request.user):
+			# Update the existing record
+			record = UserProject.objects.get(userID=request.user)
+			p_id = request.POST.get('projectID')
+			record.projectID = Project.objects.get(id=p_id)
+			record.save()
+		else:
+			# Create a new record using form data
+			form = UserProjectForm(request.POST)
+			if form.is_valid():
+				new_usrproj = form.save(user=request.user)
+	return HttpResponseRedirect('/editor')
+
+@login_required()
+def newSurvey(request):
+	if request.method == "POST":
+		form = QuestionnaireForm(request.POST)
+		binding = ProjectQuestionnaire()
+
+		binding.projectID = UserProject.objects.get(userID=request.user).projectID
+
+		if form.is_valid():
+			new_surv = form.save()
+			binding.questionnaireID = new_surv
+			binding.save()
+
+	return HttpResponseRedirect('/editor')
+
+@login_required()
+def newPage(request):
+	if request.method == "POST":
+		form = PageForm(request.POST)
+#	binding = QuestionnairePage()
+
+
+		if form.is_valid():
+			new_page = form.save()
+	return HttpResponseRedirect('/editor')
+
+@login_required()
+def newQuestion(request):
+	if request.method == "POST":
+		form = QuestionForm(request.POST)
+		if form.is_valid():
+			new_ques = form.save()
+	return HttpResponseRedirect('/editor')
 
 
 
 
-
-
-
-
-
-
-# Views
+# Frontend Views
 def login(request):
 	state = next = username = password = ''
 
@@ -101,7 +154,7 @@ def logout(request):
 	return HttpResponseRedirect('/')
 
 def welcome(request):
-	template = loader.get_template('cover.html')
+	template = loader.get_template('SurveyEditor/welcome.html')
 
 	context = RequestContext(request, {
 		'path' : request.path.split('/')[-2],
@@ -133,60 +186,20 @@ def home(request):
 	return HttpResponse(template.render(context))
 
 @login_required()
-def newQuestion(request):
-	if request.method == "POST":
-		q = QuestionForm(request.POST)
-		if q.is_valid():
-			new_ques = q.save()
-	return HttpResponseRedirect('/editor')
-
-@login_required()
-def newSurvey(request):
-	if request.method == "POST":
-		s = QuestionnaireForm(request.POST)
-		binding = ProjectQuestionnaire()
-
-		binding.projectID = UserProject.objects.get(userID=request.user).projectID
-
-		if s.is_valid():
-			new_surv = s.save()
-			binding.questionnaireID = new_surv
-			binding.save()
-
-	return HttpResponseRedirect('/editor')
-
-@login_required()
-def newProject(request):
-	if request.method == "POST":
-		p = ProjectForm(request.POST)
-		if p.is_valid():
-			new_proj = p.save()
-	return HttpResponseRedirect('/home')
-
-@login_required()
-def selectProject(request):
-	if request.method == "POST":
-		if UserProject.objects.filter(userID=request.user):
-			# Update the existing record
-			up = UserProject.objects.get(userID=request.user)
-			p_id = request.POST.get('projectID')
-			up.projectID = Project.objects.get(id=p_id)
-			up.save()
-		else:
-			# Create a new record
-			up = UserProjectForm(request.POST)
-			if up.is_valid():
-				new_usrproj = up.save(user=request.user)
-	return HttpResponseRedirect('/home')
-
-@login_required()
 def editor(request):
 	template = loader.get_template('SurveyEditor/editor.html')
 	form1 = QuestionForm()
 	form2 = PageForm()
+
+	default_project = UserProject.objects.get(userID=request.user).projectID
+
+	list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
+	
 	context = RequestContext(request, {
 		'questionForm' : form1,
 		'pageForm' : form2,
+		'defaultProject' : default_project,
+		'listSurveys' : list_surveys,
 		'path' : request.path.split('/')[-2],
 	})
 
