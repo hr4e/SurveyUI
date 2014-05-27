@@ -30,6 +30,7 @@
 
     <script type="text/javascript">
       var ProjSelectCtrl = function($scope) {
+        $scope.visible = false;
         $scope.projects = [];
         {% for project in allProjects %}
           $scope.projects.push({
@@ -37,11 +38,22 @@
             name: '{{project.name}}',
           });
         {% endfor %}
+        $scope.setSelected = function() {
+            $scope.selected = this.project;
+        };
+        $scope.isSelected = function() {
+          if (this.project == $scope.selected)
+            return true;
+          else {
+            return false;
+          }
+        };
       };
     </script>
 
     <script type="text/javascript">
       var SurvSelectCtrl = function($scope) {
+        $scope.visible = false;
         $scope.surveys = [];
         {% for survey in listSurveys %}
           $scope.surveys.push({
@@ -49,6 +61,16 @@
             desc: '{{ survey.questionnaireID.description }}',
           });
         {% endfor %}
+        $scope.setSelected = function() {
+            $scope.selected = this.survey;
+        };
+        $scope.isSelected = function() {
+          if (this.survey == $scope.selected)
+            return true;
+          else {
+            return false;
+          }
+        };
       };
     </script>
 <br><br><br><br><br><br>
