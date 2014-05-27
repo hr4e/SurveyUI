@@ -9,7 +9,8 @@
     <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
     <div ng-include="'{{ STATIC_URL }}partials/addSurveyModal.html'"></div>
     <div ng-include="'{{ STATIC_URL }}partials/addProjectModal.html'"></div>
-    <div ng-include="'{{ STATIC_URL }}partials/selectProjectModal.html'"></div>
+    <div ng-include="'{{ STATIC_URL }}partials/selectProjectBtn.html'"></div>
+    <div ng-include="'{{ STATIC_URL }}partials/selectSurveyBtn.html'"></div>
 
 
 
@@ -39,8 +40,28 @@
       };
     </script>
 
+    <script type="text/javascript">
+      var SurvSelectCtrl = function($scope) {
+        $scope.surveys = [];
+        {% for survey in listSurveys %}
+          $scope.surveys.push({
+            name: '{{ survey.questionnaireID.shortTag }}', 
+            desc: '{{ survey.questionnaireID.description }}',
+          });
+        {% endfor %}
+      };
+    </script>
+<br><br><br><br><br><br>
 
     <!-- Modal Scripts -->
+    <script type="text/ng-template" id="selectProjectModal.html">
+      <div ng-include="'{{ STATIC_URL }}partials/selectProjectModalContents.html'"></div>
+    </script>
+
+    <script type="text/ng-template" id="selectSurveyModal.html">
+      <div ng-include="'{{ STATIC_URL }}partials/selectSurveyModalContents.html'"></div>
+    </script>
+
     <script type="text/ng-template" id="addSurveyModalContent.html">
       <div class="modal-header">
           <h3 class="modal-title">Create a new survey</h3>
@@ -53,10 +74,6 @@
           {% endfor %}
         <input type="submit" value="Submit" />
       </div>
-    </script>
-
-    <script type="text/ng-template" id="selectProjectModal.html">
-      <div ng-include="'{{ STATIC_URL }}partials/projectSelector.html'"></div>
     </script>
 
     <script type="text/ng-template" id="addProjectModal.html">

@@ -171,16 +171,19 @@ def home(request):
 	form3 = QuestionnaireForm()
 	if UserProject.objects.filter(userID=request.user):
 		# Update the existing record
-		defaultProject = UserProject.objects.get(userID=request.user)
+		default_project = UserProject.objects.get(userID=request.user)
+		list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
 	else:
-		defaultProject = ''
+		default_project = ''
+		list_surveys = 'No project selected'
 
 	context = RequestContext(request, {
 		'allProjects' : allProjects,
 		'projectForm' : form1,
 		'userProjectForm' : form2,
 		'questionnaireForm' : form3,
-		'defaultProject' : defaultProject,
+		'defaultProject' : default_project,
+		'listSurveys' : list_surveys,
 		'path' : request.path.split('/')[-2],
 	})
 	return HttpResponse(template.render(context))
