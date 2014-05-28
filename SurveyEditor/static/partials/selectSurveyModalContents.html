@@ -23,8 +23,7 @@
           <tr ng-repeat="survey in surveys | filter:query" ng-click="setSelected()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
             <td>
               <a ng-show="visible || isSelected()">
-                <span class="glyphicon glyphicon-ok">
-                </span>
+                <span class="glyphicon glyphicon-ok"></span>
               </a>
             </td>
             <td>{{ survey.name }}</td>
@@ -35,7 +34,9 @@
       </table>
     </div>
     <div>
-      <button class="btn btn-primary">OK!</button>
+      <form action="../editor/" method="get">
+        <button name="selected" value="{{ selected }}">OK!</button>
+      </form>
     </div>
   </div>
 </div>
