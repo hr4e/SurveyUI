@@ -3,168 +3,237 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import login as auth_login, logout as auth_logout
 
 from django.shortcuts import render, render_to_response
-
-from django.forms import ModelForm
-from multiquest.models import Question, Project
-
-# Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 
-class QuestionForm(ModelForm):
-    class Meta:
-        model = Question
-        fields = ['language', 'questionTag', 'questionText', 'helpText', 'explanation']
+from django.utils import timezone
+from django.forms import ModelForm
+
+# Reuse existing database models
+from multiquest.models import *
+
+
+# Backend API
+class UserProjectForm(ModelForm):
+  def save(self, user=None, force_insert=False, force_update=False, commit=True):
+    up = super(UserProjectForm, self).save(commit=False)
+    up.userID = user
+    if commit:
+      up.save()
+    return up
+  class Meta:
+    model = UserProject
+    fields = ['projectID']
 
 class ProjectForm(ModelForm):
-    class Meta:
-        model = Project
-        fields = '__all__'
+  class Meta:
+    model = Project
+    fields = '__all__'
 
+class QuestionnaireForm(ModelForm):
+  def save(self, force_insert=False, force_update=False, commit=True):
+    s = super(QuestionnaireForm, self).save(commit=False)
+    s.versionDate = timezone.now()
+    if commit:
+      s.save()
+    return s
+  class Meta:
+    model = Questionnaire
+    exclude =['versionDate']
 
-def login(request):
-    state = next = username = password = ''
+class PageForm(ModelForm):
+  class Meta:
+    model = Page
+    fields = '__all__'
 
-    if request.GET:  
-        next = request.GET['next']
-
-    if request.POST:
-        username = request.POST['username']
-        password = request.POST['password']
-
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                auth_login(request, user)
-                state = "You're successfully logged in!"
-                if next == "":
-                    return HttpResponseRedirect('home/')
-                else:
-                    return HttpResponseRedirect(next)
-            else:
-                state = "Your account is not active, please contact the site admin."
-        else:
-            state = "Your username and/or password were incorrect."
-
-    return render_to_response(
-        'registration/login.html',
-        {
-        'msg':state,
-        'username': username,
-        'next':next,
-        },
-        context_instance=RequestContext(request)
-    )
-
-@login_required()
-def logout(request):
-    auth_logout(request, request.user)
-    return HttpResponseRedirect('/test')
-
-@login_required()
-def index(request):
-    template = loader.get_template('home.html')
-
-    allProjects = Project.objects.all()
-    form = ProjectForm()
-
-    context = RequestContext(request, {
-        'allProjects' : allProjects,
-        'projectForm' : form,
-    })
-    return HttpResponse(template.render(context))
-
-@login_required()
-def newQuestion(request):
-    if request.method == "POST":
-        q = QuestionForm(request.POST)
-        if q.is_valid():
-            new_ques = q.save()
-    return HttpResponseRedirect('/test/editor')
+class QuestionForm(ModelForm):
+  class Meta:
+    model = Question
+    fields = '__all__'
 
 @login_required()
 def newProject(request):
-    if request.method == "POST":
-        p = ProjectForm(request.POST)
-        if p.is_valid():
-            new_proj = p.save()
-    return HttpResponseRedirect('/test/home')
+  if request.method == "POST":
+    form = ProjectForm(request.POST)
+    if form.is_valid():
+      new_proj = form.save()
+  return HttpResponseRedirect('/home/')
+
+@login_required()
+def selectProject(request):
+  if request.method == "GET":
+    if UserProject.objects.filter(userID=request.user):
+      # Update the existing record
+      record = UserProject.objects.get(userID=request.user)
+      record.projectID = Project.objects.get(abbrev=request.GET['selected'])
+      record.save()
+    else:
+      # Create a new record
+      record = UserProject()
+      record.userID = request.user
+      record.projectID = Project.objects.get(abbrev=request.GET['selected'])
+      record.save()
+  return HttpResponseRedirect('/home')
+
+@login_required()
+def newSurvey(request):
+  if request.method == "POST":
+    form = QuestionnaireForm(request.POST)
+    binding = ProjectQuestionnaire()
+
+    # check if survey already exists in database to ensure unique survey names
+    check = request.POST['shortTag']
+    if Questionnaire.objects.filter(shortTag=check):
+      # send 'error creating survey' message to user
+      return HttpResponseRedirect('/home/')
+
+    binding.projectID = UserProject.objects.get(userID=request.user).projectID
+
+    if form.is_valid():
+      new_surv = form.save()
+      binding.questionnaireID = new_surv
+      binding.save()
+
+  return HttpResponseRedirect('/editor/' + check)
+
+@login_required()
+def newPage(request):
+  if request.method == "POST":
+    form = PageForm(request.POST)
+    binding = QuestionnairePage()
+
+    selected_survey = request.POST['selected']
+    if selected_survey=='False':
+      # Error, no selected survey
+      return HttpResponseRedirect('/')
+    q_id = Questionnaire.objects.get(shortTag=selected_survey)
+    binding.questionnaireID = q_id
+
+    if form.is_valid():
+      new_page = form.save()
+      binding.pageID = new_page
+      binding.nextPageID = new_page
+      binding.save()
+  return HttpResponseRedirect('/editor/?selected=' + selected_survey)
+
+@login_required()
+def newQuestion(request):
+  if request.method == "POST":
+    form = QuestionForm(request.POST)
+    if form.is_valid():
+      new_ques = form.save()
+  return HttpResponseRedirect('/editor')
+
+
+
+
+# Frontend Views
+def login(request):
+  state = next = username = password = ''
+
+  if request.GET:  
+    next = request.GET['next']
+
+  if request.POST:
+    username = request.POST['username']
+    password = request.POST['password']
+
+    user = authenticate(username=username, password=password)
+    if user is not None:
+      if user.is_active:
+        auth_login(request, user)
+        state = "You're successfully logged in!"
+        if next == "":
+          return HttpResponseRedirect('../home/')
+        else:
+          return HttpResponseRedirect(next)
+      else:
+        state = "Your account is not active, please contact the site admin."
+    else:
+      state = "Your username and/or password were incorrect."
+
+  return render_to_response(
+    'registration/login.html',
+    {
+    'msg':state,
+    'username': username,
+    'next':next,
+    'path' : request.path.split('/')[-2],
+    },
+    context_instance=RequestContext(request)
+  )
+
+@login_required()
+def logout(request):
+  auth_logout(request, request.user)
+  return HttpResponseRedirect('/')
+
+def welcome(request):
+  template = loader.get_template('SurveyEditor/welcome.html')
+
+  context = RequestContext(request, {
+    'path' : request.path.split('/')[-2],
+  })
+  return HttpResponse(template.render(context))
+
+@login_required()
+def home(request):
+  template = loader.get_template('SurveyEditor/home.html')
+
+  allProjects = Project.objects.all()
+  form1 = ProjectForm()
+  form2 = UserProjectForm()
+  form3 = QuestionnaireForm()
+  if UserProject.objects.filter(userID=request.user):
+    # Update the existing record
+    default_project = UserProject.objects.get(userID=request.user).projectID
+    list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
+  else:
+    list_surveys = default_project = ''
+  
+
+  context = RequestContext(request, {
+    'allProjects' : allProjects,
+    'projectForm' : form1,
+    'userProjectForm' : form2,
+    'questionnaireForm' : form3,
+    'defaultProject' : default_project,
+    'listSurveys' : list_surveys,
+    'path' : request.path.split('/')[-2],
+  })
+  return HttpResponse(template.render(context))
 
 @login_required()
 def editor(request):
+  template = loader.get_template('SurveyEditor/editor.html')
+  form1 = QuestionForm()
+  form2 = PageForm()
 
+  default_project = UserProject.objects.get(userID=request.user).projectID
+  list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
+  
+  if request.GET:
+    selected_survey = request.GET['selected']
+    q_id = Questionnaire.objects.get(shortTag=selected_survey)
+  else:
+    q_id = False
+    list_pages = ''
+    selected_survey = False
+  
+  request.session['msg'] = 'hi'
 
-    template = loader.get_template('editor.html')
-    form = QuestionForm()
-    context = RequestContext(request, {
-        'questionForm' : form,
-    })
+  if q_id:
+    list_pages = QuestionnairePage.objects.filter(questionnaireID=q_id)
 
-    return HttpResponse(template.render(context))
+  context = RequestContext(request, {
+    'questionForm' : form1,
+    'pageForm' : form2,
+    'defaultProject' : default_project,
+    'listSurveys' : list_surveys,
+    'selectedSurvey' : selected_survey,
+    'listPages' : list_pages,
+    'path' : request.path.split('/')[-2],
+  })
 
+  return HttpResponse(template.render(context))
 
-def associateUserToProject(theProject, theUser):
-    """
-    Adds or updates a record in UserProject connecting User and Project.
-    Allow only one Project associate per user.
-    
-    Database
-    Sets and association between User and Project in UserProject.
-    The combination of theProject + theUser must be unique
-    
-    Session data
-    Untouched.
-    """
-    # check if already existing record.
-    allSAObjs = UserProject.objects.filter(
-        userID=theUser,
-        )
-    if len(allSAObjs)>1:
-        # delete the extra records and replace with a new one
-        UserProject.objects.filter(
-            userID=theUser,
-            ).delete()
-        UserProject.objects.create(
-            userID=theUser,
-            projectID=theProject
-            )
-    elif len(allSAObjs)==1:
-        # update the existing record. Don't bother checking if the Project has changed.
-        theSArec = allSAObjs[0]
-        theSArec.projectID=theProject
-        theSArec.save()
-    elif len(allSAObjs)==0:
-        # No records exist for this User, so create one
-        UserProject.objects.create(
-            userID=theUser,
-            projectID=theProject
-            )
-    return True
-
-def getAssociatedProjectForUser(theUser):
-    """
-    Adds or updates a record in UserProject connecting User and Project.
-    Allow only one Project associate per user.
-    
-    Database
-    Reads UserProject.
-    The combination of theProject + theUser must be unique
-    
-    Session data
-    Untouched.
-    """
-    try:
-        allSAObjs = UserProject.objects.filter(
-            userID=theUser,
-            )
-        if len(allSAObjs)>=1:
-            # Should not be greater than 1! So select 1st one in the list.
-            theUSObj = allSAObjs[0]
-            if len(allSAObjs)>1:
-                DebugOut('getAssociatedProjectForUser:  syserrmsg: Found more than one project in UserProject table for user: %s'%theUser.username)
-            theProject = theUSObj.projectID
-        elif len(allSAObjs)==0:
-            theProject=None
-    except:
-        theProject=None
-    return theProject

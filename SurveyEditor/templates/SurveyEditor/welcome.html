@@ -1,0 +1,45 @@
+
+{% extends "base.html" %}{% load staticfiles %}
+{% block content %}
+
+  <div ng-app="EditorApp">
+
+	{% if user.is_authenticated %}
+
+	  <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
+	  <p> welcome {{ user }} </p>
+    <div class="container">
+
+      <div class="jumbotron">
+        <h1> HR4E Survey Editor </h1>
+        <div>
+          <p>Welcome to the Health Records For Everyone Survey Editor. Please sign in to create or edit surveys.</p>
+          <p>Or continue to the survey area to complete a survey.</p>
+          <p>
+            <a class="btn btn-lg btn-primary" href="#" role="button">Take a survey &raquo;</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+{{ msg }}
+	{% else %}
+<!-- not needed?
+	  <div ng-include="'{{ STATIC_URL }}partials/navbarWelcome.html'"></div>
+-->
+
+    <body id="cover">
+      <div id="coverdiv">
+        <h1>Health Records For Everyone</h1>
+        <p class="lead">Easily evaluate the condition of your health</p>
+        <a href="#" class="btn btn-lg btn-info">Take a survey</a>
+        <a href="home" class="btn btn-lg btn-info">Write your own survey</a>
+      </div>
+    </body>
+
+
+
+	{% endif %}
+
+  </div>
+{% endblock content %}

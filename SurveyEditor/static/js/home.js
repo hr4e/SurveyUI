@@ -1,15 +1,12 @@
-var ModalDemoCtrl = function ($scope, $modal, $log, Nav) {
-
-
-  Nav.selectPage('Home');
+var AddSurveyModalCtrl = function ($scope, $modal, $log) {
 
   $scope.items = ['item1', 'item2', 'item3'];
 
   $scope.open = function (size) {
 
     var modalInstance = $modal.open({
-      templateUrl: 'myModalContent.html',
-      controller: ModalInstanceCtrl,
+      templateUrl: 'addSurveyModalContent.html',
+      controller: AddSurveyInstanceCtrl,
       size: size,
       resolve: {
         items: function () {
@@ -29,7 +26,7 @@ var ModalDemoCtrl = function ($scope, $modal, $log, Nav) {
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
 
-var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
+var AddSurveyInstanceCtrl = function ($scope, $modalInstance, items) {
   $scope.items = items;
   $scope.selected = {
     item: $scope.items[0]
@@ -45,7 +42,7 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
 };
 
 
-var SelectProjectCtrl = function ($scope, $modal, $log, Nav) {
+var SelectProjectCtrl = function ($scope, $modal, $log) {
 
 
   $scope.items = ['item1', 'item2', 'item3'];
@@ -89,7 +86,7 @@ var SelectProjectModalInstanceCtrl = function ($scope, $modalInstance, items) {
   };
 };
 
-var NewQuestionModalCtrl = function ($scope, $modal, $log) {
+var SelectSurveyCtrl = function ($scope, $modal, $log) {
 
 
   $scope.items = ['item1', 'item2', 'item3'];
@@ -97,8 +94,8 @@ var NewQuestionModalCtrl = function ($scope, $modal, $log) {
   $scope.open = function (size) {
 
     var modalInstance = $modal.open({
-      templateUrl: 'newQuestionModal.html',
-      controller: NewQuestionInstanceCtrl,
+      templateUrl: 'selectSurveyModal.html',
+      controller: SelectSurveyModalInstanceCtrl,
       size: size,
       resolve: {
         items: function () {
@@ -118,7 +115,7 @@ var NewQuestionModalCtrl = function ($scope, $modal, $log) {
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
 
-var NewQuestionInstanceCtrl = function ($scope, $modalInstance, items) {
+var SelectSurveyModalInstanceCtrl = function ($scope, $modalInstance, items) {
   $scope.items = items;
   $scope.selected = {
     item: $scope.items[0]
@@ -138,6 +135,7 @@ var NewQuestionInstanceCtrl = function ($scope, $modalInstance, items) {
 
 
 
+
 var NewProjectModalCtrl = function ($scope, $modal, $log) {
 
 
@@ -146,7 +144,7 @@ var NewProjectModalCtrl = function ($scope, $modal, $log) {
   $scope.open = function (size) {
 
     var modalInstance = $modal.open({
-      templateUrl: 'newProjectModal.html',
+      templateUrl: 'addProjectModal.html',
       controller: NewProjectInstanceCtrl,
       size: size,
       resolve: {

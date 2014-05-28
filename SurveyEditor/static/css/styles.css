@@ -1,23 +1,93 @@
-#QuesCtrl {
-    padding: 20px;
-}
-
-#SaveBtn {
-	float: right;
-}
-
-#QuesEditor {
-	margin-left:auto;
-	margin-right:auto;
-	width: 80%;
-	padding: 55;
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('../fonts/glyphicons-halflings-regular.eot');
+  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
 }
 
 #ToolBar {
-	display: inline;
+  display: inline;
+}
+
+#contentarea{
+  margin-top: 80px;
+}
+
+#footer{
+  background-color: #ccc;
 }
 
 .jumbo-login{
-	width:550px;
-	margin:0 auto;
+  width:550px;
+  margin:0 auto;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+
+.form-signin input[type="username"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* frontpage styles */
+#cover{
+    background: url(../images/raw/8407640768_03c0632c77_o.jpg) no-repeat center center fixed; 
+    background-size: cover;
+    font-family: "Lato", sans-serif;
+}
+
+#coverdiv{
+    position: absolute;
+    top: 35%;
+    left: 0;
+    right: 0;
+    padding-bottom: 20px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.75);
+}
+
+#footer.cover{
+    background-color: #222;
+    color: #aaa;
+    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.75);
+}
+
+.login-alert{
+  width:600px;
+  text-align: center;
+  margin:0 auto;
 }

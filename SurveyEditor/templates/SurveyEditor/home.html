@@ -1,0 +1,133 @@
+
+{% extends "base.html" %}{% load staticfiles %}
+{% block content %}
+
+  <div ng-app="EditorApp">
+
+    <!-- Partials -->
+
+    <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
+
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Welcome to the HR4E Survey Editor</h1>
+        <p>A tool for creating medical surveys with ease!</p>
+        <div ng-controller="AddSurveyModalCtrl">
+          <button class="btn btn-primary btn-lg" ng-click="open()">Create a new survey</button>
+        </div>
+        <div ng-controller="SelectSurveyCtrl">
+          <button class="btn btn-primary btn-lg" ng-click="open()">Edit an existing survey</button>
+        </div>
+      </div>
+    </div>
+
+
+    <div ng-include="'{{ STATIC_URL }}partials/addProjectModal.html'"></div>
+    <div ng-include="'{{ STATIC_URL }}partials/selectProjectBtn.html'"></div>
+    Your default project: {{ defaultProject }}
+    <form action="../selectProject/" method="post">{% csrf_token %}
+      {% for field in userProjectForm %}
+        <div class="fieldName">{{ field.html_name }}</div>
+        <div class="fieldInput">{{ field }}</div>
+      {% endfor %}
+    <input type="submit" value="Submit" />
+
+
+
+
+
+    <!-- Django-Angular Script -->
+
+    <script type="text/javascript">
+      var ProjSelectCtrl = function($scope) {
+        $scope.visible = false;
+        $scope.projects = [];
+        {% for project in allProjects %}
+          $scope.projects.push({
+            abbrev: '{{project.abbrev}}', 
+            name: '{{project.name}}',
+          });
+        {% endfor %}
+        $scope.setSelected = function() {
+            $scope.selected = this.project.abbrev;
+        };
+        $scope.isSelected = function() {
+          if (this.project.abbrev == $scope.selected)
+            return true;
+          else {
+            return false;
+          }
+        };
+      };
+    </script>
+
+    <script type="text/javascript">
+      var SurvSelectCtrl = function($scope) {
+        $scope.visible = false;
+        $scope.surveys = [];
+        {% for survey in listSurveys %}
+          $scope.surveys.push({
+            name: '{{ survey.questionnaireID.shortTag }}', 
+            desc: '{{ survey.questionnaireID.description }}',
+          });
+        {% endfor %}
+        $scope.setSelected = function() {
+            $scope.selected = this.survey.name;
+        };
+        $scope.isSelected = function() {
+          if (this.survey.name == $scope.selected)
+            return true;
+          else {
+            return false;
+          }
+        };
+
+      };
+    </script>
+
+<br><br><br><br><br><br>
+    <!-- Modal Scripts -->
+    <script type="text/ng-template" id="selectProjectModal.html">
+      <div ng-include="'{{ STATIC_URL }}partials/selectProjectModalContents.html'"></div>
+    </script>
+
+    <script type="text/ng-template" id="selectSurveyModal.html">
+      <div ng-include="'{{ STATIC_URL }}partials/selectSurveyModalContents.html'"></div>
+    </script>
+
+    <script type="text/ng-template" id="addSurveyModalContent.html">
+      <div class="modal-header">
+          <h3 class="modal-title">Create a new survey</h3>
+      </div>
+      <div class="modal-body">
+        <form action="../newSurvey/" method="post">{% csrf_token %}
+          {% for field in questionnaireForm %}
+            <div class="fieldName">{{ field.html_name }}</div>
+            <div class="fieldInput">{{ field }}</div>
+          {% endfor %}
+        <input type="submit" value="Submit" />
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="addProjectModal.html">
+      <div class="modal-header">
+        <h3 class="modal-title">Add a new project</h3>
+      </div>
+      <div class="modal-body">
+        <form action="../newProject/" method="post">{% csrf_token %}
+          {% for field in projectForm %}
+            <div class="fieldName">{{ field.html_name }}</div>
+            <div class="fieldInput">{{ field }}</div>
+          {% endfor %}
+        <input type="submit" value="Submit" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      </div>
+    </script>
+
+
+  </div>
+
+{% endblock content %}

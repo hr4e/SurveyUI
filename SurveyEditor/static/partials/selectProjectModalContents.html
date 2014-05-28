@@ -4,7 +4,6 @@
     <div class="panel-heading">
       <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
-          <!--<span class="glyphicon glyphicon-search projectsearch"></span>-->
           <input class="form-control navbar-right projectsearch" placeholder="Type a project name..." ng-model="query">
         </div>
       </form>
@@ -15,14 +14,19 @@
       <table class="table table-bordered table-hover">
         <thead>
           <tr>
+            <th width="36"></th>
             <th>Name</th>
             <th>Quick Description</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="project in projects | filter:query">
-            <a href="#">
-            {{ msg }}
+          <tr ng-repeat="project in projects | filter:query" ng-click="setSelected()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
+            <td>
+              <a ng-show="visible || isSelected()">
+                <span class="glyphicon glyphicon-ok">
+                </span>
+              </a>
+            </td>
             <td>{{ project.abbrev }}</td>
             <td>{{ project.name }}</td>
             </a>
@@ -30,8 +34,8 @@
         </tbody>
       </table>
     </div>
-    <div>
-      <button class="btn btn-primary">OK!</button>
-    </div>
+    <form action="../selectProject/" method="get">
+      <button name="selected" value="{{ selected }}">OK!</button>
+    </form>
   </div>
 </div>

@@ -10,6 +10,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^multiquest/', include('multiquest.urls')),
-    url(r'^test/', include('SurveyEditor.urls')),
+    url(r'', include('SurveyEditor.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

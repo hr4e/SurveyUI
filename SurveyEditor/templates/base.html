@@ -2,80 +2,51 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HR4E Survey Editor</title>
-
-    <!-- Bootstrap -->
-
     <link href="{{ STATIC_URL }}css/lib/bootstrap.min.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/styles.css" rel="stylesheet">
+    <script src="{{ STATIC_URL }}js/lib/angular.min.js"></script>
+
+    <!-- We must use static font files or it will break when in Africa -->
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css">
 
   </head>
+  <body>
+    <!-- Django-Angular Script -->
+    <script type="text/javascript">
+    var NavbarCtrl = function ($scope, $location) {
+      $scope.isCollapsed = true;
+      $scope.isActive = function(path) {
+        if ('{{ path }}' == path) {
+          return "active"
+        } else {
+          return ''
+        }
+      };
+    };
+    </script>
 
-  <body ng-controller="MainCtrl">
+    <div id="contentarea" class="container">
+      {% block content %}{% endblock content %}
+    </div>
 
-    <div ng-controller="ModalDemoCtrl"></div>
-    <!-- Navigation Bar -->
-
-    <nav class="navbar navbar-default" role="navigation">
-      <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">HR4E</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-
-            <li ng-class="(Nav.selected()=='Home') ? 'active' : ''"><a href="../home">Home</a></li>
-            <li ng-class="(Nav.selected()=='Editor') ? 'active' : ''"><a href="../editor">Editor</a></li>
-            
-            
-          </ul>
-
-          <ul class="nav navbar-nav navbar-right">
-            <form action="../logout">
-              <input type="submit" class="btn btn-default navbar-btn" value="Sign out">
-            </form>
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
-    
-    <!-- Content Container -->
-
-    <div class="container">
-
-      {% block content %}
-      {% endblock content %}
-
-
-      {% block footer %}
-      <hr>
-      <footer>
-        <p>&copy; Health Records For Everyone 2014 </p>
-      </footer>
-      {% endblock footer %}
-      
-    </div><!-- /container -->
+    {% block footer %}
+    <div id="footer" class="navbar navbar-fixed-bottom">
+      <div class="container">
+	<span class="navbar-text pull-left"><a href="#">About</a> | <a href="https://github.com/hr4e">GitHub</a></span>
+	<p class="navbar-text pull-right">&copy; 2014 Health Records For Everyone</p>
+      </div>
+    </div>
+    {% endblock footer %}
 
     {% block javascript %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="{{ STATIC_URL }}js/lib/angular.min.js"></script>
+    <script src="{{ STATIC_URL }}js/lib/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}js/lib/ui-bootstrap-tpls-0.10.0.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/kinetic-v5.1.0.min.js"></script>
-    <script src="{{ STATIC_URL }}js/lib/ui-bootstrap-tpls-0.10.0.js"></script>
     <script src="{{ STATIC_URL }}js/app.js"></script>
-    <script src="{{ STATIC_URL }}js/homeCtrl.js"></script>
-    <script src="{{ STATIC_URL }}js/editorCtrl.js"></script>
+    <script src="{{ STATIC_URL }}js/home.js"></script>
+    <script src="{{ STATIC_URL }}js/editor.js"></script>
     {% endblock javascript %}
   </body>
 </html>

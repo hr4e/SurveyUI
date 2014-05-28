@@ -1,0 +1,9 @@
+Oddities:
+API > Select Default Project
+- Correctly modifies database but changes not reflected in multiquest
+
+ToDo:
+[ ] Make title page change depending on location of website 
+[ ] Include username in navbar signout button: "Sign out of $user_name"
+[ ] Error when newsurvey fails
+[ ] 
