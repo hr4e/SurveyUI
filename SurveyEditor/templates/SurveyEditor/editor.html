@@ -31,18 +31,15 @@
 </tr>
 {% endfor %}
 
-
-
-
    <!-- Django-Angular Script -->
 
     <script type="text/javascript">
- var PaginationDemoCtrl = function ($scope) {
+      var SelectPageCtrl = function ($scope) {
 
-   $scope.maxSize = 5;
-   $scope.bigTotalItems = 175;
-   $scope.bigCurrentPage = 1;
- };
+        $scope.maxSize = 5;
+        $scope.totalPages = 10 * {{ numPages }};
+        $scope.selectedPage = 1;
+      };
     </script>
 
     <!-- Modal Scripts -->

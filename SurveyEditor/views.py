@@ -217,13 +217,12 @@ def editor(request):
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
   else:
     q_id = False
-    list_pages = ''
+    list_pages = num_pages = ''
     selected_survey = False
   
-  request.session['msg'] = 'hi'
-
   if q_id:
     list_pages = QuestionnairePage.objects.filter(questionnaireID=q_id)
+    num_pages = QuestionnairePage.objects.filter(questionnaireID=q_id).count()
 
   context = RequestContext(request, {
     'questionForm' : form1,
@@ -231,6 +230,7 @@ def editor(request):
     'defaultProject' : default_project,
     'listSurveys' : list_surveys,
     'selectedSurvey' : selected_survey,
+    'numPages' : num_pages,
     'listPages' : list_pages,
     'path' : request.path.split('/')[-2],
   })
