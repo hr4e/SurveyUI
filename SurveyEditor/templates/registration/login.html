@@ -6,14 +6,8 @@
   <p class="bg-danger">Your username and password didn't match. Please try again.</p>
 {% endif %}
 -->
-{% if errMsg %}
-  {% for aMsg in errMsg %}
-    <p>{{aMsg}}</p>
-  {% endfor %}
-{% endif %}
-<div class="alert alert-danger login-alert">
-  {{ msg }}
-</div>
+
+
 
 <!--
 <form action="" method="post">{% csrf_token %}
@@ -29,7 +23,9 @@
 <!-- Partials -->
 
 <div ng-app="EditorApp" ng-include="'{{ STATIC_URL }}partials/navbarWelcome.html'"></div>
+  <div ng-if="">
 
+  </div>
 
 <!-- Bootstrap -->
 <!-- Log in form - works! 

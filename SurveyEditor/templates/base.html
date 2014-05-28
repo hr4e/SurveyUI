@@ -16,6 +16,7 @@
     <!-- Django-Angular Script -->
     <script type="text/javascript">
     var NavbarCtrl = function ($scope, $location) {
+      $scope.username = '{{ user }}'
       $scope.isCollapsed = true;
       $scope.isActive = function(path) {
         if ('{{ path }}' == path) {
