@@ -23,9 +23,12 @@
 <!-- Partials -->
 
 <div ng-app="EditorApp" ng-include="'{{ STATIC_URL }}partials/navbarWelcome.html'"></div>
-  <div ng-if="">
-
+  {% if msg %}
+  <div class="alert alert-danger login-alert">
+    {{ msg }}
   </div>
+  {% endif %}
+</div>
 
 <!-- Bootstrap -->
 <!-- Log in form - works! 
