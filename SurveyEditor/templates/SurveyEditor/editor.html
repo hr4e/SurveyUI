@@ -18,8 +18,16 @@
   {{ listPage }}
 </div>
 <br>
+<table>
+  <tr>
+    <th>Current Page </th>
+    <th>Next Page</th>
+  </tr>
 {% for page in listPages %}
-  <br>Page: {{ page.pageID }}
+<tr>
+  <td>{{ page.pageID.shortTag }}</td>
+  <td>{{ page.nextPageID.shortTag }}</td>
+</tr>
 {% endfor %}
     <!-- Modal Scripts -->
 

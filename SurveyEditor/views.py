@@ -57,7 +57,7 @@ def newProject(request):
     form = ProjectForm(request.POST)
     if form.is_valid():
       new_proj = form.save()
-  return HttpResponseRedirect('/home')
+  return HttpResponseRedirect('/home/')
 
 @login_required()
 def selectProject(request):
@@ -81,6 +81,12 @@ def newSurvey(request):
     form = QuestionnaireForm(request.POST)
     binding = ProjectQuestionnaire()
 
+    # check if survey already exists in database to ensure unique survey names
+    check = request.POST['shortTag']
+    if Questionnaire.objects.filter(shortTag=check):
+      # send 'error creating survey' message to user
+      return HttpResponseRedirect('/home/')
+
     binding.projectID = UserProject.objects.get(userID=request.user).projectID
 
     if form.is_valid():
@@ -88,7 +94,7 @@ def newSurvey(request):
       binding.questionnaireID = new_surv
       binding.save()
 
-  return HttpResponseRedirect('/editor')
+  return HttpResponseRedirect('/editor/' + check)
 
 @login_required()
 def newPage(request):
