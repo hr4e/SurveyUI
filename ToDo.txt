@@ -5,3 +5,5 @@ API > Select Default Project
 ToDo:
 [ ] Make title page change depending on location of website 
 [ ] Include username in navbar signout button: "Sign out of $user_name"
+[ ] Error when newsurvey fails
+[ ] 
