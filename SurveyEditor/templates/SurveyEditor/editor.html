@@ -11,49 +11,60 @@
 
   {% if selectedSurvey == ''%}
   <!-- Force user to select survey -->
-    <div ng-controller="SelectSurveyCtrl">
-      <div ng-init="open()"></div>
-    </div>
+  <div ng-controller="SelectSurveyCtrl">
+    <div ng-init="open()"></div>
+  </div>
 
-    <script type="text/ng-template" id="selectSurveyModal.html">
-      <div ng-include="'{{ STATIC_URL }}partials/selectSurveyModalContents.html'"></div>
-    </script>
+  <script type="text/ng-template" id="selectSurveyModal.html">
+    <div ng-include="'{{ STATIC_URL }}partials/selectSurveyModalContents.html'"></div>
+  </script>
 
-    <script type="text/javascript">
-      var SurvSelectCtrl = function($scope) {
-        $scope.visible = false;
-        $scope.surveys = [];
-        {% for survey in listSurveys %}
-          $scope.surveys.push({
-            name: '{{ survey.questionnaireID.shortTag }}', 
-            desc: '{{ survey.questionnaireID.description }}',
-          });
-        {% endfor %}
-        $scope.setSelected = function() {
-            $scope.selected = this.survey.name;
-        };
-        $scope.isSelected = function() {
-          if (this.survey.name == $scope.selected)
-            return true;
-          else {
-            return false;
-          }
-        };
-
+  <script type="text/javascript">
+    var SurvSelectCtrl = function($scope) {
+      $scope.visible = false;
+      $scope.surveys = [];
+      {% for survey in listSurveys %}
+        $scope.surveys.push({
+          name: '{{ survey.questionnaireID.shortTag }}', 
+          desc: '{{ survey.questionnaireID.description }}',
+        });
+      {% endfor %}
+      $scope.setSelected = function() {
+          $scope.selected = this.survey.name;
       };
-    </script>
+      $scope.isSelected = function() {
+        if (this.survey.name == $scope.selected)
+          return true;
+        else {
+          return false;
+        }
+      };
+
+    };
+  </script>
   {% else %}
   <!-- Survey editor Page -->
 
   <!-- Partials -->
-  <div ng-controller="NewQuestionModalCtrl">
-    <div ng-controller="SelectPageCtrl" >
-    <button class="btn btn-primary btn-lg" ng-click="open()">Add a new question</button>
-    </div>
-  </div>
+
 
   <div ng-include="'{{ STATIC_URL }}partials/addPageModal.html'"></div>
-  <div ng-include="'{{ STATIC_URL }}partials/selectPageBar.html'"></div>
+  <div ng-controller="SelectPageCtrl">
+
+    <div ng-controller="NewQuestionModalCtrl">
+      {% verbatim %}
+      <button class="btn btn-primary btn-lg" ng-click="open(selectedPage)">Add a new question to page {{ selectedPage }}</button>
+      {% endverbatim %}
+    </div>
+
+      <h4>Default</h4>
+  <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+
+      <hr />
+      {% verbatim %}
+      <pre>Page: {{selectedPage}} / {{numPages}}</pre>
+      {% endverbatim %}
+  </div>
 
 
   <!-- Content -->
