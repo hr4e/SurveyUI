@@ -182,8 +182,7 @@ def home(request):
 
   allProjects = Project.objects.all()
   form1 = ProjectForm()
-  form2 = UserProjectForm()
-  form3 = QuestionnaireForm()
+  form2 = QuestionnaireForm()
   if UserProject.objects.filter(userID=request.user):
     # Update the existing record
     default_project = UserProject.objects.get(userID=request.user).projectID
@@ -193,11 +192,10 @@ def home(request):
   
 
   context = RequestContext(request, {
-    'allProjects' : allProjects,
     'projectForm' : form1,
-    'userProjectForm' : form2,
-    'questionnaireForm' : form3,
+    'questionnaireForm' : form2,
     'defaultProject' : default_project,
+    'allProjects' : allProjects,
     'listSurveys' : list_surveys,
     'path' : request.path.split('/')[-2],
   })

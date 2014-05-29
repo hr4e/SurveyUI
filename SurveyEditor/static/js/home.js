@@ -5,7 +5,7 @@ var AddSurveyModalCtrl = function ($scope, $modal, $log) {
   $scope.open = function (size) {
 
     var modalInstance = $modal.open({
-      templateUrl: 'addSurveyModalContent.html',
+      templateUrl: 'addSurveyModalForm.html',
       controller: AddSurveyInstanceCtrl,
       size: size,
       resolve: {

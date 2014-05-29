@@ -8,36 +8,46 @@
 
     <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 
+
+    <!-- Content -->
+
+    <!-- top panel -->
     <div class="jumbotron">
       <div class="container">
         <h1>Welcome to the HR4E Survey Editor</h1>
         <p>A tool for creating medical surveys with ease!</p>
+
+        <!-- API: Add survey btn -->
         <div ng-controller="AddSurveyModalCtrl">
           <button class="btn btn-primary btn-lg" ng-click="open()">Create a new survey</button>
         </div>
+
+        <!-- API: Select survey btn -->
         <div ng-controller="SelectSurveyCtrl">
           <button class="btn btn-primary btn-lg" ng-click="open()">Edit an existing survey</button>
         </div>
+
       </div>
     </div>
 
+    <!-- API: Add project btn -->
+    <div ng-controller="NewProjectModalCtrl">
+      <button class="btn btn-primary btn-lg" ng-click="open()">Add a new project</button>
+      <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+    </div>
 
-    <div ng-include="'{{ STATIC_URL }}partials/addProjectModal.html'"></div>
-    <div ng-include="'{{ STATIC_URL }}partials/selectProjectBtn.html'"></div>
+    <!-- API: Select project btn -->
+    <div ng-controller="SelectProjectCtrl">
+      <button class="btn btn-primary btn-lg" ng-click="open()">Select a project</button>
+      <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+    </div>
+
     Your default project: {{ defaultProject }}
-    <form action="../selectProject/" method="post">{% csrf_token %}
-      {% for field in userProjectForm %}
-        <div class="fieldName">{{ field.html_name }}</div>
-        <div class="fieldInput">{{ field }}</div>
-      {% endfor %}
-    <input type="submit" value="Submit" />
-
-
-
 
 
     <!-- Django-Angular Script -->
 
+    <!-- API: 2-way data binding the list of projects -->
     <script type="text/javascript">
       var ProjSelectCtrl = function($scope) {
         $scope.visible = false;
@@ -61,6 +71,7 @@
       };
     </script>
 
+    <!-- API: 2-way data binding the list of surveys -->
     <script type="text/javascript">
       var SurvSelectCtrl = function($scope) {
         $scope.visible = false;
@@ -85,17 +96,21 @@
       };
     </script>
 
-<br><br><br><br><br><br>
+<br><br><br><br><br><br><!-- can someone add a margin top for home page -->
     <!-- Modal Scripts -->
+
+    <!-- select project modal container -->
     <script type="text/ng-template" id="selectProjectModal.html">
       <div ng-include="'{{ STATIC_URL }}partials/selectProjectModalContents.html'"></div>
     </script>
 
+    <!-- select survey modal contents -->
     <script type="text/ng-template" id="selectSurveyModal.html">
       <div ng-include="'{{ STATIC_URL }}partials/selectSurveyModalContents.html'"></div>
     </script>
 
-    <script type="text/ng-template" id="addSurveyModalContent.html">
+    <!-- add survey modal form -->
+    <script type="text/ng-template" id="addSurveyModalForm.html">
       <div class="modal-header">
           <h3 class="modal-title">Create a new survey</h3>
       </div>
@@ -109,6 +124,7 @@
       </div>
     </script>
 
+    <!-- add project modal form -->
     <script type="text/ng-template" id="addProjectModal.html">
       <div class="modal-header">
         <h3 class="modal-title">Add a new project</h3>

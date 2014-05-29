@@ -1,6 +1,6 @@
 <!-- Angular Handlebars here do not need to be wrapped in verbatim tags -->
 <div ng-controller="SurvSelectCtrl">
-  <div class="panel panel-default">
+  <div ng-if="surveys.length>0" class="panel panel-default">
     <div class="panel-heading">
       <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
@@ -11,6 +11,7 @@
     </div>
 
     <div class="panel-body">
+
       <table class="table table-bordered table-hover">
         <thead>
           <tr>
@@ -32,11 +33,18 @@
           </tr>
         </tbody>
       </table>
+
     </div>
     <div>
       <form action="../editor/" method="get">
         <button name="selected" value="{{ selected }}">OK!</button>
       </form>
+    </div>
+  </div>
+
+  <div ng-if="surveys.length<=0" class="panel panel-default">
+    <div class="panel-heading">
+      <h1>No surveys created yet!</h1>
     </div>
   </div>
 </div>
