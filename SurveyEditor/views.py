@@ -217,8 +217,7 @@ def editor(request):
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
   else:
     q_id = False
-    list_pages = num_pages = ''
-    selected_survey = False
+    selected_survey = list_pages = num_pages = ''
   
   if q_id:
     list_pages = QuestionnairePage.objects.filter(questionnaireID=q_id)

@@ -2,95 +2,132 @@
 {% extends "base.html" %}{% load staticfiles %}
 {% block content %}
  
-  <div ng-app="EditorApp">
+<div ng-app="EditorApp">
+  <h1>Project {{ defaultProject.shortTag }}</h1>
 
-    <!-- Partials 
-    <div ng-include="'{{ STATIC_URL }}partials/selectPageBtn.html'"></div>-->
+  <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 
-    <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 
-    <div ng-controller="NewQuestionModalCtrl">
-      <div ng-controller="SelectPageCtrl" >
-        {% verbatim %}
-      <button class="btn btn-primary btn-lg" ng-click="open('{{ selectedPage }}')">Add a new question2</button>
-      {% endverbatim %}
-      </div>
+
+  {% if selectedSurvey == ''%}
+  <!-- Force user to select survey -->
+    <div ng-controller="SelectSurveyCtrl">
+      <div ng-init="open()"></div>
     </div>
 
-    <div ng-include="'{{ STATIC_URL }}partials/addPageModal.html'"></div>
-    <div ng-include="'{{ STATIC_URL }}partials/selectPageBar.html'"></div>
+    <script type="text/ng-template" id="selectSurveyModal.html">
+      <div ng-include="'{{ STATIC_URL }}partials/selectSurveyModalContents.html'"></div>
+    </script>
 
-{{ defaultProject }}
-<div ng-controller="SurvSelectCtrl">
+    <script type="text/javascript">
+      var SurvSelectCtrl = function($scope) {
+        $scope.visible = false;
+        $scope.surveys = [];
+        {% for survey in listSurveys %}
+          $scope.surveys.push({
+            name: '{{ survey.questionnaireID.shortTag }}', 
+            desc: '{{ survey.questionnaireID.description }}',
+          });
+        {% endfor %}
+        $scope.setSelected = function() {
+            $scope.selected = this.survey.name;
+        };
+        $scope.isSelected = function() {
+          if (this.survey.name == $scope.selected)
+            return true;
+          else {
+            return false;
+          }
+        };
+
+      };
+    </script>
+  {% else %}
+  <!-- Survey editor Page -->
+
+  <!-- Partials -->
+  <div ng-controller="NewQuestionModalCtrl">
+    <div ng-controller="SelectPageCtrl" >
+    <button class="btn btn-primary btn-lg" ng-click="open()">Add a new question</button>
+    </div>
+  </div>
+
+  <div ng-include="'{{ STATIC_URL }}partials/addPageModal.html'"></div>
+  <div ng-include="'{{ STATIC_URL }}partials/selectPageBar.html'"></div>
+
+
+  <!-- Content -->
+
+  <div ng-controller="SurvSelectCtrl">
+    <br>
+    Selected Survey: {{ selectedSurvey }}<br>
+    {{ listPage }}
+  </div>
   <br>
-  Selected Survey: {{ selectedSurvey }}<br>
-  {{ listPage }}
-</div>
-<br>
-<table>
+  <table>
+    <tr>
+      <th>Current Page </th>
+      <th>Next Page</th>
+    </tr>
+  {% for page in listPages %}
   <tr>
-    <th>Current Page </th>
-    <th>Next Page</th>
+    <td>{{ page.pageID.shortTag }}</td>
+    <td>{{ page.nextPageID.shortTag }}</td>
   </tr>
-{% for page in listPages %}
-<tr>
-  <td>{{ page.pageID.shortTag }}</td>
-  <td>{{ page.nextPageID.shortTag }}</td>
-</tr>
-{% endfor %}
+  {% endfor %}
+
 
    <!-- Django-Angular Script -->
 
-    <script type="text/javascript">
-      var SelectPageCtrl = function ($scope) {
+  <script type="text/javascript">
+    var SelectPageCtrl = function ($scope) {
+      $scope.maxSize = 5;
+      $scope.totalPages = 10 * {{ numPages }};
+      $scope.selectedPage = 1;
+    };
+  </script>
+  <!-- Modal Scripts -->
 
-        $scope.maxSize = 5;
-        $scope.totalPages = 10 * {{ numPages }};
-        $scope.selectedPage = 1;
-      };
-    </script>
+  <script type="text/ng-template" id="addPageModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Add a new page</h3>
+    </div>
+    <div class="modal-body">
+      <form action="../newPage/" method="post">{% csrf_token %}
+        {% for field in pageForm %}
+          <div class="fieldName">{{ field.html_name }}</div>
+          <div class="fieldInput">{{ field }}</div>
+          <input type="hidden" value="{{ selectedSurvey }}" name="selected">
+        {% endfor %}
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ok()">OK</button>
+      <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+  </script>
 
-    <!-- Modal Scripts -->
+  <script type="text/ng-template" id="addQuestionModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Add a new question {% verbatim %}{{ msg }}{% endverbatim %}</h3>
+    </div>
+    <div class="modal-body">
+      <form action="../newQuestion/" method="post">{% csrf_token %}
+        {% for field in questionForm %}
+          <div class="fieldName">{{ field.html_name }}</div>
+          <div class="fieldInput">{{ field }}</div>
+        {% endfor %}
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ok()">OK</button>
+      <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+  </script>
+  {% endif %}
 
-    <script type="text/ng-template" id="addPageModal.html">
-      <div class="modal-header">
-         <h3 class="modal-title">Add a new page</h3>
-      </div>
-      <div class="modal-body">
-        <form action="../newPage/" method="post">{% csrf_token %}
-          {% for field in pageForm %}
-            <div class="fieldName">{{ field.html_name }}</div>
-            <div class="fieldInput">{{ field }}</div>
-            <input type="hidden" value="{{ selectedSurvey }}" name="selected">
-          {% endfor %}
-          <input type="submit" value="Submit" />
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-      </div>
-    </script>
-
-    <script type="text/ng-template" id="addQuestionModal.html">
-      <div class="modal-header">
-         <h3 class="modal-title">Add a new question {% verbatim %}{{ msg }}{% endverbatim %}</h3>
-      </div>
-      <div class="modal-body">
-        <form action="../newQuestion/" method="post">{% csrf_token %}
-          {% for field in questionForm %}
-            <div class="fieldName">{{ field.html_name }}</div>
-            <div class="fieldInput">{{ field }}</div>
-          {% endfor %}
-          <input type="submit" value="Submit" />
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-      </div>
-    </script>
-
-  </div>
+</div>
   
 {% endblock content %}
