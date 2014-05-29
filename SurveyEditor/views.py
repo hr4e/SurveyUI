@@ -214,8 +214,7 @@ def editor(request):
     selected_survey = request.GET['selected']
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
   else:
-    q_id = False
-    selected_survey = list_pages = num_pages = ''
+    q_id = selected_survey = list_pages = num_pages = ''
   
   if q_id:
     list_pages = QuestionnairePage.objects.filter(questionnaireID=q_id)
@@ -225,7 +224,7 @@ def editor(request):
     'questionForm' : form1,
     'pageForm' : form2,
     'defaultProject' : default_project,
-    'selectedSurvey' : selected_survey,
+    'selectedSurvey' : q_id,
     'listSurveys' : list_surveys,
     'numPages' : num_pages,
     'listPages' : list_pages,
