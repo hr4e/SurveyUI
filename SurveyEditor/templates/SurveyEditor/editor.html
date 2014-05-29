@@ -3,17 +3,22 @@
 {% block content %}
  
 <div ng-app="EditorApp">
-  <h1>Project {{ defaultProject.shortTag }}</h1>
+
+  <!-- Partials -->
 
   <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 
 
-
   {% if selectedSurvey == ''%}
+  <h1>Project {{ defaultProject.shortTag }}</h1>
+  <hr>
+
   <!-- Force user to select survey -->
   <div ng-controller="SelectSurveyCtrl">
     <div ng-init="open()"></div>
   </div>
+
+  <h3>Please select a survey to edit</h3>
 
   <script type="text/ng-template" id="selectSurveyModal.html">
     <div ng-include="'{{ STATIC_URL }}partials/selectSurveyModalContents.html'"></div>
@@ -44,11 +49,15 @@
   </script>
   {% else %}
   <!-- Survey editor Page -->
+  <h1>Project {{ defaultProject.shortTag }} > {{ selectedSurvey }}</h1>
+  <hr>
 
-  <!-- Partials -->
+  <!-- API: Add new page -->
+  <div ng-controller="NewPageModalCtrl">
+    <button class="btn btn-primary btn-lg" ng-click="open()">Add a new page</button>
+    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+  </div>
 
-
-  <div ng-include="'{{ STATIC_URL }}partials/addPageModal.html'"></div>
   <div ng-controller="SelectPageCtrl">
 
     <div ng-controller="NewQuestionModalCtrl">

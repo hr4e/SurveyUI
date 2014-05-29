@@ -10,7 +10,8 @@
 
 
     <!-- Content -->
-
+<h1>Project {{ defaultProject.abbrev }}</h1>
+<hr>
     <!-- top panel -->
     <div class="jumbotron">
       <div class="container">
@@ -41,9 +42,6 @@
       <button class="btn btn-primary btn-lg" ng-click="open()">Select a project</button>
       <div ng-show="selected">Selection from a modal: {{ selected }}</div>
     </div>
-
-    Your default project: {{ defaultProject }}
-
 
     <!-- Django-Angular Script -->
 
@@ -96,7 +94,7 @@
       };
     </script>
 
-<br><br><br><br><br><br><!-- can someone add a margin top for home page -->
+<br><br><br><br><br><br><!-- can someone add a margin bottom for home page -->
     <!-- Modal Scripts -->
 
     <!-- select project modal container -->
