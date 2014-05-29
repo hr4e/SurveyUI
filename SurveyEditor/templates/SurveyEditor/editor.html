@@ -8,7 +8,15 @@
     <div ng-include="'{{ STATIC_URL }}partials/selectPageBtn.html'"></div>-->
 
     <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
-    <div ng-include="'{{ STATIC_URL }}partials/addQuestionModal.html'"></div>
+
+    <div ng-controller="NewQuestionModalCtrl">
+      <div ng-controller="SelectPageCtrl" >
+        {% verbatim %}
+      <button class="btn btn-primary btn-lg" ng-click="open('{{ selectedPage }}')">Add a new question2</button>
+      {% endverbatim %}
+      </div>
+    </div>
+
     <div ng-include="'{{ STATIC_URL }}partials/addPageModal.html'"></div>
     <div ng-include="'{{ STATIC_URL }}partials/selectPageBar.html'"></div>
 
@@ -66,7 +74,7 @@
 
     <script type="text/ng-template" id="addQuestionModal.html">
       <div class="modal-header">
-         <h3 class="modal-title">Add a new question</h3>
+         <h3 class="modal-title">Add a new question {% verbatim %}{{ msg }}{% endverbatim %}</h3>
       </div>
       <div class="modal-body">
         <form action="../newQuestion/" method="post">{% csrf_token %}
