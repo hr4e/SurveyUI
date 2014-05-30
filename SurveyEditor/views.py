@@ -56,6 +56,14 @@ class QuestionForm(ModelForm):
 def newProject(request):
   if request.method == "POST":
     form = ProjectForm(request.POST)
+
+    # check if survey already exists in database to ensure unique survey names
+    check = request.POST['shortTag']
+    if Project.objects.filter(shortTag=check):
+      # send 'error survey name exists' message to user
+      messages.error(request, 'Error: project name \'' + check + '\' already exists.')
+      return HttpResponseRedirect('/home/')
+
     if form.is_valid():
       new_proj = form.save()
       messages.success(request, 'Success: new project \'' + new_proj.shortTag + '\' added to database')
@@ -94,6 +102,7 @@ def newSurvey(request):
     check = request.POST['shortTag']
     if Questionnaire.objects.filter(shortTag=check):
       # send 'error survey name exists' message to user
+      messages.error(request, 'Error: survey name \'' + check + '\' already exists.')
       return HttpResponseRedirect('/home/')
 
     binding.projectID = UserProject.objects.get(userID=request.user).projectID
@@ -129,7 +138,7 @@ def newPage(request):
     check = request.POST['shortTag']
     if Page.objects.filter(shortTag=check):
       # send 'error page name exists' message to user
-      messages.error(request, 'Error: name \'' + check + '\' already exists.')
+      messages.error(request, 'Error: page name \'' + check + '\' already exists.')
       return HttpResponseRedirect('/editor/?selected=' + selected_survey)
 
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
@@ -161,11 +170,17 @@ def newQuestion(request):
     binding.pageID = p_id
     selected_survey = request.POST['selected']
 
+    check = request.POST['questionTag']
+    if Question.objects.filter(questionTag=check):
+      # send 'error question name exists' message to user
+      messages.error(request, 'Error: question name \'' + check + '\' already exists.')
+      return HttpResponseRedirect('/editor/?selected=' + selected_survey)
+
     if form.is_valid():
       new_ques = form.save()
       binding.questionID = new_ques
       binding.save()
-      messages.success(request, 'Success: new question \'' + new_ques.shortTag + '\' added to page: \'' + p_id.shortTag + '\'')
+      messages.success(request, 'Success: new question \'' + new_ques.questionTag + '\' added to page: \'' + p_id.shortTag + '\'')
     else:
       for error in form.errors:
           messages.error(request, 'Error: \'' + error + '\' is required')
@@ -271,6 +286,12 @@ def editor(request):
     list_pages = QuestionnairePage.objects.filter(questionnaireID=q_id)
     num_pages = QuestionnairePage.objects.filter(questionnaireID=q_id).count()
 
+  # Get list of all questions within a page
+  all_questions = []
+  for page in list_pages:
+    # Append list of questions associated w/ this page
+    all_questions.append(PageQuestion.objects.filter(pageID=page.pageID))
+
   context = RequestContext(request, {
     'questionForm' : form1,
     'pageForm' : form2,
@@ -279,6 +300,7 @@ def editor(request):
     'listSurveys' : list_surveys,
     'numPages' : num_pages,
     'listPages' : list_pages,
+    'allQuestions' : all_questions,
     'path' : request.path.split('/')[-2],
   })
 

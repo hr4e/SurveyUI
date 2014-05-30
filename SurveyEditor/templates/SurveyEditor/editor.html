@@ -119,11 +119,14 @@
       {% endverbatim %}
 
 
+      {% verbatim %}
+      <pre>Page: {{ allQuestions }}</pre>
+      {% endverbatim %}
+
     <!-- transition table -->
     <div ng-include="'{{ STATIC_URL }}partials/transitionTableContents.html'"></div>
     <br><br><br><br>
     </div>
-
 
     <!-- Django-Angular Script -->
 
@@ -134,6 +137,7 @@
         $scope.selectedPage = 1;
         $scope.selectedSurvey = '{{ selectedSurvey.shortTag }}';
  
+        <!-- 2-way data bind the list of pages -->
         $scope.listPages = [];
         {% for page in listPages %}
           $scope.listPages.push({
@@ -141,6 +145,19 @@
             nextPage : '{{ page.nextPageID.shortTag }}',
           });
         {% endfor %}
+
+        <!-- 2 way data bind the list of list_questions -->
+        $scope.allQuestions = [];
+        {% for page in allQuestions %}
+          $scope.allQuestions.push([]);
+          {% for question in page %}
+            $scope.allQuestions[{{ forloop.parentloop.counter0 }}].push({
+              questionTag : '{{ question.questionID.questionTag }}',
+              });
+          {% endfor %}
+        {% endfor %}
+
+
 
         $scope.setSelected = function() {
           $scope.selectedPage = this.$index + 1;
