@@ -6,6 +6,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 
+from django.contrib import messages
 from django.utils import timezone
 from django.forms import ModelForm
 
@@ -84,7 +85,7 @@ def newSurvey(request):
     # check if survey already exists in database to ensure unique survey names
     check = request.POST['shortTag']
     if Questionnaire.objects.filter(shortTag=check):
-      # send 'error creating survey' message to user
+      # send 'error survey name exists' message to user
       return HttpResponseRedirect('/home/')
 
     binding.projectID = UserProject.objects.get(userID=request.user).projectID
@@ -98,14 +99,22 @@ def newSurvey(request):
 
 @login_required()
 def newPage(request):
+  # We maintain the invariant that all pages have a unique shortTag
   if request.method == "POST":
     form = PageForm(request.POST)
     binding = QuestionnairePage()
 
     selected_survey = request.POST['selected']
-    if selected_survey=='False':
+    if selected_survey=='':
       # Error, no selected survey
       return HttpResponseRedirect('/')
+
+    check = request.POST['shortTag']
+    if Page.objects.filter(shortTag=check):
+      # send 'error page name exists' message to user
+      messages.error(request, 'Error: Page name already exists.')
+      return HttpResponseRedirect('/editor/?selected=' + selected_survey)
+
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
     binding.questionnaireID = q_id
 
@@ -114,6 +123,7 @@ def newPage(request):
       binding.pageID = new_page
       binding.nextPageID = new_page
       binding.save()
+      messages.success(request, 'Success: Added new page to survey ' + selected_survey)
   return HttpResponseRedirect('/editor/?selected=' + selected_survey)
 
 @login_required()

@@ -4,6 +4,38 @@
  
 <div ng-app="EditorApp">
 
+  <!-- Django message middleware notification system -->
+  {% if messages %}
+      {% for message in messages %}
+        <div ng-controller="EditorCtrl">
+          <!-- #define ERROR 40 -->
+          {% if message.level == 40 %}
+          <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+          {% endif %}
+
+          <!-- #define WARNING 30 -->
+          {% if message.level == 30 %}
+          <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+          {% endif %}
+
+          <!-- #define SUCCESS 25 -->
+          {% if message.level == 25 %}
+          <alert type="success" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+          {% endif %}
+
+          <!-- #define INFO 20 -->
+          {% if message.level == 20 %}
+          <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+          {% endif %}
+
+          <!-- #define DEBUG 10 -->
+          {% if message.level == 10 %}
+          <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+          {% endif %}
+        </div>
+      {% endfor %}
+  {% endif %}
+
   <!-- Partials -->
 
   <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>

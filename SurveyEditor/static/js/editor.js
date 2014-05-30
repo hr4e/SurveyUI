@@ -1,5 +1,8 @@
 var EditorCtrl = function ($scope) {
-
+  $scope.visible = true;
+  $scope.closeAlert = function(index) {
+    $scope.alerts.splice(index, 1);
+  };
 
 	$scope.surprise = function() {
 		$scope.msg = $scope.windowWidth;
