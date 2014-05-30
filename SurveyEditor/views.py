@@ -62,7 +62,11 @@ def newProject(request):
     else:
       for error in form.errors:
           messages.error(request, 'Error: \'' + error + '\' is required')
-  return HttpResponseRedirect('/home/')
+    return HttpResponseRedirect('/home/')
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
 @login_required()
 def selectProject(request):
@@ -99,11 +103,16 @@ def newSurvey(request):
       binding.questionnaireID = new_surv
       binding.save()
       messages.success(request, 'Success: new survey \'' + new_surv.shortTag + '\' added to project \'' + binding.projectID.shortTag + '\'')
+      return HttpResponseRedirect('/editor/' + check)
     else:
       for error in form.errors:
           messages.error(request, 'Error: \'' + error + '\' is required')
+      return HttpResponseRedirect('/home/')
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
-  return HttpResponseRedirect('/editor/' + check)
 
 @login_required()
 def newPage(request):
@@ -134,9 +143,12 @@ def newPage(request):
       messages.success(request, 'Success: new page \'' + new_page.shortTag + '\' added to survey \'' + selected_survey + '\'')
     else:
       for error in form.errors:
-          messages.error(request, 'ERROR: \'' + error + '\' is required')
-
-  return HttpResponseRedirect('/editor/?selected=' + selected_survey)
+          messages.error(request, 'Error: \'' + error + '\' is required')
+    return HttpResponseRedirect('/editor/?selected=' + selected_survey)
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
 @login_required()
 def newQuestion(request):
@@ -156,9 +168,12 @@ def newQuestion(request):
       messages.success(request, 'Success: new question \'' + new_ques.shortTag + '\' added to page: \'' + p_id.shortTag + '\'')
     else:
       for error in form.errors:
-          messages.error(request, 'ERROR: \'' + error + '\' is required')
-
-  return HttpResponseRedirect('/editor/?selected='+selected_survey)
+          messages.error(request, 'Error: \'' + error + '\' is required')
+    return HttpResponseRedirect('/editor/?selected='+selected_survey)
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
 
 
