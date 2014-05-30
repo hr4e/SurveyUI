@@ -15,7 +15,7 @@
 
           <!-- #define WARNING 30 -->
           {% if message.level == 30 %}
-          <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+          <alert ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
           {% endif %}
 
           <!-- #define SUCCESS 25 -->
@@ -25,7 +25,7 @@
 
           <!-- #define INFO 20 -->
           {% if message.level == 20 %}
-          <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+          <alert ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
           {% endif %}
 
           <!-- #define DEBUG 10 -->
@@ -141,6 +141,17 @@
             nextPage : '{{ page.nextPageID.shortTag }}',
           });
         {% endfor %}
+
+        $scope.setSelected = function() {
+          $scope.selectedPage = this.$index + 1;
+        };
+        $scope.isSelected = function() {
+          if (this.$index+1 == $scope.selectedPage)
+            return true;
+          else {
+            return false;
+          }
+        };
       };
     </script>
 

@@ -58,6 +58,10 @@ def newProject(request):
     form = ProjectForm(request.POST)
     if form.is_valid():
       new_proj = form.save()
+      messages.success(request, 'Success: new project \'' + new_proj.shortTag + '\' added to database')
+    else:
+      for error in form.errors:
+          messages.error(request, 'Error: \'' + error + '\' is required')
   return HttpResponseRedirect('/home/')
 
 @login_required()
@@ -94,6 +98,10 @@ def newSurvey(request):
       new_surv = form.save()
       binding.questionnaireID = new_surv
       binding.save()
+      messages.success(request, 'Success: new survey \'' + new_surv.shortTag + '\' added to project \'' + binding.projectID.shortTag + '\'')
+    else:
+      for error in form.errors:
+          messages.error(request, 'Error: \'' + error + '\' is required')
 
   return HttpResponseRedirect('/editor/' + check)
 
@@ -112,7 +120,7 @@ def newPage(request):
     check = request.POST['shortTag']
     if Page.objects.filter(shortTag=check):
       # send 'error page name exists' message to user
-      messages.error(request, 'Error: Page name already exists.')
+      messages.error(request, 'Error: name \'' + check + '\' already exists.')
       return HttpResponseRedirect('/editor/?selected=' + selected_survey)
 
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
@@ -123,7 +131,11 @@ def newPage(request):
       binding.pageID = new_page
       binding.nextPageID = new_page
       binding.save()
-      messages.success(request, 'Success: Added new page to survey ' + selected_survey)
+      messages.success(request, 'Success: new page \'' + new_page.shortTag + '\' added to survey \'' + selected_survey + '\'')
+    else:
+      for error in form.errors:
+          messages.error(request, 'ERROR: \'' + error + '\' is required')
+
   return HttpResponseRedirect('/editor/?selected=' + selected_survey)
 
 @login_required()
@@ -141,6 +153,11 @@ def newQuestion(request):
       new_ques = form.save()
       binding.questionID = new_ques
       binding.save()
+      messages.success(request, 'Success: new question \'' + new_ques.shortTag + '\' added to page: \'' + p_id.shortTag + '\'')
+    else:
+      for error in form.errors:
+          messages.error(request, 'ERROR: \'' + error + '\' is required')
+
   return HttpResponseRedirect('/editor/?selected='+selected_survey)
 
 

@@ -77,6 +77,7 @@ var NewQuestionModalCtrl = function ($scope, $modal, $log) {
 
 var NewQuestionInstanceCtrl = function ($scope, $modalInstance, selection) {
   $scope.page = selection[0];
+  $scope.survey = selection[1];
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
