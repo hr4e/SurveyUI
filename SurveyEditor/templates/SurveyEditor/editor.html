@@ -120,7 +120,7 @@
 
 
       {% verbatim %}
-      <pre>Page: {{ allQuestions }}</pre>
+      <pre>Page: {{ allQuestions[selectedPage-1] }}</pre>
       {% endverbatim %}
 
     <!-- transition table -->
@@ -137,7 +137,7 @@
         $scope.selectedPage = 1;
         $scope.selectedSurvey = '{{ selectedSurvey.shortTag }}';
  
-        <!-- 2-way data bind the list of pages -->
+        <!-- API: 2-way data bind the list of pages -->
         $scope.listPages = [];
         {% for page in listPages %}
           $scope.listPages.push({
@@ -146,7 +146,7 @@
           });
         {% endfor %}
 
-        <!-- 2 way data bind the list of list_questions -->
+        <!-- API: 2 way data bind the list of list_questions -->
         $scope.allQuestions = [];
         {% for page in allQuestions %}
           $scope.allQuestions.push([]);
