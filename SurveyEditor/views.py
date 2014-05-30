@@ -120,9 +120,18 @@ def newPage(request):
 def newQuestion(request):
   if request.method == "POST":
     form = QuestionForm(request.POST)
+    binding = PageQuestion()
+
+    selected_page = request.POST['page']
+    p_id = Page.objects.get(shortTag=selected_page)
+    binding.pageID = p_id
+    selected_survey = request.POST['selected']
+
     if form.is_valid():
       new_ques = form.save()
-  return HttpResponseRedirect('/editor')
+      binding.questionID = new_ques
+      binding.save()
+  return HttpResponseRedirect('/editor/?selected='+selected_survey)
 
 
 

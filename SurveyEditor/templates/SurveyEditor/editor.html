@@ -70,8 +70,9 @@
       <!-- API: add new question btn -->
       <div ng-controller="NewQuestionModalCtrl">
         {% verbatim %}
-        <button class="btn btn-primary btn-lg" ng-click="open(selectedPage)">Add a new question to page {{ selectedPage }}</button>
+        <button class="btn btn-primary btn-lg" ng-click="open(listPages[selectedPage-1].currentPage, selectedSurvey)">Add a new question to page {{ selectedPage }}</button>
         {% endverbatim %}
+        
       </div>
 
       <!-- API: select a page bar -->
@@ -79,14 +80,17 @@
 
       <hr />
       {% verbatim %}
+      Selected Page: <h1>{{ listPages[selectedPage-1].currentPage }}</h1>
+      {% endverbatim %}
+      {% verbatim %}
       <pre>Page: {{selectedPage}} / {{numPages}}</pre>
       {% endverbatim %}
-    </div>
 
 
-    <!-- Content -->
-
+    <!-- transition table -->
     <div ng-include="'{{ STATIC_URL }}partials/transitionTableContents.html'"></div>
+    <br><br><br><br>
+    </div>
 
 
     <!-- Django-Angular Script -->
@@ -96,6 +100,7 @@
         $scope.maxSize = 5;
         $scope.totalPages = 10 * {{ numPages }};
         $scope.selectedPage = 1;
+        $scope.selectedSurvey = '{{ selectedSurvey.shortTag }}';
  
         $scope.listPages = [];
         {% for page in listPages %}
@@ -108,7 +113,6 @@
     </script>
 
 
-    <br><br><br><br>
     <!-- Modal Scripts -->
 
     <script type="text/ng-template" id="addPageModal.html">
@@ -133,7 +137,7 @@
 
     <script type="text/ng-template" id="addQuestionModal.html">
       <div class="modal-header">
-         <h3 class="modal-title">Add a new question {% verbatim %}{{ msg }}{% endverbatim %}</h3>
+         <h3 class="modal-title">Add a new question to {% verbatim %}{{ page }}{% endverbatim %}</h3>
       </div>
       <div class="modal-body">
         <form action="../newQuestion/" method="post">{% csrf_token %}
@@ -141,7 +145,10 @@
             <div class="fieldName">{{ field.html_name }}</div>
             <div class="fieldInput">{{ field }}</div>
           {% endfor %}
-          <input type="hidden" value="{{ selectedPage }}" name="page">
+          {% verbatim %}
+          <input type="hidden" value="{{ page }}" name="page">
+          <input type="hidden" value="{{ survey }}" name="selected">
+          {% endverbatim %}
           <input type="submit" value="Submit" />
         </form>
       </div>

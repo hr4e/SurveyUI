@@ -54,14 +54,14 @@ var NewPageInstanceCtrl = function ($scope, $modalInstance, items) {
 
 var NewQuestionModalCtrl = function ($scope, $modal, $log) {
 
-  $scope.open = function (selection) {
+  $scope.open = function (page, survey) {
 
     var modalInstance = $modal.open({
       templateUrl: 'addQuestionModal.html',
       controller: NewQuestionInstanceCtrl,
       resolve: {
-        selectedPage: function () {
-          return selection;
+        selection: function () {
+          return [page, survey];
         }
       }
     });
@@ -72,8 +72,8 @@ var NewQuestionModalCtrl = function ($scope, $modal, $log) {
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
 
-var NewQuestionInstanceCtrl = function ($scope, $modalInstance, selectedPage) {
-  $scope.msg = selectedPage;
+var NewQuestionInstanceCtrl = function ($scope, $modalInstance, selection) {
+  $scope.page = selection[0];
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
