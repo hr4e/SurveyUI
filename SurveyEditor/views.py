@@ -105,7 +105,12 @@ def newSurvey(request):
       messages.error(request, 'Error: survey name \'' + check + '\' already exists.')
       return HttpResponseRedirect('/home/')
 
-    binding.projectID = UserProject.objects.get(userID=request.user).projectID
+    # check if user has selected a project
+    try:
+      binding.projectID = UserProject.objects.get(userID=request.user).projectID
+    except:
+      messages.error(request, "Error: User '" + str(request.user) + "' has not selected a default project.")
+      return HttpResponseRedirect('/home/')
 
     if form.is_valid():
       new_surv = form.save()
