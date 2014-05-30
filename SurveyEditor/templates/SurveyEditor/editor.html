@@ -86,34 +86,29 @@
 
     <!-- Content -->
 
-    <div ng-controller="SurvSelectCtrl">
-      <br>
-      Selected Survey: {{ selectedSurvey.barTitle }}<br>
-      {{ listPage }}
-    </div>
-    <br>
-    <table>
-      <tr>
-        <th>Current Page </th>
-        <th>Next Page</th>
-      </tr>
-    {% for page in listPages %}
-    <tr>
-      <td>{{ page.pageID.shortTag }}</td>
-      <td>{{ page.nextPageID.shortTag }}</td>
-    </tr>
-    {% endfor %}
+    <div ng-include="'{{ STATIC_URL }}partials/transitionTableContents.html'"></div>
 
 
-     <!-- Django-Angular Script -->
+    <!-- Django-Angular Script -->
 
     <script type="text/javascript">
       var SelectPageCtrl = function ($scope) {
         $scope.maxSize = 5;
         $scope.totalPages = 10 * {{ numPages }};
         $scope.selectedPage = 1;
+ 
+        $scope.listPages = [];
+        {% for page in listPages %}
+          $scope.listPages.push({
+            currentPage : '{{ page.pageID.shortTag }}',
+            nextPage : '{{ page.nextPageID.shortTag }}',
+          });
+        {% endfor %}
       };
     </script>
+
+
+    <br><br><br><br>
     <!-- Modal Scripts -->
 
     <script type="text/ng-template" id="addPageModal.html">
@@ -125,8 +120,8 @@
           {% for field in pageForm %}
             <div class="fieldName">{{ field.html_name }}</div>
             <div class="fieldInput">{{ field }}</div>
-            <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="selected">
           {% endfor %}
+          <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="selected">
           <input type="submit" value="Submit" />
         </form>
       </div>
@@ -146,6 +141,7 @@
             <div class="fieldName">{{ field.html_name }}</div>
             <div class="fieldInput">{{ field }}</div>
           {% endfor %}
+          <input type="hidden" value="{{ selectedPage }}" name="page">
           <input type="submit" value="Submit" />
         </form>
       </div>
