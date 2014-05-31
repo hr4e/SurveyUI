@@ -115,9 +115,11 @@
       {% endverbatim %}
       <hr />
 
-
       <accordion close-others="oneAtATime">
-        <accordion-group heading="{% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}" ng-repeat="listQues in allQuestions">
+        <accordion-group ng-repeat="listQues in allQuestions" is-open="(selectedPage-1)==$index" ng-click="setSelected()">
+        <accordion-heading>
+            {% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}
+        </accordion-heading>
         {% verbatim %}
           <div ng-if="listQues">
             <div ng-repeat="ques in listQues">
@@ -127,6 +129,9 @@
               <hr>
             </div>
           <br>
+          </div>
+          <div ng-if="listQues[0]==null">
+            <p> No questions </p>
           </div>
         {% endverbatim %}
         </accordion-group>
