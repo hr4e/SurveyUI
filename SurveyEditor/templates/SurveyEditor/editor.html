@@ -110,23 +110,28 @@
       <!-- API: select a page bar -->
       <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
 
-      <hr />
-      {% verbatim %}
-      Selected Page: <h1>{{ listPages[selectedPage-1].currentPage }}</h1>
-      {% endverbatim %}
       {% verbatim %}
       <pre>Page: {{selectedPage}} / {{numPages}}</pre>
       {% endverbatim %}
+      <hr />
 
 
-      {% verbatim %}
-      <pre>Page: {{ allQuestions[selectedPage-1] }}</pre>
-      {% endverbatim %}
+      <accordion close-others="oneAtATime">
+        <accordion-group heading="{% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}" ng-repeat="listQues in allQuestions">
+        {% verbatim %}
+          <div ng-if="listQues">
+            <div ng-repeat="ques in listQues">
+              {{ ques.questionTag }}
+              <br>
+              {{ ques.questionText }}
+              <hr>
+            </div>
+          <br>
+          </div>
+        {% endverbatim %}
+        </accordion-group>
+      </accordion>
 
-    <!-- transition table -->
-    <div ng-include="'{{ STATIC_URL }}partials/transitionTableContents.html'"></div>
-    <br><br><br><br>
-    </div>
 
     <!-- Django-Angular Script -->
 
@@ -136,7 +141,11 @@
         $scope.totalPages = 10 * {{ numPages }};
         $scope.selectedPage = 1;
         $scope.selectedSurvey = '{{ selectedSurvey.shortTag }}';
- 
+        
+        $scope.status = {
+          isFirstOpen: true,
+          isFirstDisabled: false
+        };
         <!-- API: 2-way data bind the list of pages -->
         $scope.listPages = [];
         {% for page in listPages %}
@@ -153,11 +162,13 @@
           {% for question in page %}
             $scope.allQuestions[{{ forloop.parentloop.counter0 }}].push({
               questionTag : '{{ question.questionID.questionTag }}',
+              questionText : '{{ question.questionID.questionText }}',
               });
           {% endfor %}
         {% endfor %}
 
 
+        $scope.oneAtATime = true;
 
         $scope.setSelected = function() {
           $scope.selectedPage = this.$index + 1;
