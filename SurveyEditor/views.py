@@ -171,9 +171,15 @@ def newQuestion(request):
     binding = PageQuestion()
 
     selected_page = request.POST['page']
-    p_id = Page.objects.get(shortTag=selected_page)
-    binding.pageID = p_id
     selected_survey = request.POST['selected']
+
+    try:
+      p_id = Page.objects.get(shortTag=selected_page)
+      binding.pageID = p_id
+    except:
+      messages.error(request, 'Error: no pages have been created yet.')
+      return HttpResponseRedirect('/editor/?selected='+selected_survey)
+
 
     check = request.POST['questionTag']
     if Question.objects.filter(questionTag=check):
