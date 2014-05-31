@@ -66,7 +66,7 @@ def newProject(request):
 
     if form.is_valid():
       new_proj = form.save()
-      messages.success(request, 'Success: new project \'' + new_proj.shortTag + '\' added to database')
+      messages.success(request, 'Success: new project \'' + new_proj.shortTag + '\' added to database.')
     else:
       for error in form.errors:
           messages.error(request, 'Error: \'' + error + '\' is required')
@@ -105,7 +105,12 @@ def newSurvey(request):
       messages.error(request, 'Error: survey name \'' + check + '\' already exists.')
       return HttpResponseRedirect('/home/')
 
-    binding.projectID = UserProject.objects.get(userID=request.user).projectID
+    # check if user has selected a project
+    try:
+      binding.projectID = UserProject.objects.get(userID=request.user).projectID
+    except:
+      messages.error(request, "Error: User '" + str(request.user) + "' has not selected a default project.")
+      return HttpResponseRedirect('/home/')
 
     if form.is_valid():
       new_surv = form.save()
@@ -115,7 +120,7 @@ def newSurvey(request):
       return HttpResponseRedirect('/editor/' + check)
     else:
       for error in form.errors:
-          messages.error(request, 'Error: \'' + error + '\' is required')
+          messages.error(request, 'Error: \'' + error + '\' is required.')
       return HttpResponseRedirect('/home/')
   else:
     template = loader.get_template('404.html')
@@ -152,7 +157,7 @@ def newPage(request):
       messages.success(request, 'Success: new page \'' + new_page.shortTag + '\' added to survey \'' + selected_survey + '\'')
     else:
       for error in form.errors:
-          messages.error(request, 'Error: \'' + error + '\' is required')
+          messages.error(request, 'Error: \'' + error + '\' is required.')
     return HttpResponseRedirect('/editor/?selected=' + selected_survey)
   else:
     template = loader.get_template('404.html')
@@ -166,9 +171,15 @@ def newQuestion(request):
     binding = PageQuestion()
 
     selected_page = request.POST['page']
-    p_id = Page.objects.get(shortTag=selected_page)
-    binding.pageID = p_id
     selected_survey = request.POST['selected']
+
+    try:
+      p_id = Page.objects.get(shortTag=selected_page)
+      binding.pageID = p_id
+    except:
+      messages.error(request, 'Error: no pages have been created yet.')
+      return HttpResponseRedirect('/editor/?selected='+selected_survey)
+
 
     check = request.POST['questionTag']
     if Question.objects.filter(questionTag=check):
@@ -183,7 +194,7 @@ def newQuestion(request):
       messages.success(request, 'Success: new question \'' + new_ques.questionTag + '\' added to page: \'' + p_id.shortTag + '\'')
     else:
       for error in form.errors:
-          messages.error(request, 'Error: \'' + error + '\' is required')
+          messages.error(request, 'Error: \'' + error + '\' is required.')
     return HttpResponseRedirect('/editor/?selected='+selected_survey)
   else:
     template = loader.get_template('404.html')
@@ -273,8 +284,14 @@ def editor(request):
   form1 = QuestionForm()
   form2 = PageForm()
 
-  default_project = UserProject.objects.get(userID=request.user).projectID
-  list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
+  try:
+    default_project = UserProject.objects.get(userID=request.user).projectID
+    list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
+  except:
+    messages.error(request, "Error: User '" + str(request.user) + "' has not selected a default project.")
+    default_project = list_surveys  = ''
+
+
   
   if request.GET:
     selected_survey = request.GET['selected']
