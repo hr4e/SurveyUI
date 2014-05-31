@@ -119,13 +119,14 @@
         <accordion-group ng-repeat="listQues in allQuestions" is-open="(selectedPage-1)==$index" ng-click="setSelected()">
         <accordion-heading>
             {% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}
+
         </accordion-heading>
-        {% verbatim %}
+
           <div ng-if="listQues">
             <div ng-repeat="ques in listQues">
-              {{ ques.questionTag }}
+{% verbatim %}{{ ques.questionTag }}{% endverbatim %}
               <br>
-              {{ ques.questionText }}
+<div ng-bind-html="ques.questionText"></div>
               <hr>
             </div>
           <br>
@@ -133,7 +134,6 @@
           <div ng-if="listQues[0]==null">
             <p> No questions </p>
           </div>
-        {% endverbatim %}
         </accordion-group>
       </accordion>
 
@@ -141,7 +141,7 @@
     <!-- Django-Angular Script -->
 
     <script type="text/javascript">
-      var SelectPageCtrl = function ($scope) {
+      var SelectPageCtrl = function ($scope, $sce) {
         $scope.maxSize = 5;
         $scope.totalPages = 10 * {{ numPages }};
         $scope.selectedPage = 1;
@@ -167,7 +167,7 @@
           {% for question in page %}
             $scope.allQuestions[{{ forloop.parentloop.counter0 }}].push({
               questionTag : '{{ question.questionID.questionTag }}',
-              questionText : '{{ question.questionID.questionText }}',
+              questionText : '{{ question.questionID.questionText | linebreaksbr}}',
               });
           {% endfor %}
         {% endfor %}
