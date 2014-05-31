@@ -91,3 +91,13 @@
   text-align: center;
   margin:0 auto;
 }
+
+.btn-left{
+  float:left;
+  width:200px;
+}
+
+.btn-left{
+  float:right;
+  margin-right:200px;
+}
