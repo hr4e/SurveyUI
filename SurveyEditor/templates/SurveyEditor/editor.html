@@ -1,9 +1,16 @@
 
 {% extends "base.html" %}{% load staticfiles %}{% load custom_filters %}
 {% block content %}
- 
-<div ng-app="EditorApp">
+          
 
+
+
+<div ng-app="EditorApp">
+<snap-drawer>
+  I'm in a drawer!
+</snap-drawer>
+
+<snap-content snap-options="opts">
   <!-- Django message middleware notification system -->
   {% if messages %}
       {% for message in messages %}
@@ -248,4 +255,5 @@
 
 </div>
   
+</snap-content>
 {% endblock content %}
