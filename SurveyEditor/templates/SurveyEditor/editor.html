@@ -99,6 +99,9 @@
 
     <div ng-controller="SelectPageCtrl">
 
+      <!-- API: select a page bar -->
+      <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+
       <!-- API: add new question btn -->
       <div ng-controller="NewQuestionModalCtrl">
         {% verbatim %}
@@ -107,8 +110,6 @@
         
       </div>
 
-      <!-- API: select a page bar -->
-      <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
 
       {% verbatim %}
       <pre>Page: {{selectedPage}} / {{numPages}}</pre>
@@ -122,18 +123,20 @@
 
         </accordion-heading>
 
+        <!-- Page content: question list start -->
           <div ng-if="listQues">
             <div ng-repeat="ques in listQues">
-{% verbatim %}{{ ques.questionTag }}{% endverbatim %}
-              <br>
-<div ng-bind-html="ques.questionText"></div>
-              <hr>
+
+              <div contenteditable ng-bind-html="ques.questionTag"></div>
+              <div contenteditable ng-bind-html="ques.questionText"></div>
+              <hr ng-if="!$last">
             </div>
           <br>
           </div>
           <div ng-if="listQues[0]==null">
             <p> No questions </p>
           </div>
+        <!-- page content end -->
         </accordion-group>
       </accordion>
 
