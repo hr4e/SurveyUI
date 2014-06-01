@@ -1,5 +1,8 @@
 var EditorCtrl = function ($scope) {
-
+  $scope.visible = true;
+  $scope.closeAlert = function(index) {
+    $scope.alerts.splice(index, 1);
+  };
 
 	$scope.surprise = function() {
 		$scope.msg = $scope.windowWidth;
@@ -54,43 +57,27 @@ var NewPageInstanceCtrl = function ($scope, $modalInstance, items) {
 
 var NewQuestionModalCtrl = function ($scope, $modal, $log) {
 
-
-  $scope.items = ['item1', 'item2', 'item3'];
-
-  $scope.open = function (size) {
+  $scope.open = function (page, survey) {
 
     var modalInstance = $modal.open({
       templateUrl: 'addQuestionModal.html',
       controller: NewQuestionInstanceCtrl,
-      size: size,
       resolve: {
-        items: function () {
-          return $scope.items;
+        selection: function () {
+          return [page, survey];
         }
       }
     });
 
-    modalInstance.result.then(function (selectedItem) {
-      $scope.selected = selectedItem;
-    }, function () {
-      $log.info('Modal dismissed at: ' + new Date());
-    });
   };
 };
 
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
 
-var NewQuestionInstanceCtrl = function ($scope, $modalInstance, items) {
-  $scope.items = items;
-  $scope.selected = {
-    item: $scope.items[0]
-  };
-
-  $scope.ok = function () {
-    $modalInstance.close($scope.selected.item);
-  };
-
+var NewQuestionInstanceCtrl = function ($scope, $modalInstance, selection) {
+  $scope.page = selection[0];
+  $scope.survey = selection[1];
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };

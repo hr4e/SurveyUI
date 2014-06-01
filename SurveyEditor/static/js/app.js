@@ -8,7 +8,7 @@
 
 // The ques_editor app will allow users to add/del/mod questions
 //  for a chosen page.
-var EditorApp = angular.module('EditorApp', ['ui.bootstrap']);
+var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'ngSanitize']);
 
 
 

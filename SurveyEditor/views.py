@@ -6,6 +6,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 
+from django.contrib import messages
 from django.utils import timezone
 from django.forms import ModelForm
 
@@ -55,9 +56,25 @@ class QuestionForm(ModelForm):
 def newProject(request):
   if request.method == "POST":
     form = ProjectForm(request.POST)
+
+    # check if survey already exists in database to ensure unique survey names
+    check = request.POST['shortTag']
+    if Project.objects.filter(shortTag=check):
+      # send 'error survey name exists' message to user
+      messages.error(request, 'Error: project name \'' + check + '\' already exists.')
+      return HttpResponseRedirect('/home/')
+
     if form.is_valid():
       new_proj = form.save()
-  return HttpResponseRedirect('/home/')
+      messages.success(request, 'Success: new project \'' + new_proj.shortTag + '\' added to database.')
+    else:
+      for error in form.errors:
+          messages.error(request, 'Error: \'' + error + '\' is required')
+    return HttpResponseRedirect('/home/')
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
 @login_required()
 def selectProject(request):
@@ -84,28 +101,51 @@ def newSurvey(request):
     # check if survey already exists in database to ensure unique survey names
     check = request.POST['shortTag']
     if Questionnaire.objects.filter(shortTag=check):
-      # send 'error creating survey' message to user
+      # send 'error survey name exists' message to user
+      messages.error(request, 'Error: survey name \'' + check + '\' already exists.')
       return HttpResponseRedirect('/home/')
 
-    binding.projectID = UserProject.objects.get(userID=request.user).projectID
+    # check if user has selected a project
+    try:
+      binding.projectID = UserProject.objects.get(userID=request.user).projectID
+    except:
+      messages.error(request, "Error: User '" + str(request.user) + "' has not selected a default project.")
+      return HttpResponseRedirect('/home/')
 
     if form.is_valid():
       new_surv = form.save()
       binding.questionnaireID = new_surv
       binding.save()
+      messages.success(request, 'Success: new survey \'' + new_surv.shortTag + '\' added to project \'' + binding.projectID.shortTag + '\'')
+      return HttpResponseRedirect('/editor/' + check)
+    else:
+      for error in form.errors:
+          messages.error(request, 'Error: \'' + error + '\' is required.')
+      return HttpResponseRedirect('/home/')
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
-  return HttpResponseRedirect('/editor/' + check)
 
 @login_required()
 def newPage(request):
+  # We maintain the invariant that all pages have a unique shortTag
   if request.method == "POST":
     form = PageForm(request.POST)
     binding = QuestionnairePage()
 
     selected_survey = request.POST['selected']
-    if selected_survey=='False':
+    if selected_survey=='':
       # Error, no selected survey
       return HttpResponseRedirect('/')
+
+    check = request.POST['shortTag']
+    if Page.objects.filter(shortTag=check):
+      # send 'error page name exists' message to user
+      messages.error(request, 'Error: page name \'' + check + '\' already exists.')
+      return HttpResponseRedirect('/editor/?selected=' + selected_survey)
+
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
     binding.questionnaireID = q_id
 
@@ -114,15 +154,52 @@ def newPage(request):
       binding.pageID = new_page
       binding.nextPageID = new_page
       binding.save()
-  return HttpResponseRedirect('/editor/?selected=' + selected_survey)
+      messages.success(request, 'Success: new page \'' + new_page.shortTag + '\' added to survey \'' + selected_survey + '\'')
+    else:
+      for error in form.errors:
+          messages.error(request, 'Error: \'' + error + '\' is required.')
+    return HttpResponseRedirect('/editor/?selected=' + selected_survey)
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
 @login_required()
 def newQuestion(request):
   if request.method == "POST":
     form = QuestionForm(request.POST)
+    binding = PageQuestion()
+
+    selected_page = request.POST['page']
+    selected_survey = request.POST['selected']
+
+    try:
+      p_id = Page.objects.get(shortTag=selected_page)
+      binding.pageID = p_id
+    except:
+      messages.error(request, 'Error: no pages have been created yet.')
+      return HttpResponseRedirect('/editor/?selected='+selected_survey)
+
+
+    check = request.POST['questionTag']
+    if Question.objects.filter(questionTag=check):
+      # send 'error question name exists' message to user
+      messages.error(request, 'Error: question name \'' + check + '\' already exists.')
+      return HttpResponseRedirect('/editor/?selected=' + selected_survey)
+
     if form.is_valid():
       new_ques = form.save()
-  return HttpResponseRedirect('/editor')
+      binding.questionID = new_ques
+      binding.save()
+      messages.success(request, 'Success: new question \'' + new_ques.questionTag + '\' added to page: \'' + p_id.shortTag + '\'')
+    else:
+      for error in form.errors:
+          messages.error(request, 'Error: \'' + error + '\' is required.')
+    return HttpResponseRedirect('/editor/?selected='+selected_survey)
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
 
 
@@ -182,8 +259,7 @@ def home(request):
 
   allProjects = Project.objects.all()
   form1 = ProjectForm()
-  form2 = UserProjectForm()
-  form3 = QuestionnaireForm()
+  form2 = QuestionnaireForm()
   if UserProject.objects.filter(userID=request.user):
     # Update the existing record
     default_project = UserProject.objects.get(userID=request.user).projectID
@@ -193,11 +269,10 @@ def home(request):
   
 
   context = RequestContext(request, {
-    'allProjects' : allProjects,
     'projectForm' : form1,
-    'userProjectForm' : form2,
-    'questionnaireForm' : form3,
+    'questionnaireForm' : form2,
     'defaultProject' : default_project,
+    'allProjects' : allProjects,
     'listSurveys' : list_surveys,
     'path' : request.path.split('/')[-2],
   })
@@ -209,29 +284,40 @@ def editor(request):
   form1 = QuestionForm()
   form2 = PageForm()
 
-  default_project = UserProject.objects.get(userID=request.user).projectID
-  list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
+  try:
+    default_project = UserProject.objects.get(userID=request.user).projectID
+    list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
+  except:
+    messages.error(request, "Error: User '" + str(request.user) + "' has not selected a default project.")
+    default_project = list_surveys  = ''
+
+
   
   if request.GET:
     selected_survey = request.GET['selected']
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
   else:
-    q_id = False
-    list_pages = ''
-    selected_survey = False
+    q_id = selected_survey = list_pages = num_pages = ''
   
-  request.session['msg'] = 'hi'
-
   if q_id:
     list_pages = QuestionnairePage.objects.filter(questionnaireID=q_id)
+    num_pages = QuestionnairePage.objects.filter(questionnaireID=q_id).count()
+
+  # Get list of all questions within a page
+  all_questions = []
+  for page in list_pages:
+    # Append list of questions associated w/ this page
+    all_questions.append(PageQuestion.objects.filter(pageID=page.pageID))
 
   context = RequestContext(request, {
     'questionForm' : form1,
     'pageForm' : form2,
     'defaultProject' : default_project,
+    'selectedSurvey' : q_id,
     'listSurveys' : list_surveys,
-    'selectedSurvey' : selected_survey,
+    'numPages' : num_pages,
     'listPages' : list_pages,
+    'allQuestions' : all_questions,
     'path' : request.path.split('/')[-2],
   })
 

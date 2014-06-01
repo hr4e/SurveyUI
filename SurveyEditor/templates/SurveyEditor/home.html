@@ -3,41 +3,78 @@
 {% block content %}
 
   <div ng-app="EditorApp">
+    <!-- Django message middleware notification system -->
+    {% if messages %}
+        {% for message in messages %}
+          <div ng-controller="EditorCtrl">
+            <!-- #define ERROR 40 -->
+            {% if message.level == 40 %}
+            <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+            {% endif %}
 
+            <!-- #define WARNING 30 -->
+            {% if message.level == 30 %}
+            <alert ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+            {% endif %}
+
+            <!-- #define SUCCESS 25 -->
+            {% if message.level == 25 %}
+            <alert type="success" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+            {% endif %}
+
+            <!-- #define INFO 20 -->
+            {% if message.level == 20 %}
+            <alert ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+            {% endif %}
+
+            <!-- #define DEBUG 10 -->
+            {% if message.level == 10 %}
+            <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+            {% endif %}
+          </div>
+        {% endfor %}
+    {% endif %}
+    
     <!-- Partials -->
 
     <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 
+
+    <!-- Content -->
+<h1>Project {{ defaultProject.abbrev }}</h1>
+<hr>
+    <!-- top panel -->
     <div class="jumbotron">
       <div class="container">
         <h1>Welcome to the HR4E Survey Editor</h1>
         <p>A tool for creating medical surveys with ease!</p>
-        <div ng-controller="AddSurveyModalCtrl">
+        <!-- API: Add survey btn -->
+        <div class="btn-left" ng-controller="AddSurveyModalCtrl">
           <button class="btn btn-primary btn-lg" ng-click="open()">Create a new survey</button>
         </div>
-        <div ng-controller="SelectSurveyCtrl">
+
+        <!-- API: Select survey btn -->
+        <div class="btn-right" ng-controller="SelectSurveyCtrl">
           <button class="btn btn-primary btn-lg" ng-click="open()">Edit an existing survey</button>
         </div>
+        <br><br>
+        <!-- API: Add project btn -->
+        <div class="btn-left" ng-controller="NewProjectModalCtrl">
+          <button class="btn btn-primary btn-lg" ng-click="open()">Add a new project</button>
+          <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+        </div>
+
+        <!-- API: Select project btn -->
+        <div class="btn-right" ng-controller="SelectProjectCtrl">
+          <button class="btn btn-primary btn-lg" ng-click="open()">Select a project</button>
+          <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+        </div>
       </div>
+
     </div>
-
-
-    <div ng-include="'{{ STATIC_URL }}partials/addProjectModal.html'"></div>
-    <div ng-include="'{{ STATIC_URL }}partials/selectProjectBtn.html'"></div>
-    Your default project: {{ defaultProject }}
-    <form action="../selectProject/" method="post">{% csrf_token %}
-      {% for field in userProjectForm %}
-        <div class="fieldName">{{ field.html_name }}</div>
-        <div class="fieldInput">{{ field }}</div>
-      {% endfor %}
-    <input type="submit" value="Submit" />
-
-
-
-
-
     <!-- Django-Angular Script -->
 
+    <!-- API: 2-way data binding the list of projects -->
     <script type="text/javascript">
       var ProjSelectCtrl = function($scope) {
         $scope.visible = false;
@@ -61,6 +98,7 @@
       };
     </script>
 
+    <!-- API: 2-way data binding the list of surveys -->
     <script type="text/javascript">
       var SurvSelectCtrl = function($scope) {
         $scope.visible = false;
@@ -85,17 +123,21 @@
       };
     </script>
 
-<br><br><br><br><br><br>
+<br><br><br><br><br><br><!-- can someone add a margin bottom for home page -->
     <!-- Modal Scripts -->
+
+    <!-- select project modal container -->
     <script type="text/ng-template" id="selectProjectModal.html">
       <div ng-include="'{{ STATIC_URL }}partials/selectProjectModalContents.html'"></div>
     </script>
 
+    <!-- select survey modal contents -->
     <script type="text/ng-template" id="selectSurveyModal.html">
       <div ng-include="'{{ STATIC_URL }}partials/selectSurveyModalContents.html'"></div>
     </script>
 
-    <script type="text/ng-template" id="addSurveyModalContent.html">
+    <!-- add survey modal form -->
+    <script type="text/ng-template" id="addSurveyModalForm.html">
       <div class="modal-header">
           <h3 class="modal-title">Create a new survey</h3>
       </div>
@@ -109,6 +151,7 @@
       </div>
     </script>
 
+    <!-- add project modal form -->
     <script type="text/ng-template" id="addProjectModal.html">
       <div class="modal-header">
         <h3 class="modal-title">Add a new project</h3>

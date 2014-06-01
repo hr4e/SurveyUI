@@ -1,6 +1,9 @@
 SurveyUI
 ========
 
+Live Test: http://hr4etest.herokuapp.com/
+Live test last update: 5/30/14
+
 Development Server Setup
 
 1. From the command line, cd into this repo's root directory

@@ -1,13 +1,12 @@
-<!-- Angular Handlebars here do not need to be wrapped in verbatim tags -->
-<div ng-controller="SurvSelectCtrl">
-  <div ng-if="surveys.length>0" class="panel panel-default">
+<div ng-controller="SelectPageCtrl">
+  <div class="panel panel-default">
     <div class="panel-heading">
       <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input class="form-control navbar-right projectsearch" placeholder="Type a survey name..." ng-model="query">
         </div>
       </form>
-      <h1>Select a Survey:</h1>
+      <h1>Transition Table:</h1>
     </div>
 
     <div class="panel-body">
@@ -15,20 +14,20 @@
       <table class="table table-bordered table-hover">
         <thead>
           <tr>
-            <th width="36"></th>
-            <th>Name</th>
-            <th>Quick Description</th>
+            <th width="36">#</th>
+            <th>Current Page</th>
+            <th>Next Page</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="survey in surveys | filter:query" ng-click="setSelected()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
+          <tr ng-repeat="page in listPages | filter:query" ng-click="setSelected()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
             <td>
               <a ng-show="visible || isSelected()">
                 <span class="glyphicon glyphicon-ok"></span>
               </a>
             </td>
-            <td>{{ survey.name }}</td>
-            <td>{{ survey.desc }}</td>
+            <td>{{ page.currentPage }}</td>
+            <td>{{ page.nextPage }}</td>
             </a>
           </tr>
         </tbody>
@@ -39,12 +38,6 @@
       <form action="../editor/" method="get">
         <button name="selected" value="{{ selected }}">OK!</button>
       </form>
-    </div>
-  </div>
-
-  <div ng-if="surveys.length<=0" class="panel panel-default">
-    <div class="panel-heading">
-      <h1>No surveys created yet!</h1>
     </div>
   </div>
 </div>
