@@ -100,7 +100,12 @@
   float:right;
   margin-right:200px;
 }
-
+.fieldName{
+  display:inline;
+}
+.fieldInput{
+  display:inline;
+}
 /* Dashboard Styles */
 #sidebar {
 

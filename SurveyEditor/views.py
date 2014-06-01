@@ -280,7 +280,7 @@ def home(request):
 
 @login_required()
 def editor(request):
-  template = loader.get_template('SurveyEditor/dashboard.html')
+  template = loader.get_template('SurveyEditor/editor.html')
 #  template = loader.get_template('SurveyEditor/editor.html')
   form1 = QuestionForm()
   form2 = PageForm()
