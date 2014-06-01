@@ -97,11 +97,20 @@
 
 /* Homepage Styles */
 .btn-left{
-  float:left;
-  width:200px;
-}
-
-.btn-left{
   float:right;
   margin-right:200px;
+}
+.fieldName{
+  display:inline;
+}
+.fieldInput{
+  display:inline;
+}
+/* Dashboard Styles */
+#sidebar {
+
+}
+
+#dashboard {
+
 }
