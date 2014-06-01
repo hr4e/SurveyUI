@@ -107,8 +107,16 @@
   display:inline;
 }
 /* Dashboard Styles */
-#sidebar {
+#dashcontainer{
+	margin-top: 51px;
+}
 
+#sidebar{
+	float: left;
+	background-color: #999;
+	width: 200px;
+	height: 600px; /*need to make this dynamic*/
+	color: red;
 }
 
 #dashboard {
