@@ -201,8 +201,10 @@
       <div class="modal-body">
         <form action="../newPage/" method="post">{% csrf_token %}
           {% for field in pageForm %}
+          <div>
             <div class="fieldName">{{ field.html_name }}</div>
             <div class="fieldInput">{{ field }}</div>
+          </div>
           {% endfor %}
           <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="selected">
           <input type="submit" value="Submit" />

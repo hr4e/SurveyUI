@@ -105,3 +105,11 @@
   float:right;
   margin-right:200px;
 }
+
+.fieldInput{
+  display:inline;
+}
+
+.fieldName{
+  display:inline;
+}
