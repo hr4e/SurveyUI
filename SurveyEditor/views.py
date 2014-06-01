@@ -13,7 +13,6 @@ from django.forms import ModelForm
 # Reuse existing database models
 from multiquest.models import *
 
-
 # Backend API
 class UserProjectForm(ModelForm):
   def save(self, user=None, force_insert=False, force_update=False, commit=True):
@@ -322,4 +321,5 @@ def editor(request):
   })
 
   return HttpResponse(template.render(context))
+
 

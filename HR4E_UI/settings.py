@@ -31,7 +31,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "django.core.context_processors.request",
 )
-
+TEMPLATE_LOADERS = (
+   'django.template.loaders.filesystem.Loader',
+   'django.template.loaders.app_directories.Loader',
+   'django.template.loaders.eggs.Loader',
+)
 
 # User login authentication
 # Login URL
@@ -58,7 +62,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -67,16 +70,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'SurveyEditor',
+    'HR4E_UI',
     'multiquest',
-)
-
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 'HR4E_UI.urls'
