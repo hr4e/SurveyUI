@@ -142,41 +142,47 @@
           <h3 class="modal-title">Create a new survey</h3>
       </div>
       <div class="modal-body">
-        <form action="../newSurvey/" method="post">{% csrf_token %}
-        
+        <form role="form" action="../newSurvey/" method="post">{% csrf_token %}
           {% for field in questionnaireForm %}
-            <div class="fieldName">{{ field.html_name }}</div>
-            {% if field.field.required %}
-            <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
-            {% else %}
-            <div class="fieldInput">{{ field }}</div>
-            {% endif %}
+            <div class="form-group">
+              <label class="fieldName">{{ field.html_name }}</label>
+              {% if field.field.required %}
+              <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
+              {% else %}
+              <div class="fieldInput">{{ field }}</div>
+              {% endif %}
+            </div>
           {% endfor %}
-          
-        <input type="submit" value="Submit" />
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+          </div>
+        </form>
       </div>
     </script>
 
-    <!-- add project modal form -->
     <script type="text/ng-template" id="addProjectModal.html">
+    <!-- add project modal form -->
       <div class="modal-header">
         <h3 class="modal-title">Add a new project</h3>
       </div>
       <div class="modal-body">
-        <form action="../newProject/" method="post">{% csrf_token %}
+        <form role="form" action="../newProject/" method="post">{% csrf_token %}
           {% for field in projectForm %}
-            <div class="fieldName">{{ field.html_name }}</div>
-            {% if field.field.required %}
-            <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
-            {% else %}
-            <div class="fieldInput">{{ field }}</div>
-            {% endif %}
+            <div class="form-group">
+              <label class="fieldName">{{ field.html_name }}</label>
+              {% if field.field.required %}
+                <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
+              {% else %}
+                <div class="fieldInput">{{ field }}</div>
+              {% endif %}
+            </div>
           {% endfor %}
-        <input type="submit" value="Submit" />
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+          <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+          </div>
+        </form>
       </div>
     </script>
 
