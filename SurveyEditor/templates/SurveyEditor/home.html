@@ -41,7 +41,7 @@
 
 
     <!-- Content -->
-<h1>Project {{ defaultProject.abbrev }}</h1>
+<h1>Project {{ defaultProject.shortTag }}</h1>
 <hr>
     <!-- top panel -->
     <div class="jumbotron">
@@ -81,15 +81,15 @@
         $scope.projects = [];
         {% for project in allProjects %}
           $scope.projects.push({
-            abbrev: '{{project.abbrev}}', 
+            shortTag: '{{project.shortTag}}', 
             name: '{{project.name}}',
           });
         {% endfor %}
         $scope.setSelected = function() {
-            $scope.selected = this.project.abbrev;
+            $scope.selected = this.project.shortTag;
         };
         $scope.isSelected = function() {
-          if (this.project.abbrev == $scope.selected)
+          if (this.project.shortTag == $scope.selected)
             return true;
           else {
             return false;
@@ -154,8 +154,8 @@
             </div>
           {% endfor %}
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            <input class="btn btn-primary" type="submit" value="Submit" />
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
           </div>
         </form>
       </div>
@@ -179,8 +179,8 @@
             </div>
           {% endfor %}
           <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            <input class="btn btn-primary" type="submit" value="Submit" />
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
           </div>
         </form>
       </div>

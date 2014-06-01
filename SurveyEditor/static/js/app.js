@@ -8,7 +8,17 @@
 
 // The ques_editor app will allow users to add/del/mod questions
 //  for a chosen page.
-var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'ngSanitize']);
+var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'ngSanitize', 'snap'])
+	.config(function(snapRemoteProvider) {
+    	snapRemoteProvider.globalOptions.disable = 'right';
+    	// or
+    	snapRemoteProvider.globalOptions = {
+      		disable: 'right',
+      		// ... others options
+      	}
+      });
+
+
 
 
 

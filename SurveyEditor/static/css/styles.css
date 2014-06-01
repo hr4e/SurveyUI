@@ -72,7 +72,11 @@
 .inline{
 	display: inline;
 }
-
+#editor{
+  margin-left: 20px;
+  padding-top: 46px;
+  padding-bottom: 46px;
+}
 /* frontpage styles */
 #cover{
     background: url(../images/raw/8407640768_03c0632c77_o.jpg) no-repeat center center fixed; 
@@ -118,13 +122,7 @@
 	margin-top: 51px;
 }
 
-#sidebar{
-	float: left;
-	background-color: #999;
-	width: 200px;
-	height: 600px; /*need to make this dynamic*/
-	color: red;
-}
+
 
 #dashboard {
 

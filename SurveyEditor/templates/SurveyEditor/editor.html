@@ -1,13 +1,22 @@
 
 {% extends "base.html" %}{% load staticfiles %}{% load custom_filters %}
 {% block content %}
- 
-<div ng-app="EditorApp">
+<link href="{{ STATIC_URL }}css/lib/angular-snap.min.css" rel="stylesheet">
 
+<div ng-app="EditorApp">
+<div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
+<snap-drawer>
+  I'm in a drawer!
+</snap-drawer>
+
+<snap-content id="editor" snap-id="test" snap-options="opts">
+  <div ng-controller="EditorCtrl">
+    
+<br><br>
   <!-- Django message middleware notification system -->
   {% if messages %}
       {% for message in messages %}
-        <div ng-controller="EditorCtrl">
+        <div>
           <!-- #define ERROR 40 -->
           {% if message.level == 40 %}
           <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
@@ -36,9 +45,13 @@
       {% endfor %}
   {% endif %}
 
+  <snap-dragger>
+    <!-- set draggable area to this empty element -->
+  </snap-dragger>
+  </div>
+
   <!-- Partials -->
 
-  <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 
 
   {% if selectedSurvey == ''%}
@@ -201,24 +214,23 @@
       </div>
       <div class="modal-body">
         <form role="form" action="../newPage/" method="post">{% csrf_token %}
-        {% for field in pageForm %}
-        <div class="form-group">
-          <label class="fieldName">{{ field.html_name }}</label>
-          {% if field.field.required %}
-            <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
-          {% else %}
-            <div class="fieldInput">{{ field }}</div>
-          {% endif %}
-        </div>
-        {% endfor %}
+          {% for field in pageForm %}
+          <div class="form-group">
+            <label class="fieldName">{{ field.html_name }}</label>
+            {% if field.field.required %}
+              <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
+            {% else %}
+              <div class="fieldInput">{{ field }}</div>
+            {% endif %}
+          </div>
+          {% endfor %}
           <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="selected">
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" ng-click="ok()">OK</button>
-            <button type="cancel" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            <input class="btn btn-primary" type="submit" value="Submit" />
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
           </div>
         </form>
       </div>
-
     </script>
 
     <script type="text/ng-template" id="addQuestionModal.html">
@@ -241,15 +253,16 @@
           <input type="hidden" value="{{ page }}" name="page">
           <input type="hidden" value="{{ survey }}" name="selected">
           {% endverbatim %}
+          <div class="modal-footer">
+            <input class="btn btn-primary" type="submit" value="Submit" />
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
       </div>
     </script>
   {% endif %}
 
-</div>
   
+</snap-content>
+</div>
 {% endblock content %}

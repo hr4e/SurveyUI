@@ -9,6 +9,7 @@ var EditorCtrl = function ($scope) {
 		drawQues();
 	};
 
+
 };
 
 var NewPageModalCtrl = function ($scope, $modal, $log) {

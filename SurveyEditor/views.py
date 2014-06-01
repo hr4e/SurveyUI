@@ -81,13 +81,13 @@ def selectProject(request):
     if UserProject.objects.filter(userID=request.user):
       # Update the existing record
       record = UserProject.objects.get(userID=request.user)
-      record.projectID = Project.objects.get(abbrev=request.GET['selected'])
+      record.projectID = Project.objects.get(shortTag=request.GET['selected'])
       record.save()
     else:
       # Create a new record
       record = UserProject()
       record.userID = request.user
-      record.projectID = Project.objects.get(abbrev=request.GET['selected'])
+      record.projectID = Project.objects.get(shortTag=request.GET['selected'])
       record.save()
   return HttpResponseRedirect('/home')
 
@@ -324,7 +324,7 @@ def editor(request):
   return HttpResponse(template.render(context))
 
 def dashboard(request):
-  template = loader.get_template('dashboard.html')
+  template = loader.get_template('SurveyEditor/dashboard.html')
 
   context = RequestContext(request, {
     'path' : request.path.split('/')[-2],
