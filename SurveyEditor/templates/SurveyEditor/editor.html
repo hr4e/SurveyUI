@@ -1,7 +1,7 @@
 
 {% extends "base.html" %}{% load staticfiles %}{% load custom_filters %}
 {% block content %}
-          
+<link href="{{ STATIC_URL }}css/lib/angular-snap.min.css" rel="stylesheet">
 
 <div ng-app="EditorApp">
 <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
@@ -9,11 +9,12 @@
   I'm in a drawer!
 </snap-drawer>
 
-<snap-content id="editor" snap-options="opts">
+<snap-content id="editor" snap-id="test" snap-options="opts">
+  <div ng-controller="EditorCtrl">
   <!-- Django message middleware notification system -->
   {% if messages %}
       {% for message in messages %}
-        <div ng-controller="EditorCtrl">
+        <div>
           <!-- #define ERROR 40 -->
           {% if message.level == 40 %}
           <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
@@ -42,11 +43,17 @@
       {% endfor %}
   {% endif %}
 
-  <!-- Partials -->
+  <!-- sidebar drawer toggle button -->
+  <br><br><br><br>
+  <button snap-toggle="left">Toggle Snap</button>
 
   <snap-dragger>
-    <button snap-toggle="left">Toggle Snap</button>
+    <!-- set draggable area to this empty element -->
   </snap-dragger>
+  </div>
+  <!-- Partials -->
+
+
 
   {% if selectedSurvey == ''%}
   <!-- if no survey is selected -->
@@ -217,11 +224,11 @@
             {% endif %}
           {% endfor %}
           <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="selected">
+          <div class="modal-footer">
+            <input class="btn btn-primary" type="submit" value="Submit" />
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-		<input class="btn btn-primary" type="submit" value="Submit" />
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
       </div>
     </script>
 
@@ -243,12 +250,11 @@
           <input type="hidden" value="{{ page }}" name="page">
           <input type="hidden" value="{{ survey }}" name="selected">
           {% endverbatim %}
-          <input type="submit" value="Submit" />
+          <div class="modal-footer">
+            <input class="btn btn-primary" type="submit" value="Submit" />
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
       </div>
     </script>
   {% endif %}
