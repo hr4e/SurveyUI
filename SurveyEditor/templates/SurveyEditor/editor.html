@@ -3,14 +3,13 @@
 {% block content %}
           
 
-
-
 <div ng-app="EditorApp">
+<div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 <snap-drawer>
   I'm in a drawer!
 </snap-drawer>
 
-<snap-content snap-options="opts">
+<snap-content id="editor" snap-options="opts">
   <!-- Django message middleware notification system -->
   {% if messages %}
       {% for message in messages %}
@@ -45,8 +44,9 @@
 
   <!-- Partials -->
 
-  <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
-
+  <snap-dragger>
+    <button snap-toggle="left">Toggle Snap</button>
+  </snap-dragger>
 
   {% if selectedSurvey == ''%}
   <!-- if no survey is selected -->
@@ -253,7 +253,7 @@
     </script>
   {% endif %}
 
-</div>
   
 </snap-content>
+</div>
 {% endblock content %}
