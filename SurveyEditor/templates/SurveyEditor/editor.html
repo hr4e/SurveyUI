@@ -1,5 +1,5 @@
 
-{% extends "base.html" %}{% load staticfiles %}
+{% extends "base.html" %}{% load staticfiles %}{% load custom_filters %}
 {% block content %}
  
 <div ng-app="EditorApp">
@@ -102,14 +102,6 @@
       <!-- API: select a page bar -->
       <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
 
-      <!-- API: add new question btn -->
-      <div ng-controller="NewQuestionModalCtrl">
-        {% verbatim %}
-        <button class="btn btn-primary btn-lg" ng-click="open(listPages[selectedPage-1].currentPage, selectedSurvey)">Add a new question to page {{ selectedPage }}</button>
-        {% endverbatim %}
-        
-      </div>
-
 
       {% verbatim %}
       <pre>Page: {{selectedPage}} / {{numPages}}</pre>
@@ -126,9 +118,10 @@
         <!-- Page content: question list start -->
           <div ng-if="listQues">
             <div ng-repeat="ques in listQues">
-
+              <div><span class="glyphicon glyphicon-pencil"></span></div>
               <div contenteditable ng-bind-html="ques.questionTag"></div>
-              <div contenteditable ng-bind-html="ques.questionText"></div>
+              <div ng-model="newQuestionText" contenteditable ng-bind-html="ques.questionText"></div>
+              <div><span class="glyphicon glyphicon-remove"></span></div>
               <hr ng-if="!$last">
             </div>
           <br>
@@ -136,7 +129,15 @@
           <div ng-if="listQues[0]==null">
             <p> No questions </p>
           </div>
-        <!-- page content end -->
+
+          <!-- API: add new question btn -->
+          <div ng-controller="NewQuestionModalCtrl">
+            {% verbatim %}
+            <button class="btn btn-primary btn-lg" ng-click="open(listPages[selectedPage-1].currentPage, selectedSurvey)">Add a new question to page {{ selectedPage }}</button>
+            {% endverbatim %}
+            
+          </div>
+        <!-- Page content end -->
         </accordion-group>
       </accordion>
 
@@ -202,7 +203,11 @@
         <form action="../newPage/" method="post">{% csrf_token %}
           {% for field in pageForm %}
             <div class="fieldName">{{ field.html_name }}</div>
+            {% if field.field.required %}
+            <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
+            {% else %}
             <div class="fieldInput">{{ field }}</div>
+            {% endif %}
           {% endfor %}
           <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="selected">
           <input type="submit" value="Submit" />
@@ -222,7 +227,11 @@
         <form action="../newQuestion/" method="post">{% csrf_token %}
           {% for field in questionForm %}
             <div class="fieldName">{{ field.html_name }}</div>
+            {% if field.field.required %}
+            <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
+            {% else %}
             <div class="fieldInput">{{ field }}</div>
+            {% endif %}
           {% endfor %}
           {% verbatim %}
           <input type="hidden" value="{{ page }}" name="page">

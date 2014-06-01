@@ -13,7 +13,6 @@ from django.forms import ModelForm
 # Reuse existing database models
 from multiquest.models import *
 
-
 # Backend API
 class UserProjectForm(ModelForm):
   def save(self, user=None, force_insert=False, force_update=False, commit=True):
@@ -281,6 +280,7 @@ def home(request):
 @login_required()
 def editor(request):
   template = loader.get_template('SurveyEditor/editor.html')
+#  template = loader.get_template('SurveyEditor/editor.html')
   form1 = QuestionForm()
   form2 = PageForm()
 
@@ -322,4 +322,5 @@ def editor(request):
   })
 
   return HttpResponse(template.render(context))
+
 

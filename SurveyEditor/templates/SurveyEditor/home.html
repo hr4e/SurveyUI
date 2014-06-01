@@ -1,5 +1,5 @@
 
-{% extends "base.html" %}{% load staticfiles %}
+{% extends "base.html" %}{% load staticfiles %}{% load custom_filters %}
 {% block content %}
 
   <div ng-app="EditorApp">
@@ -145,7 +145,11 @@
         <form action="../newSurvey/" method="post">{% csrf_token %}
           {% for field in questionnaireForm %}
             <div class="fieldName">{{ field.html_name }}</div>
+            {% if field.field.required %}
+            <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
+            {% else %}
             <div class="fieldInput">{{ field }}</div>
+            {% endif %}
           {% endfor %}
         <input type="submit" value="Submit" />
       </div>
@@ -160,7 +164,11 @@
         <form action="../newProject/" method="post">{% csrf_token %}
           {% for field in projectForm %}
             <div class="fieldName">{{ field.html_name }}</div>
+            {% if field.field.required %}
+            <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
+            {% else %}
             <div class="fieldInput">{{ field }}</div>
+            {% endif %}
           {% endfor %}
         <input type="submit" value="Submit" />
       </div>
