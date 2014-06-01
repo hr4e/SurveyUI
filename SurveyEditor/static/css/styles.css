@@ -97,11 +97,15 @@
 
 /* Homepage Styles */
 .btn-left{
-  float:left;
-  width:200px;
-}
-
-.btn-left{
   float:right;
   margin-right:200px;
+}
+
+/* Dashboard Styles */
+#sidebar {
+
+}
+
+#dashboard {
+
 }
