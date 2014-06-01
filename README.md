@@ -4,7 +4,7 @@ SurveyUI
 Live Test: http://hr4etest.herokuapp.com/
 Live test last update: 5/30/14
 
-Verifify we affect the old database
+Verify we affect the old database
 -----------------------------------
 
 It is important to show that we actually did stuff,
