@@ -69,6 +69,10 @@
   margin:0 auto;
 }
 
+.inline{
+	display: inline;
+}
+
 /* frontpage styles */
 #cover{
     background: url(../images/raw/8407640768_03c0632c77_o.jpg) no-repeat center center fixed; 
