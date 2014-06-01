@@ -4,6 +4,12 @@ API > Select Default Project
 
 In the modal forms, text areas can be extended past the edge of the modal.
 
+Changes in the old website are reflected in the new website.
+
+Changes made in the new website do not reflect changes on the
+old site. The old site uses some additional component in addition
+to the database.
+
 ToDo:
 [ ] Make title page change depending on location of website 
 [ ] Include username in navbar signout button: "Sign out of $user_name"
