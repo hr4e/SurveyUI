@@ -2,6 +2,8 @@ Oddities:
 API > Select Default Project
 - Correctly modifies database but changes not reflected in multiquest
 
+In the modal forms, text areas can be extended past the edge of the modal.
+
 ToDo:
 [ ] Make title page change depending on location of website 
 [ ] Include username in navbar signout button: "Sign out of $user_name"
