@@ -1,0 +1,60 @@
+{% load staticfiles %}<!DOCTYPE html>
+<html lang="en" ng-app="EditorApp">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HR4E Survey Editor</title>
+    <link href="{{ STATIC_URL }}css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/styles.css" rel="stylesheet">
+    <!-- We must use static font files or it will break when in Africa -->
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <!-- Django-Angular Script -->
+    <script type="text/javascript">
+    var NavbarCtrl = function ($scope, $location) {
+      $scope.username = '{{ user }}'
+      $scope.isCollapsed = true;
+      $scope.isActive = function(path) {
+        if ('{{ path }}' == path) {
+          return "active"
+        } else {
+          return ''
+        }
+      };
+    };
+    </script>
+
+    <!-- block content starts here -->
+	<div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
+	
+	<div id="dashcontainer">
+		<div id="sidebar">
+		  <p>Sidebar test</p>
+		</div>
+		<div>
+		  <p>Content area</p>	  
+		</div>
+	</div>
+    <!-- block content ends here -->
+
+
+    {% block footer %}
+    <div id="footer" class="navbar navbar-fixed-bottom">
+      <div class="container">
+	<span class="navbar-text pull-left"><a href="#">About</a> | <a href="https://github.com/hr4e">GitHub</a></span>
+	<p class="navbar-text pull-right">&copy; 2014 Health Records For Everyone</p>
+      </div>
+    </div>
+    {% endblock footer %}
+
+    {% block javascript %}
+    <script src="{{ STATIC_URL }}js/lib/angular.min.js"></script>
+    <script src="{{ STATIC_URL }}js/lib/angular-sanitize.js"></script>
+    <script src="{{ STATIC_URL }}js/lib/ui-bootstrap-tpls-0.11.0.min.js"></script>
+    <script src="{{ STATIC_URL }}js/app.js"></script>
+    <script src="{{ STATIC_URL }}js/home.js"></script>
+    <script src="{{ STATIC_URL }}js/editor.js"></script>
+    {% endblock javascript %}
+  </body>
+</html>

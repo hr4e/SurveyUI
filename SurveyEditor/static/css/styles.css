@@ -69,6 +69,10 @@
   margin:0 auto;
 }
 
+.inline{
+	display: inline;
+}
+
 /* frontpage styles */
 #cover{
     background: url(../images/raw/8407640768_03c0632c77_o.jpg) no-repeat center center fixed; 
@@ -110,8 +114,16 @@
 */
 
 /* Dashboard Styles */
-#sidebar {
+#dashcontainer{
+	margin-top: 51px;
+}
 
+#sidebar{
+	float: left;
+	background-color: #999;
+	width: 200px;
+	height: 600px; /*need to make this dynamic*/
+	color: red;
 }
 
 #dashboard {

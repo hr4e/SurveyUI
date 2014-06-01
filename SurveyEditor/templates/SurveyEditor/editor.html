@@ -118,10 +118,10 @@
         <!-- Page content: question list start -->
           <div ng-if="listQues">
             <div ng-repeat="ques in listQues">
-              <div><span class="glyphicon glyphicon-pencil"></span></div>
-              <div contenteditable ng-bind-html="ques.questionTag"></div>
-              <div ng-model="newQuestionText" contenteditable ng-bind-html="ques.questionText"></div>
-              <div><span class="glyphicon glyphicon-remove"></span></div>
+              <a href="#"><span class="glyphicon glyphicon-pencil inline"></span></a>
+              <div contenteditable class="inline" ng-bind-html="ques.questionTag"></div>
+              <div ng-model="newQuestionText" class="inline" contenteditable ng-bind-html="ques.questionText"></div>
+              <a href="#"><span class="glyphicon glyphicon-remove inline pull-right"></span></a>
               <hr ng-if="!$last">
             </div>
           <br>
@@ -212,12 +212,15 @@
         </div>
         {% endfor %}
           <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="selected">
+        </form>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary" ng-click="ok()">OK</button>
             <button type="cancel" class="btn btn-warning" ng-click="cancel()">Cancel</button>
           </div>
+      </div>
         </form>
       </div>
+
     </script>
 
     <script type="text/ng-template" id="addQuestionModal.html">
