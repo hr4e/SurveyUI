@@ -194,8 +194,8 @@
 
 
     <!-- Modal Scripts -->
-
     <script type="text/ng-template" id="addPageModal.html">
+
       <div class="modal-header">
          <h3 class="modal-title">Add a new page</h3>
       </div>
@@ -212,12 +212,10 @@
         </div>
         {% endfor %}
           <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="selected">
-        </form>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary" ng-click="ok()">OK</button>
             <button type="cancel" class="btn btn-warning" ng-click="cancel()">Cancel</button>
           </div>
-      </div>
         </form>
       </div>
 
