@@ -13,12 +13,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" collapse="isCollapsed">
       <ul class="nav navbar-nav">
-        <li ng-class="{ active: isActive('editor')}">
-          <a href="../editor">{{ defaultProject }}</a>
-        </li>
-        <li ng-if="selectedSurvey" ng-class="{ active: isActive('editor')}">
-          <a ng-click="selectSurvModal()">{{ selectedSurvey }}</a>
-        </li>
+        <li ng-class="{ active: isActive('editor')}"><a href="../editor">{{ defaultProject }}</a></li>
+        <li ng-if="selectedSurvey" ng-class="{ active: isActive('editor')}"><a href="../editor">{{ selectedSurvey }}</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
