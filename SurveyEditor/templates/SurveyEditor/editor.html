@@ -87,8 +87,10 @@
                 'imageFileType':ques.imageFileType
               }, selectedSurvey)"><span class="glyphicon glyphicon-pencil inline"></span></a>
               <div contenteditable class="inline" ng-bind-html="ques.questionTag"></div>
-              <div ng-model="newQuestionText" class="inline" contenteditable ng-bind-html="ques.questionText"></div>
               <a href="#" ng-click="deleteQuesModal(ques.questionTag, selectedSurvey)"><span class="glyphicon glyphicon-remove inline pull-right"></span></a>
+
+              <div ng-model="newQuestionText" ng-bind-html="ques.questionText"></div>
+
               <hr ng-if="!$last">
             </div>
           <br>
@@ -378,25 +380,27 @@
       <h4>Are you sure?</h4>
       <form role="form" action="../deleteQuestion/" method="post">{% csrf_token %}
         {% verbatim %}
-        <input type="hidden" value="{{ question }}" name="question">
+        <input type="hidden" value="{{ question.questionTag }}" name="question">
         <input type="hidden" value="{{ survey }}" name="survey">
         {% endverbatim %}
         <div class="modal-footer">
-          <input class="btn btn-primary" type="submit" value="Submit" />
-          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+          <input class="btn btn-primary" type="submit" value="Yes" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">No</button>
         </div>
       </form>
     </div>
   </script>
-<
+
   <!-- API: update question modal -->
   <script type="text/ng-template" id="updateQuestionModal.html">
     <div class="modal-header">
-       <h3 class="modal-title">Update question {% verbatim %}'{{ question.questionTag }}'{% endverbatim %}</h3>
+      {% verbatim %}
+      <h3 class="modal-title">Update question '{{ question.originalTag }}'</h3>
+      {% endverbatim %}
     </div>
     <div class="modal-body">
       <form role="form" action="../updateQuestion/" method="post">{% csrf_token %}
-        {% for field in updateQuesForm %}
+        {% for field in quesForm %}
           <div class="form-group">
             <label class="fieldName">{{ field.html_name }}</label>
             {% if field.field.required %}
@@ -407,8 +411,8 @@
           </div>
         {% endfor %}
         {% verbatim %}
-        <input type="hidden" value="{{ question }}" name="page">
-        <input type="hidden" value="{{ survey }}" name="selected">
+        <input type="hidden" value="{{ question.originalTag }}" name="originalTag">
+        <input type="hidden" value="{{ survey }}" name="survey">
         {% endverbatim %}
         <div class="modal-footer">
           <input class="btn btn-primary" type="submit" value="Submit" />

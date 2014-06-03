@@ -58,7 +58,7 @@ var EditorCtrl = function ($scope, $modal) {
   $scope.updateQuesModal = function (question, survey) {
     var modalInstance = $modal.open({
       templateUrl: 'updateQuestionModal.html',
-      controller: QuesInstanceCtrl,
+      controller: UpdateQuesInstanceCtrl,
       resolve: {
         selection: function () {
           return [question, survey];
@@ -90,9 +90,10 @@ var DeleteQuesInstanceCtrl = function ($scope, $modalInstance, selection) {
     $modalInstance.dismiss('cancel');
   };
 };
-var QuesInstanceCtrl = function ($scope, $modalInstance, selection) {
+var UpdateQuesInstanceCtrl = function ($scope, $modalInstance, selection) {
   $scope.question = {};
   $scope.question["questionTag"] = selection[0].questionTag;
+  $scope.question["originalTag"] = selection[0].questionTag;
   $scope.question["questionText"] = selection[0].questionText;
   $scope.question["helpText"] = selection[0].helpText;
   $scope.question["explanation"] = selection[0].explanation;
@@ -100,12 +101,8 @@ var QuesInstanceCtrl = function ($scope, $modalInstance, selection) {
   $scope.question["description"] = selection[0].description;
   $scope.question["imageFileName"] = selection[0].imageFileName;
   $scope.question["imageFileType"] = selection[0].imageFileType;
-  $scope.question = selection[0];
   $scope.survey = selection[1];
 
-  $scope.setField = function (newValue) {
-    this.value = newValue;
-  }
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };

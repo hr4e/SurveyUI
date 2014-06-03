@@ -61,11 +61,13 @@ def newProject(request):
     if Project.objects.filter(shortTag=check):
       # send 'error survey name exists' message to user
       messages.error(request, 'Error: project name \'' + check + '\' already exists.')
-      return HttpResponseRedirect('/home/')
+      return HttpResponseRedirect('/editor/')
 
     if form.is_valid():
       new_proj = form.save()
       messages.success(request, 'Success: new project \'' + new_proj.shortTag + '\' added to database.')
+      # automatically set user's default project to newly created one
+      return HttpResponseRedirect('/selectProject/?selected='+check)
     else:
       for error in form.errors:
           messages.error(request, 'Error: \'' + error + '\' is required')
@@ -206,17 +208,17 @@ def deleteQuestion(request):
   if request.method == "POST":
     quesTag = request.POST['question']
     selected_survey = request.POST['survey']
-    q_id = Question.objects.get(questionTag=quesTag)
 
-    if q_id:
+    try:
+      q_id = Question.objects.get(questionTag=quesTag)
       # found question to delete
       messages.success(request, "Success: question '"+quesTag+"'was deleted.")
       q_id.delete()
-      return HttpResponseRedirect('/editor/?selected='+selected_survey)
-    else:
+    except:
       # did not find question to delete
       messages.error(request, "Error: question name '"+quesTag+"' was not found!")
-      return HttpResponseRedirect('/editor/?selected='+selected_survey)
+    
+    return HttpResponseRedirect('/editor/?selected='+selected_survey)
   else:
     template = loader.get_template('404.html')
     context = RequestContext(request, {})
@@ -225,18 +227,31 @@ def deleteQuestion(request):
 @login_required()
 def updateQuestion(request):
   if request.method == "POST":
-    quesTag = request.POST['question']
+    quesTag = request.POST['originalTag']
     selected_survey = request.POST['survey']
-    q_id = Question.objects.get(questionTag=quesTag)
 
-    if q_id:
-      # found question to delete
-      messages.success(request, "Success: question '"+quesTag+"'was updated.")
-      return HttpResponseRedirect('/editor/?selected='+selected_survey)
-    else:
-      # did not find question to delete
+    try:
+      q_id = Question.objects.get(questionTag=quesTag)
+      # found question to update
+      try:
+        t = q_id.questionTag = request.POST['questionTag']
+        q_id.questionText = request.POST['questionText']
+        q_id.helpText = request.POST['helpText']
+        q_id.explanation = request.POST['explanation']
+        q_id.language = request.POST['language']
+        q_id.description = request.POST['description']
+        q_id.imageFileName = request.POST['imageFileName']
+        q_id.imageFileType = request.POST['imageFileType']
+        q_id.save()
+        messages.success(request, "Success: question '"+t+"'was updated.")
+      except:
+        messages.error(request, "Error: question name '"+quesTag+"' could not be updated!")
+
+    except:
+      # did not find question to update
       messages.error(request, "Error: question name '"+quesTag+"' was not found!")
-      return HttpResponseRedirect('/editor/?selected='+selected_survey)
+    
+    return HttpResponseRedirect('/editor/?selected='+selected_survey)
   else:
     template = loader.get_template('404.html')
     context = RequestContext(request, {})
@@ -259,7 +274,7 @@ def login(request):
         auth_login(request, user)
         state = "You're successfully logged in!"
         if next == "":
-          return HttpResponseRedirect('../home/')
+          return HttpResponseRedirect('../')
         else:
           return HttpResponseRedirect(next)
       else:
@@ -298,31 +313,6 @@ def welcome(request):
   return HttpResponse(template.render(context))
 
 @login_required()
-def home(request):
-  template = loader.get_template('SurveyEditor/home.html')
-
-  allProjects = Project.objects.all()
-  form1 = ProjectForm()
-  form2 = QuestionnaireForm()
-  if UserProject.objects.filter(userID=request.user):
-    # Update the existing record
-    default_project = UserProject.objects.get(userID=request.user).projectID
-    list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
-  else:
-    list_surveys = default_project = ''
-  
-
-  context = RequestContext(request, {
-    'projectForm' : form1,
-    'questionnaireForm' : form2,
-    'defaultProject' : default_project,
-    'allProjects' : allProjects,
-    'listSurveys' : list_surveys,
-    'path' : request.path.split('/')[-2],
-  })
-  return HttpResponse(template.render(context))
-
-@login_required()
 def editor(request):
   template = loader.get_template('SurveyEditor/editor.html')
   proj_form = ProjectForm()
@@ -341,8 +331,10 @@ def editor(request):
   if request.GET:
     selected_survey = request.GET['selected']
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
+    path = 'survey'
   else:
     q_id = selected_survey = list_pages = num_pages = ''
+    path = request.path.split('/')[-2]
   
   if q_id:
     list_pages = QuestionnairePage.objects.filter(questionnaireID=q_id)
@@ -354,18 +346,11 @@ def editor(request):
     # Append list of questions associated w/ this page
     all_questions.append(PageQuestion.objects.filter(pageID=page.pageID))
 
-
-
-  update_ques_form = QuestionForm(initial={
-  })
-
-
   context = RequestContext(request, {
     'projForm' : proj_form,
     'survForm' : surv_form,
     'pageForm' : page_form,
     'quesForm' : ques_form,
-    'updateQuesForm' : update_ques_form,
     'defaultProject' : default_project,
     'allProjects' : all_projects,
     'selectedSurvey' : q_id,
@@ -373,6 +358,6 @@ def editor(request):
     'numPages' : num_pages,
     'listPages' : list_pages,
     'allQuestions' : all_questions,
-    'path' : request.path.split('/')[-2],
+    'path' : path,
   })
   return HttpResponse(template.render(context))

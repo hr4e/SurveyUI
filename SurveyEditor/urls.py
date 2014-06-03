@@ -8,14 +8,12 @@ from django.views.generic.base import RedirectView
 from SurveyEditor import views
 
 
-next = '/home'
+next = '/editor'
 
 
 urlpatterns = patterns('',
     #url(r'^$', RedirectView.as_view(url='home', permanent=False), name='index'),
     url(r'^$', views.welcome, name='welcome'),
-    # Home
-    url(r'^home/', views.home, name='home'),
     url(r'^editor/', views.editor, name='editor'),
     url(r'^newProject/', views.newProject, name='newProject'),
     url(r'^selectProject/', views.selectProject, name='selectProject'),
