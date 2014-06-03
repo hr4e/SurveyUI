@@ -69,7 +69,7 @@ def newProject(request):
     else:
       for error in form.errors:
           messages.error(request, 'Error: \'' + error + '\' is required')
-    return HttpResponseRedirect('/home/')
+    return HttpResponseRedirect('/editor/')
   else:
     template = loader.get_template('404.html')
     context = RequestContext(request, {})
@@ -89,7 +89,7 @@ def selectProject(request):
       record.userID = request.user
       record.projectID = Project.objects.get(shortTag=request.GET['selected'])
       record.save()
-  return HttpResponseRedirect('/home')
+  return HttpResponseRedirect('/editor/')
 
 @login_required()
 def newSurvey(request):
@@ -102,14 +102,14 @@ def newSurvey(request):
     if Questionnaire.objects.filter(shortTag=check):
       # send 'error survey name exists' message to user
       messages.error(request, 'Error: survey name \'' + check + '\' already exists.')
-      return HttpResponseRedirect('/home/')
+      return HttpResponseRedirect('/editor/')
 
     # check if user has selected a project
     try:
       binding.projectID = UserProject.objects.get(userID=request.user).projectID
     except:
       messages.error(request, "Error: User '" + str(request.user) + "' has not selected a default project.")
-      return HttpResponseRedirect('/home/')
+      return HttpResponseRedirect('/editor/')
 
     if form.is_valid():
       new_surv = form.save()
@@ -120,7 +120,7 @@ def newSurvey(request):
     else:
       for error in form.errors:
           messages.error(request, 'Error: \'' + error + '\' is required.')
-      return HttpResponseRedirect('/home/')
+      return HttpResponseRedirect('/editor/')
   else:
     template = loader.get_template('404.html')
     context = RequestContext(request, {})
@@ -137,7 +137,8 @@ def newPage(request):
     selected_survey = request.POST['selected']
     if selected_survey=='':
       # Error, no selected survey
-      return HttpResponseRedirect('/')
+      messages.error(request, 'Error: no survey selected.')
+      return HttpResponseRedirect('/editor/')
 
     check = request.POST['shortTag']
     if Page.objects.filter(shortTag=check):
@@ -161,7 +162,7 @@ def newPage(request):
   else:
     template = loader.get_template('404.html')
     context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(context)) 
 
 @login_required()
 def newQuestion(request):
@@ -247,7 +248,13 @@ def logout(request):
 def welcome(request):
   template = loader.get_template('SurveyEditor/welcome.html')
 
+  try:
+    default_project = UserProject.objects.get(userID=request.user).projectID
+  except:
+    default_project = ''
+
   context = RequestContext(request, {
+    'defaultProject' : default_project,
     'path' : request.path.split('/')[-2],
   })
   return HttpResponse(template.render(context))

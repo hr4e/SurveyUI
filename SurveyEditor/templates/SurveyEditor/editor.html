@@ -5,9 +5,11 @@
 
   <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 
-  <snap-drawer>
     <br><br><br><br>
+
+  <snap-drawer>
     <div>
+    <br><br><br><br>
     <button class="btn btn-primary btn-lg" ng-click="newProjModal()">Add a new project</button>
     <button class="btn btn-primary btn-lg" ng-click="newSurvModal()">Add a new survey</button>
     <button class="btn btn-primary btn-lg" ng-click="newPageModal()">Add a new page</button>
@@ -18,53 +20,141 @@
 
   <snap-content id="editor" snap-id="test" snap-options="opts">
     <br><br><br><br>
-    <div ng-controller="SelectPageCtrl">
+    <!-- Django message middleware notification system -->
+    {% if messages %}
+      {% for message in messages %}
 
-      <!-- API: select a page bar -->
-      <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+        <!-- #define ERROR 40 -->
+        {% if message.level == 40 %}
+        <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+        {% endif %}
+
+        <!-- #define WARNING 30 -->
+        {% if message.level == 30 %}
+        <alert ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+        {% endif %}
+
+        <!-- #define SUCCESS 25 -->
+        {% if message.level == 25 %}
+        <alert type="success" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+        {% endif %}
+
+        <!-- #define INFO 20 -->
+        {% if message.level == 20 %}
+        <alert ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+        {% endif %}
+
+        <!-- #define DEBUG 10 -->
+        {% if message.level == 10 %}
+        <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    <div ng-controller="SelectPageCtrl">
 
 
       {% verbatim %}
       <h1>Default Project: {{ defaultProject }}</h1>
-      <h2>Selected Survey: {{ selectedSurvey }}</h2>
-      <pre>Page: {{selectedPage}} / {{ numPages }}</pre>
-      {% endverbatim %}
-      <hr />
 
-      <accordion close-others="oneAtATime">
-        <accordion-group ng-repeat="listQues in allQuestions" is-open="(selectedPage-1)==$index" ng-click="setSelected()">
-        <accordion-heading>
-            {% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}
+      <div ng-if="!selectedSurvey">
 
-        </accordion-heading>
 
-        <!-- Page content: question list start -->
-          <div ng-if="listQues">
-            <div ng-repeat="ques in listQues">
-              <a href="#"><span class="glyphicon glyphicon-pencil inline"></span></a>
-              <div contenteditable class="inline" ng-bind-html="ques.questionTag"></div>
-              <div ng-model="newQuestionText" class="inline" contenteditable ng-bind-html="ques.questionText"></div>
-              <a href="#"><span class="glyphicon glyphicon-remove inline pull-right"></span></a>
-              <hr ng-if="!$last">
+        <div ng-init="selectSurvModal()"></div>
+        <div ng-if="projects.length>0" class="panel panel-default">
+          <div class="panel-heading">
+            <form class="navbar-form navbar-right" role="search">
+              <div class="form-group">
+                <input class="form-control navbar-right projectsearch" placeholder="Type a project name..." ng-model="query">
+              </div>
+            </form>
+            <h1>Select a Project:</h1>
+          </div>
+          <div class="panel-body">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th width="36"></th>
+                  <th>Name</th>
+                  <th>Quick Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="project in projects | filter:query" ng-click="setSelectedProj()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
+                  <td>
+                    <a ng-show="visible || isSelectedProj()">
+                      <span class="glyphicon glyphicon-ok"></span>
+                    </a>
+                  </td>
+                  <td>{{ project.shortTag }}</td>
+                  <td>{{ project.name }}</td>
+                  </a>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <form action="../selectProject/" method="get">
+              <button name="selected" value="{{ selectedProj }}">OK!</button>
+            </form>
+          </div>
+        </div>
+        <div ng-if="projects.length<=0" class="panel panel-default">
+          <div class="panel-heading">
+            <h1>No projects created yet!</h1>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div ng-if="selectedSurvey">
+
+
+        <!-- API: select a page bar -->
+        <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+
+        <pre>Page: {{selectedPage}} / {{ numPages }}</pre>
+        {% endverbatim %}
+        <hr />
+
+        <accordion close-others="oneAtATime">
+          <accordion-group ng-repeat="listQues in allQuestions" is-open="(selectedPage-1)==$index" ng-click="setSelected()">
+          <accordion-heading>
+              {% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}
+
+          </accordion-heading>
+
+          <!-- Page content: question list start -->
+            <div ng-if="listQues">
+              <div ng-repeat="ques in listQues">
+                <a href="#"><span class="glyphicon glyphicon-pencil inline"></span></a>
+                <div contenteditable class="inline" ng-bind-html="ques.questionTag"></div>
+                <div ng-model="newQuestionText" class="inline" contenteditable ng-bind-html="ques.questionText"></div>
+                <a href="#"><span class="glyphicon glyphicon-remove inline pull-right"></span></a>
+                <hr ng-if="!$last">
+              </div>
+            <br>
             </div>
-          <br>
-          </div>
-          <div ng-if="listQues[0]==null">
-            <p> No questions </p>
-          </div>
+            <div ng-if="listQues[0]==null">
+              <p> No questions </p>
+            </div>
 
-          <!-- API: add new question btn -->
-          {% verbatim %}
-          <button class="btn btn-primary btn-lg" ng-click="newQuesModal(listPages[selectedPage-1].currentPage, selectedSurvey)">Add a new question to page {{ selectedPage }}</button>
-          {% endverbatim %}
-          <div ng-controller="NewQuestionModalCtrl">
-            
-          </div>
-        <!-- Page content end -->
-        </accordion-group>
-      </accordion>
-    </div>
-  </snap-content>
+            <!-- API: add new question btn -->
+            {% verbatim %}
+            <button class="btn btn-primary btn-lg" ng-click="newQuesModal(listPages[selectedPage-1].currentPage, selectedSurvey)">Add a new question to page {{ selectedPage }}</button>
+            {% endverbatim %}
+            <div ng-controller="NewQuestionModalCtrl">
+              
+            </div>
+          <!-- Page content end -->
+          </accordion-group>
+        </accordion>
+      </div>
+    </snap-content>
+
+
+  </div>
 
 
 
