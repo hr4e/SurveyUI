@@ -280,19 +280,19 @@ def home(request):
 @login_required()
 def editor(request):
   template = loader.get_template('SurveyEditor/editor.html')
-#  template = loader.get_template('SurveyEditor/editor.html')
-  form1 = QuestionForm()
-  form2 = PageForm()
+  proj_form = ProjectForm()
+  surv_form = QuestionnaireForm()
+  page_form = PageForm()
+  ques_form = QuestionForm()
 
+  all_projects = Project.objects.all()
   try:
     default_project = UserProject.objects.get(userID=request.user).projectID
     list_surveys = ProjectQuestionnaire.objects.filter(projectID=default_project)
   except:
     messages.error(request, "Error: User '" + str(request.user) + "' has not selected a default project.")
     default_project = list_surveys  = ''
-
-
-  
+    
   if request.GET:
     selected_survey = request.GET['selected']
     q_id = Questionnaire.objects.get(shortTag=selected_survey)
@@ -309,24 +309,19 @@ def editor(request):
     # Append list of questions associated w/ this page
     all_questions.append(PageQuestion.objects.filter(pageID=page.pageID))
 
+
   context = RequestContext(request, {
-    'questionForm' : form1,
-    'pageForm' : form2,
+    'projForm' : proj_form,
+    'survForm' : surv_form,
+    'pageForm' : page_form,
+    'quesForm' : ques_form,
     'defaultProject' : default_project,
+    'allProjects' : all_projects,
     'selectedSurvey' : q_id,
     'listSurveys' : list_surveys,
     'numPages' : num_pages,
     'listPages' : list_pages,
     'allQuestions' : all_questions,
-    'path' : request.path.split('/')[-2],
-  })
-
-  return HttpResponse(template.render(context))
-
-def dashboard(request):
-  template = loader.get_template('SurveyEditor/dashboard.html')
-
-  context = RequestContext(request, {
     'path' : request.path.split('/')[-2],
   })
   return HttpResponse(template.render(context))

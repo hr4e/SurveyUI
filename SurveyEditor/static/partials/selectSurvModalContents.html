@@ -1,5 +1,5 @@
 <!-- Angular Handlebars here do not need to be wrapped in verbatim tags -->
-<div ng-controller="SurvSelectCtrl">
+<div ng-controller="SelectPageCtrl">
   <div ng-if="surveys.length>0" class="panel panel-default">
     <div class="panel-heading">
       <form class="navbar-form navbar-right" role="search">
@@ -21,9 +21,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="survey in surveys | filter:query" ng-click="setSelected()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
+          <tr ng-repeat="survey in surveys | filter:query" ng-click="setSelectedSurv()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
             <td>
-              <a ng-show="visible || isSelected()">
+              <a ng-show="visible || isSelectedSurv()">
                 <span class="glyphicon glyphicon-ok"></span>
               </a>
             </td>
@@ -37,7 +37,7 @@
     </div>
     <div>
       <form action="../editor/" method="get">
-        <button name="selected" value="{{ selected }}">OK!</button>
+        <button name="selected" value="{{ selectedSurv }}">OK!</button>
       </form>
     </div>
   </div>

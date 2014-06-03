@@ -1,5 +1,5 @@
 <!-- Angular Handlebars here do not need to be wrapped in verbatim tags -->
-<div ng-controller="ProjSelectCtrl">
+<div ng-controller="SelectPageCtrl">
   <div ng-if="projects.length>0" class="panel panel-default">
     <div class="panel-heading">
       <form class="navbar-form navbar-right" role="search">
@@ -7,7 +7,7 @@
           <input class="form-control navbar-right projectsearch" placeholder="Type a project name..." ng-model="query">
         </div>
       </form>
-      <h1>Select a Survey:</h1>
+      <h1>Select a Project:</h1>
     </div>
 
     <div class="panel-body">
@@ -21,9 +21,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="project in projects | filter:query" ng-click="setSelected()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
+          <tr ng-repeat="project in projects | filter:query" ng-click="setSelectedProj()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
             <td>
-              <a ng-show="visible || isSelected()">
+              <a ng-show="visible || isSelectedProj()">
                 <span class="glyphicon glyphicon-ok"></span>
               </a>
             </td>
@@ -37,7 +37,7 @@
     </div>
     <div>
       <form action="../selectProject/" method="get">
-        <button name="selected" value="{{ selected }}">OK!</button>
+        <button name="selected" value="{{ selectedProj }}">OK!</button>
       </form>
     </div>
   </div>

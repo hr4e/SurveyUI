@@ -1,115 +1,23 @@
-
 {% extends "base.html" %}{% load staticfiles %}{% load custom_filters %}
 {% block content %}
 <link href="{{ STATIC_URL }}css/lib/angular-snap.min.css" rel="stylesheet">
+<div ng-app="EditorApp" ng-controller="EditorCtrl">
 
-<div ng-app="EditorApp">
-<div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
-<snap-drawer>
-  I'm in a drawer!
-</snap-drawer>
+  <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 
-<snap-content id="editor" snap-id="test" snap-options="opts">
-  <div ng-controller="EditorCtrl">
-    
-<br><br>
-  <!-- Django message middleware notification system -->
-  {% if messages %}
-      {% for message in messages %}
-        <div>
-          <!-- #define ERROR 40 -->
-          {% if message.level == 40 %}
-          <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
-          {% endif %}
-
-          <!-- #define WARNING 30 -->
-          {% if message.level == 30 %}
-          <alert ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
-          {% endif %}
-
-          <!-- #define SUCCESS 25 -->
-          {% if message.level == 25 %}
-          <alert type="success" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
-          {% endif %}
-
-          <!-- #define INFO 20 -->
-          {% if message.level == 20 %}
-          <alert ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
-          {% endif %}
-
-          <!-- #define DEBUG 10 -->
-          {% if message.level == 10 %}
-          <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
-          {% endif %}
-        </div>
-      {% endfor %}
-  {% endif %}
-
-  <snap-dragger>
-    <!-- set draggable area to this empty element -->
-  </snap-dragger>
+  <snap-drawer>
+    <br><br><br><br>
+    <div>
+    <button class="btn btn-primary btn-lg" ng-click="newProjModal()">Add a new project</button>
+    <button class="btn btn-primary btn-lg" ng-click="newSurvModal()">Add a new survey</button>
+    <button class="btn btn-primary btn-lg" ng-click="newPageModal()">Add a new page</button>
+    <button class="btn btn-primary btn-lg" ng-click="selectProjModal()">Select a project</button>
+    <button class="btn btn-primary btn-lg" ng-click="selectSurvModal()">Select a survey</button>
   </div>
+  </snap-drawer>
 
-  <!-- Partials -->
-
-
-
-  {% if selectedSurvey == ''%}
-  <!-- if no survey is selected -->
-
-    <h1>Project {{ defaultProject.shortTag }}</h1>
-    <hr>
-
-    <!-- Force user to select survey -->
-    <div ng-controller="SelectSurveyCtrl">
-      <div ng-init="open()"></div>
-    </div>
-
-    <h3>Please select a survey to edit</h3>
-
-    <script type="text/ng-template" id="selectSurveyModal.html">
-      <div ng-include="'{{ STATIC_URL }}partials/selectSurveyModalContents.html'"></div>
-    </script>
-
-    <script type="text/javascript">
-      var SurvSelectCtrl = function($scope) {
-        $scope.visible = false;
-        $scope.surveys = [];
-        {% for survey in listSurveys %}
-          $scope.surveys.push({
-            name: '{{ survey.questionnaireID.shortTag }}', 
-            desc: '{{ survey.questionnaireID.description }}',
-          });
-        {% endfor %}
-        $scope.setSelected = function() {
-            $scope.selected = this.survey.name;
-        };
-        $scope.isSelected = function() {
-          if (this.survey.name == $scope.selected)
-            return true;
-          else {
-            return false;
-          }
-        };
-
-      };
-    </script>
-
-
-  {% else %}
-  <!-- if a survey is selected -->
-
-    <!-- Survey editor Page -->
-    <h1>Project {{ defaultProject.shortTag }} > {{ selectedSurvey.shortTag }}</h1>
-    <h4>{{ selectedSurvey.description }}</h4>
-    <hr>
-
-    <!-- API: Add new page btn -->
-    <div ng-controller="NewPageModalCtrl">
-      <button class="btn btn-primary btn-lg" ng-click="open()">Add a new page</button>
-      <div ng-show="selected">Selection from a modal: {{ selected }}</div>
-    </div>
-
+  <snap-content id="editor" snap-id="test" snap-options="opts">
+    <br><br><br><br>
     <div ng-controller="SelectPageCtrl">
 
       <!-- API: select a page bar -->
@@ -117,7 +25,9 @@
 
 
       {% verbatim %}
-      <pre>Page: {{selectedPage}} / {{numPages}}</pre>
+      <h1>Default Project: {{ defaultProject }}</h1>
+      <h2>Selected Survey: {{ selectedSurvey }}</h2>
+      <pre>Page: {{selectedPage}} / {{ numPages }}</pre>
       {% endverbatim %}
       <hr />
 
@@ -144,77 +54,117 @@
           </div>
 
           <!-- API: add new question btn -->
+          {% verbatim %}
+          <button class="btn btn-primary btn-lg" ng-click="newQuesModal(listPages[selectedPage-1].currentPage, selectedSurvey)">Add a new question to page {{ selectedPage }}</button>
+          {% endverbatim %}
           <div ng-controller="NewQuestionModalCtrl">
-            {% verbatim %}
-            <button class="btn btn-primary btn-lg" ng-click="open(listPages[selectedPage-1].currentPage, selectedSurvey)">Add a new question to page {{ selectedPage }}</button>
-            {% endverbatim %}
             
           </div>
         <!-- Page content end -->
         </accordion-group>
       </accordion>
+    </div>
+  </snap-content>
 
 
-    <!-- Django-Angular Script -->
 
-    <script type="text/javascript">
-      var SelectPageCtrl = function ($scope, $sce) {
-        $scope.maxSize = 5;
-        $scope.totalPages = 10 * {{ numPages }};
-        $scope.selectedPage = 1;
-        $scope.selectedSurvey = '{{ selectedSurvey.shortTag }}';
-        
-        $scope.status = {
-          isFirstOpen: true,
-          isFirstDisabled: false
-        };
-        <!-- API: 2-way data bind the list of pages -->
-        $scope.listPages = [];
-        {% for page in listPages %}
-          $scope.listPages.push({
-            currentPage : '{{ page.pageID.shortTag }}',
-            nextPage : '{{ page.nextPageID.shortTag }}',
-          });
-        {% endfor %}
+  <!-- Django-Angular Script -->
 
-        <!-- API: 2 way data bind the list of list_questions -->
-        $scope.allQuestions = [];
-        {% for page in allQuestions %}
-          $scope.allQuestions.push([]);
-          {% for question in page %}
-            $scope.allQuestions[{{ forloop.parentloop.counter0 }}].push({
-              questionTag : '{{ question.questionID.questionTag }}',
-              questionText : '{{ question.questionID.questionText | linebreaksbr}}',
-              });
-          {% endfor %}
-        {% endfor %}
-
-
-        $scope.oneAtATime = true;
-
-        $scope.setSelected = function() {
-          $scope.selectedPage = this.$index + 1;
-        };
-        $scope.isSelected = function() {
-          if (this.$index+1 == $scope.selectedPage)
-            return true;
-          else {
-            return false;
-          }
-        };
+  <script type="text/javascript">
+    var SelectPageCtrl = function ($scope, $sce) {
+      $scope.maxSize = 5;
+      $scope.totalPages = 10 * '{{ numPages }}';
+      $scope.selectedPage = 1;
+      $scope.defaultProject = '{{ defaultProject.shortTag }}';
+      $scope.selectedSurvey = '{{ selectedSurvey.shortTag }}';
+      
+      $scope.status = {
+        isFirstOpen: true,
+        isFirstDisabled: false
       };
-    </script>
+      <!-- API: 2-way data bind the list of pages -->
+      $scope.listPages = [];
+      {% for page in listPages %}
+        $scope.listPages.push({
+          currentPage : '{{ page.pageID.shortTag }}',
+          nextPage : '{{ page.nextPageID.shortTag }}',
+        });
+      {% endfor %}
+
+      <!-- API: 2 way data bind the list of list_questions -->
+      $scope.allQuestions = [];
+      {% for page in allQuestions %}
+        $scope.allQuestions.push([]);
+        {% for question in page %}
+          $scope.allQuestions[{{ forloop.parentloop.counter0 }}].push({
+            questionTag : '{{ question.questionID.questionTag }}',
+            questionText : '{{ question.questionID.questionText | linebreaksbr}}',
+            });
+        {% endfor %}
+      {% endfor %}
 
 
-    <!-- Modal Scripts -->
-    <script type="text/ng-template" id="addPageModal.html">
+      $scope.oneAtATime = true;
 
-      <div class="modal-header">
-         <h3 class="modal-title">Add a new page</h3>
-      </div>
-      <div class="modal-body">
-        <form role="form" action="../newPage/" method="post">{% csrf_token %}
-          {% for field in pageForm %}
+      $scope.setSelected = function() {
+        $scope.selectedPage = this.$index + 1;
+      };
+      $scope.isSelected = function() {
+        if (this.$index+1 == $scope.selectedPage)
+          return true;
+        else {
+          return false;
+        }
+      };
+
+      $scope.visible = false;
+      $scope.projects = [];
+      {% for project in allProjects %}
+        $scope.projects.push({
+          shortTag: '{{project.shortTag}}', 
+          name: '{{project.name}}',
+        });
+      {% endfor %}
+      $scope.setSelectedProj = function() {
+          $scope.selectedProj = this.project.shortTag;
+      };
+      $scope.isSelectedProj = function() {
+        if (this.project.shortTag == $scope.selectedProj)
+          return true;
+        else {
+          return false;
+        }
+      };
+
+      $scope.surveys = [];
+      {% for survey in listSurveys %}
+        $scope.surveys.push({
+          name: '{{ survey.questionnaireID.shortTag }}', 
+          desc: '{{ survey.questionnaireID.description }}',
+        });
+      {% endfor %}
+      $scope.setSelectedSurv = function() {
+          $scope.selectedSurv = this.survey.name;
+      };
+      $scope.isSelectedSurv = function() {
+        if (this.survey.name == $scope.selectedSurv)
+          return true;
+        else {
+          return false;
+        }
+      };
+
+    };
+  </script>
+
+  <!-- Modal Scripts -->
+  <script type="text/ng-template" id="addProjectModal.html">
+    <div class="modal-header">
+      <h3 class="modal-title">Add a new project</h3>
+    </div>
+    <div class="modal-body">
+      <form role="form" action="../newProject/" method="post">{% csrf_token %}
+        {% for field in projForm %}
           <div class="form-group">
             <label class="fieldName">{{ field.html_name }}</label>
             {% if field.field.required %}
@@ -223,46 +173,102 @@
               <div class="fieldInput">{{ field }}</div>
             {% endif %}
           </div>
-          {% endfor %}
-          <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="selected">
-          <div class="modal-footer">
-            <input class="btn btn-primary" type="submit" value="Submit" />
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-          </div>
-        </form>
-      </div>
-    </script>
+        {% endfor %}
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Submit" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </script>
 
-    <script type="text/ng-template" id="addQuestionModal.html">
-      <div class="modal-header">
-         <h3 class="modal-title">Add a new question to {% verbatim %}{{ page }}{% endverbatim %}</h3>
-      </div>
-      <div class="modal-body">
-        <form role="form" action="../newQuestion/" method="post">{% csrf_token %}
-          {% for field in questionForm %}
-            <div class="form-group">
-              <label class="fieldName">{{ field.html_name }}</label>
-              {% if field.field.required %}
-              <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
-              {% else %}
-              <div class="fieldInput">{{ field }}</div>
-              {% endif %}
-            </div>
-          {% endfor %}
-          {% verbatim %}
-          <input type="hidden" value="{{ page }}" name="page">
-          <input type="hidden" value="{{ survey }}" name="selected">
-          {% endverbatim %}
-          <div class="modal-footer">
-            <input class="btn btn-primary" type="submit" value="Submit" />
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+  <script type="text/ng-template" id="addSurveyModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Create a new survey</h3>
+    </div>
+    <div class="modal-body">
+      <form role="form" action="../newSurvey/" method="post">{% csrf_token %}
+        {% for field in survForm %}
+          <div class="form-group">
+            <label class="fieldName">{{ field.html_name }}</label>
+            {% if field.field.required %}
+            <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
+            {% else %}
+            <div class="fieldInput">{{ field }}</div>
+            {% endif %}
           </div>
-        </form>
-      </div>
-    </script>
-  {% endif %}
+        {% endfor %}
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Submit" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </script>
 
-  
-</snap-content>
+  <script type="text/ng-template" id="addPageModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Add a new page</h3>
+    </div>
+    <div class="modal-body">
+      <form role="form" action="../newPage/" method="post">{% csrf_token %}
+        {% for field in pageForm %}
+        <div class="form-group">
+          <label class="fieldName">{{ field.html_name }}</label>
+          {% if field.field.required %}
+            <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
+          {% else %}
+            <div class="fieldInput">{{ field }}</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+        <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="selected">
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Submit" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </script>
+
+  <script type="text/ng-template" id="addQuestionModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Add a new question to {% verbatim %}{{ page }}{% endverbatim %}</h3>
+    </div>
+    <div class="modal-body">
+      <form role="form" action="../newQuestion/" method="post">{% csrf_token %}
+        {% for field in quesForm %}
+          <div class="form-group">
+            <label class="fieldName">{{ field.html_name }}</label>
+            {% if field.field.required %}
+            <div class="fieldInput">{{ field|addcss:"alert-danger" }}</div>
+            {% else %}
+            <div class="fieldInput">{{ field }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+        {% verbatim %}
+        <input type="hidden" value="{{ page }}" name="page">
+        <input type="hidden" value="{{ survey }}" name="selected">
+        {% endverbatim %}
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Submit" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </script>
+
+  <!-- select project modal container -->
+  <script type="text/ng-template" id="selectProjectModal.html">
+    <div ng-include="'{{ STATIC_URL }}partials/selectProjModalContents.html'"></div>
+  </script>
+
+  <!-- select survey modal contents -->
+  <script type="text/ng-template" id="selectSurveyModal.html">
+    <div ng-include="'{{ STATIC_URL }}partials/selectSurvModalContents.html'"></div>
+  </script>
+
+
 </div>
 {% endblock content %}
