@@ -17,7 +17,43 @@
   </snap-drawer>
 
   <snap-content id="editor" snap-id="test" snap-options="opts">
-    <br><br><br><br>
+    <br><br>
+    <!-- Django message middleware notification system -->
+    {% if messages %}
+        {% for message in messages %}
+          <div>
+            <!-- #define ERROR 40 -->
+            {% if message.level == 40 %}
+            <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+            {% endif %}
+
+            <!-- #define WARNING 30 -->
+            {% if message.level == 30 %}
+            <alert ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+            {% endif %}
+
+            <!-- #define SUCCESS 25 -->
+            {% if message.level == 25 %}
+            <alert type="success" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+            {% endif %}
+
+            <!-- #define INFO 20 -->
+            {% if message.level == 20 %}
+            <alert ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+            {% endif %}
+
+            <!-- #define DEBUG 10 -->
+            {% if message.level == 10 %}
+            <alert type="danger" ng-init="true" ng-show="visible" close="visible=false">{{ message }}</alert>
+            {% endif %}
+          </div>
+        {% endfor %}
+    {% endif %}
+
+    <snap-dragger>
+      <!-- set draggable area to this empty element -->
+    </snap-dragger>
+
     <div ng-controller="SelectPageCtrl">
       {% if selectedSurvey %}
       <!-- API: select a page bar -->
@@ -40,10 +76,19 @@
           <!-- Page content: question list start -->
           <div ng-if="listQues">
             <div ng-repeat="ques in listQues">
-              <a href="#"><span class="glyphicon glyphicon-pencil inline"></span></a>
+              <a href="#" ng-click="updateQuesModal({
+                'questionTag':ques.questionTag,
+                'questionText':ques.questionText,
+                'helpText':ques.helpText,
+                'explanation':ques.explanation,
+                'language':ques.language,
+                'description':ques.description,
+                'imageFileName':ques.imageFileName,
+                'imageFileType':ques.imageFileType
+              }, selectedSurvey)"><span class="glyphicon glyphicon-pencil inline"></span></a>
               <div contenteditable class="inline" ng-bind-html="ques.questionTag"></div>
               <div ng-model="newQuestionText" class="inline" contenteditable ng-bind-html="ques.questionText"></div>
-              <a href="#" ng-click="deleteQuesModal(ques.questionTag)"><span class="glyphicon glyphicon-remove inline pull-right"></span></a>
+              <a href="#" ng-click="deleteQuesModal(ques.questionTag, selectedSurvey)"><span class="glyphicon glyphicon-remove inline pull-right"></span></a>
               <hr ng-if="!$last">
             </div>
           <br>
@@ -146,8 +191,14 @@
         $scope.allQuestions.push([]);
         {% for question in page %}
           $scope.allQuestions[{{ forloop.parentloop.counter0 }}].push({
-            questionTag : '{{ question.questionID.questionTag }}',
-            questionText : '{{ question.questionID.questionText | linebreaksbr}}',
+            questionTag   : '{{ question.questionID.questionTag }}',
+            questionText  : '{{ question.questionID.questionText | linebreaksbr }}',
+            helpText      : '{{ question.questionID.helpText }}',
+            explanation   : '{{ question.questionID.explanation | linebreaksbr }}',
+            language      : '{{ question.questionID.language }}',
+            description   : '{{ question.questionID.description | linebreaksbr }}',
+            imageFileName : '{{ question.questionID.imageFileName }}',
+            imageFileType : '{{ question.questionID.imageFileType }}',
             });
         {% endfor %}
       {% endfor %}
@@ -307,7 +358,7 @@
       </form>
     </div>
   </script>
-
+   
   <!-- select project modal container -->
   <script type="text/ng-template" id="selectProjectModal.html">
     <div ng-include="'{{ STATIC_URL }}partials/selectProjModalContents.html'"></div>
@@ -325,6 +376,45 @@
     </div>
     <div class="modal-body">
       <h4>Are you sure?</h4>
+      <form role="form" action="../deleteQuestion/" method="post">{% csrf_token %}
+        {% verbatim %}
+        <input type="hidden" value="{{ question }}" name="question">
+        <input type="hidden" value="{{ survey }}" name="survey">
+        {% endverbatim %}
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Submit" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </script>
+<
+  <!-- API: update question modal -->
+  <script type="text/ng-template" id="updateQuestionModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Update question {% verbatim %}'{{ question.questionTag }}'{% endverbatim %}</h3>
+    </div>
+    <div class="modal-body">
+      <form role="form" action="../updateQuestion/" method="post">{% csrf_token %}
+        {% for field in updateQuesForm %}
+          <div class="form-group">
+            <label class="fieldName">{{ field.html_name }}</label>
+            {% if field.field.required %}
+            <div class="fieldInput">{{ field|addDangerModel:field.html_name }}</div>
+            {% else %}
+            <div class="fieldInput">{{ field|addModel:field.html_name }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+        {% verbatim %}
+        <input type="hidden" value="{{ question }}" name="page">
+        <input type="hidden" value="{{ survey }}" name="selected">
+        {% endverbatim %}
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Submit" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
     </div>
   </script>
 

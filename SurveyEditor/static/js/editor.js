@@ -44,13 +44,24 @@ var EditorCtrl = function ($scope, $modal) {
       controller: StandardInstanceCtrl,
     });
   };
-  $scope.deleteQuesModal = function (question) {
+  $scope.deleteQuesModal = function (question, survey) {
     var modalInstance = $modal.open({
       templateUrl: 'deleteQuestionModal.html',
-      controller: deleteQuesInstanceCtrl,
+      controller: DeleteQuesInstanceCtrl,
       resolve: {
-        objectToDelete: function () {
-          return question;
+        selection: function () {
+          return [question, survey];
+        }
+      }
+    });
+  };
+  $scope.updateQuesModal = function (question, survey) {
+    var modalInstance = $modal.open({
+      templateUrl: 'updateQuestionModal.html',
+      controller: QuesInstanceCtrl,
+      resolve: {
+        selection: function () {
+          return [question, survey];
         }
       }
     });
@@ -71,8 +82,30 @@ var NewQuesInstanceCtrl = function ($scope, $modalInstance, selection) {
     $modalInstance.dismiss('cancel');
   };
 };
-var deleteQuesInstanceCtrl = function ($scope, $modalInstance, objectToDelete) {
-  $scope.question = objectToDelete;
+var DeleteQuesInstanceCtrl = function ($scope, $modalInstance, selection) {
+  $scope.question = selection[0];
+  $scope.survey = selection[1];
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+var QuesInstanceCtrl = function ($scope, $modalInstance, selection) {
+  $scope.question = {};
+  $scope.question["questionTag"] = selection[0].questionTag;
+  $scope.question["questionText"] = selection[0].questionText;
+  $scope.question["helpText"] = selection[0].helpText;
+  $scope.question["explanation"] = selection[0].explanation;
+  $scope.question["language"] = selection[0].language;
+  $scope.question["description"] = selection[0].description;
+  $scope.question["imageFileName"] = selection[0].imageFileName;
+  $scope.question["imageFileType"] = selection[0].imageFileType;
+  $scope.question = selection[0];
+  $scope.survey = selection[1];
+
+  $scope.setField = function (newValue) {
+    this.value = newValue;
+  }
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };

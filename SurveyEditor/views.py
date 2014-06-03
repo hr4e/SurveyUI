@@ -201,8 +201,46 @@ def newQuestion(request):
     context = RequestContext(request, {})
     return HttpResponse(template.render(context))
 
+@login_required()
+def deleteQuestion(request):
+  if request.method == "POST":
+    quesTag = request.POST['question']
+    selected_survey = request.POST['survey']
+    q_id = Question.objects.get(questionTag=quesTag)
 
+    if q_id:
+      # found question to delete
+      messages.success(request, "Success: question '"+quesTag+"'was deleted.")
+      q_id.delete()
+      return HttpResponseRedirect('/editor/?selected='+selected_survey)
+    else:
+      # did not find question to delete
+      messages.error(request, "Error: question name '"+quesTag+"' was not found!")
+      return HttpResponseRedirect('/editor/?selected='+selected_survey)
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
+@login_required()
+def updateQuestion(request):
+  if request.method == "POST":
+    quesTag = request.POST['question']
+    selected_survey = request.POST['survey']
+    q_id = Question.objects.get(questionTag=quesTag)
+
+    if q_id:
+      # found question to delete
+      messages.success(request, "Success: question '"+quesTag+"'was updated.")
+      return HttpResponseRedirect('/editor/?selected='+selected_survey)
+    else:
+      # did not find question to delete
+      messages.error(request, "Error: question name '"+quesTag+"' was not found!")
+      return HttpResponseRedirect('/editor/?selected='+selected_survey)
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
 # Frontend Views
 def login(request):
@@ -317,11 +355,17 @@ def editor(request):
     all_questions.append(PageQuestion.objects.filter(pageID=page.pageID))
 
 
+
+  update_ques_form = QuestionForm(initial={
+  })
+
+
   context = RequestContext(request, {
     'projForm' : proj_form,
     'survForm' : surv_form,
     'pageForm' : page_form,
     'quesForm' : ques_form,
+    'updateQuesForm' : update_ques_form,
     'defaultProject' : default_project,
     'allProjects' : all_projects,
     'selectedSurvey' : q_id,

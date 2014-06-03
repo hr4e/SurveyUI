@@ -22,6 +22,9 @@ urlpatterns = patterns('',
     url(r'^newSurvey/', views.newSurvey, name='newSurvey'),
     url(r'^newPage/', views.newPage, name='newPage'),
     url(r'^newQuestion/', views.newQuestion, name='newQuestion'),
+    url(r'^deleteQuestion/', views.deleteQuestion, name='deleteQuestion'),
+    url(r'^updateQuestion/', views.updateQuestion, name='updateQuestion'),
+
     url(r'^login/', views.login, name='login'),
     url(r'^logout/', views.logout, name='logout'),
 )
