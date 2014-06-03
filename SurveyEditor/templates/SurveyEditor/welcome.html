@@ -3,10 +3,32 @@
 {% block content %}
 
   <div ng-app="EditorApp">
+    {% if user.is_authenticated %}
+    <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 
+    {{ user }}
+    <!-- top panel -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Welcome to the HR4E Survey Editor</h1>
+        <p>A tool for creating medical surveys with ease!</p>
+      </div>
+    </div>
+
+
+
+    <!-- Django-Angular Script -->
+
+    <script type="text/javascript">
+      var SelectPageCtrl = function ($scope, $sce) {
+        $scope.defaultProject = '{{ defaultProject.shortTag }}';
+      };
+    </script>
+
+    {% else %}
 
 <!-- not needed? 
-	  <div ng-include="'{{ STATIC_URL }}partials/navbarWelcome.html'"></div>
+    <div ng-include="'{{ STATIC_URL }}partials/navbarWelcome.html'"></div>
 -->
 
     <body id="cover">
@@ -14,10 +36,11 @@
         <h1>Health Records For Everyone</h1>
         <p class="lead">Easily evaluate the condition of your health</p>
         <a href="#" class="btn btn-lg btn-info">Take a survey</a>
-        <a href="home" class="btn btn-lg btn-info">Write your own survey</a>
+        <a href="/editor/" class="btn btn-lg btn-info">Write your own survey</a>
       </div>
     </body>
 
 
   </div>
+  {% endif %}
 {% endblock content %}

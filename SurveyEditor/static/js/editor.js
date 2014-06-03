@@ -3,28 +3,24 @@ var EditorCtrl = function ($scope, $modal) {
   $scope.closeAlert = function(index) {
     $scope.alerts.splice(index, 1);
   };
-
   $scope.newProjModal = function() {
     var modalInstance = $modal.open({
       templateUrl: 'addProjectModal.html',
-      controller: NewProjInstanceCtrl,
+      controller: StandardInstanceCtrl,
     });
   };
-
   $scope.newSurvModal = function() {
     var modalInstance = $modal.open({
       templateUrl: 'addSurveyModal.html',
-      controller: NewSurvInstanceCtrl,
+      controller: StandardInstanceCtrl,
     });
   };
-
 	$scope.newPageModal = function() {
     var modalInstance = $modal.open({
       templateUrl: 'addPageModal.html',
-      controller: NewPageInstanceCtrl,
+      controller: StandardInstanceCtrl,
     });
 	};
-
   $scope.newQuesModal = function (page, survey) {
     var modalInstance = $modal.open({
       templateUrl: 'addQuestionModal.html',
@@ -36,41 +32,38 @@ var EditorCtrl = function ($scope, $modal) {
       }
     });
   };
-
   $scope.selectProjModal = function() {
     var modalInstance = $modal.open({
       templateUrl: 'selectProjectModal.html',
-      controller: SelectProjInstanceCtrl,
+      controller: StandardInstanceCtrl,
     });
   };
-
   $scope.selectSurvModal = function() {
     var modalInstance = $modal.open({
       templateUrl: 'selectSurveyModal.html',
-      controller: SelectSurvInstanceCtrl,
+      controller: StandardInstanceCtrl,
+    });
+  };
+  $scope.deleteQuesModal = function (question) {
+    var modalInstance = $modal.open({
+      templateUrl: 'deleteQuestionModal.html',
+      controller: deleteQuesInstanceCtrl,
+      resolve: {
+        objectToDelete: function () {
+          return question;
+        }
+      }
     });
   };
 
 };
-// /open(listPages[selectedPage-1].currentPage, selectedSurvey)
-var NewProjInstanceCtrl = function ($scope, $modalInstance) {
+
+
+var StandardInstanceCtrl = function ($scope, $modalInstance) {
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
 };
-
-var NewSurvInstanceCtrl = function ($scope, $modalInstance) {
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
-};
-
-var NewPageInstanceCtrl = function ($scope, $modalInstance) {
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
-};
-
 var NewQuesInstanceCtrl = function ($scope, $modalInstance, selection) {
   $scope.page = selection[0];
   $scope.survey = selection[1];
@@ -78,14 +71,8 @@ var NewQuesInstanceCtrl = function ($scope, $modalInstance, selection) {
     $modalInstance.dismiss('cancel');
   };
 };
-
-var SelectProjInstanceCtrl = function ($scope, $modalInstance) {
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
-};
-
-var SelectSurvInstanceCtrl = function ($scope, $modalInstance) {
+var deleteQuesInstanceCtrl = function ($scope, $modalInstance, objectToDelete) {
+  $scope.question = objectToDelete;
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };

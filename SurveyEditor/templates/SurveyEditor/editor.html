@@ -33,18 +33,17 @@
 
       <accordion close-others="oneAtATime">
         <accordion-group ng-repeat="listQues in allQuestions" is-open="(selectedPage-1)==$index" ng-click="setSelected()">
-        <accordion-heading>
-            {% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}
+          <accordion-heading>
+              {% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}
+          </accordion-heading>
 
-        </accordion-heading>
-
-        <!-- Page content: question list start -->
+          <!-- Page content: question list start -->
           <div ng-if="listQues">
             <div ng-repeat="ques in listQues">
               <a href="#"><span class="glyphicon glyphicon-pencil inline"></span></a>
               <div contenteditable class="inline" ng-bind-html="ques.questionTag"></div>
               <div ng-model="newQuestionText" class="inline" contenteditable ng-bind-html="ques.questionText"></div>
-              <a href="#"><span class="glyphicon glyphicon-remove inline pull-right"></span></a>
+              <a href="#" ng-click="deleteQuesModal(ques.questionTag)"><span class="glyphicon glyphicon-remove inline pull-right"></span></a>
               <hr ng-if="!$last">
             </div>
           <br>
@@ -317,6 +316,16 @@
   <!-- select survey modal contents -->
   <script type="text/ng-template" id="selectSurveyModal.html">
     <div ng-include="'{{ STATIC_URL }}partials/selectSurvModalContents.html'"></div>
+  </script>
+
+  <!-- API: delete question modal -->
+  <script type="text/ng-template" id="deleteQuestionModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Will delete question {% verbatim %}'{{ question }}'{% endverbatim %}</h3>
+    </div>
+    <div class="modal-body">
+      <h4>Are you sure?</h4>
+    </div>
   </script>
 
 
