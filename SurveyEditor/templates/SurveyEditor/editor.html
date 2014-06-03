@@ -129,6 +129,7 @@
                 <th width="36"></th>
                 <th>Name</th>
                 <th>Quick Description</th>
+                <th width="36">Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -140,7 +141,11 @@
                 </td>
                 <td>{{ project.shortTag }}</td>
                 <td>{{ project.name }}</td>
-                </a>
+                <td>
+                  <a ng-show="visible || isSelectedProj()" ng-click="deleteProjModal(project.shortTag)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </a>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -380,7 +385,7 @@
       <h4>Are you sure?</h4>
       <form role="form" action="../deleteQuestion/" method="post">{% csrf_token %}
         {% verbatim %}
-        <input type="hidden" value="{{ question.questionTag }}" name="question">
+        <input type="hidden" value="{{ question }}" name="question">
         <input type="hidden" value="{{ survey }}" name="survey">
         {% endverbatim %}
         <div class="modal-footer">
@@ -417,6 +422,65 @@
         <div class="modal-footer">
           <input class="btn btn-primary" type="submit" value="Submit" />
           <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </script>
+
+  <!-- API: delete project modal -->
+  <script type="text/ng-template" id="deleteProjectModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Will delete project {% verbatim %}'{{ selection }}'{% endverbatim %}</h3>
+    </div>
+    <div class="modal-body">
+      <h4>Are you sure?</h4>
+      <form role="form" action="../deleteProject/" method="post">{% csrf_token %}
+        {% verbatim %}
+        <input type="hidden" value="{{ selection }}" name="project">
+        {% endverbatim %}
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Yes" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">No</button>
+        </div>
+      </form>
+    </div>
+  </script>
+
+    <!-- API: delete question modal -->
+  <script type="text/ng-template" id="deleteQuestionModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Will delete question {% verbatim %}'{{ question }}'{% endverbatim %}</h3>
+    </div>
+    <div class="modal-body">
+      <h4>Are you sure?</h4>
+      <form role="form" action="../deleteQuestion/" method="post">{% csrf_token %}
+        {% verbatim %}
+        <input type="hidden" value="{{ question }}" name="question">
+        <input type="hidden" value="{{ survey }}" name="survey">
+        {% endverbatim %}
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Yes" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">No</button>
+        </div>
+      </form>
+    </div>
+  </script>
+
+    <!-- API: delete question modal -->
+  <script type="text/ng-template" id="deleteQuestionModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Will delete question {% verbatim %}'{{ question }}'{% endverbatim %}</h3>
+    </div>
+    <div class="modal-body">
+      <h4>Are you sure?</h4>
+      <form role="form" action="../deleteQuestion/" method="post">{% csrf_token %}
+        {% verbatim %}
+        <input type="hidden" value="{{ question }}" name="question">
+        <input type="hidden" value="{{ survey }}" name="survey">
+        {% endverbatim %}
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Yes" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">No</button>
         </div>
       </form>
     </div>

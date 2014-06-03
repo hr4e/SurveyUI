@@ -3,6 +3,20 @@ var EditorCtrl = function ($scope, $modal) {
   $scope.closeAlert = function(index) {
     $scope.alerts.splice(index, 1);
   };
+  // Select modals
+  $scope.selectProjModal = function() {
+    var modalInstance = $modal.open({
+      templateUrl: 'selectProjectModal.html',
+      controller: StandardInstanceCtrl,
+    });
+  };
+  $scope.selectSurvModal = function() {
+    var modalInstance = $modal.open({
+      templateUrl: 'selectSurveyModal.html',
+      controller: StandardInstanceCtrl,
+    });
+  };
+  // Create modals
   $scope.newProjModal = function() {
     var modalInstance = $modal.open({
       templateUrl: 'addProjectModal.html',
@@ -32,15 +46,27 @@ var EditorCtrl = function ($scope, $modal) {
       }
     });
   };
-  $scope.selectProjModal = function() {
+  // Delete modals
+  $scope.deleteProjModal = function(project) {
     var modalInstance = $modal.open({
-      templateUrl: 'selectProjectModal.html',
+      templateUrl: 'deleteProjectModal.html',
+      controller: DeleteInstanceCtrl,
+      resolve: {
+        selection: function () {
+          return project;
+        }
+      }
+    });
+  };
+  $scope.deleteSurvModal = function() {
+    var modalInstance = $modal.open({
+      templateUrl: 'deleteSurveyModal.html',
       controller: StandardInstanceCtrl,
     });
   };
-  $scope.selectSurvModal = function() {
+  $scope.deletePageModal = function() {
     var modalInstance = $modal.open({
-      templateUrl: 'selectSurveyModal.html',
+      templateUrl: 'deletePageModal.html',
       controller: StandardInstanceCtrl,
     });
   };
@@ -55,6 +81,7 @@ var EditorCtrl = function ($scope, $modal) {
       }
     });
   };
+  // Edit modals
   $scope.updateQuesModal = function (question, survey) {
     var modalInstance = $modal.open({
       templateUrl: 'updateQuestionModal.html',
@@ -86,6 +113,12 @@ var DeleteQuesInstanceCtrl = function ($scope, $modalInstance, selection) {
   $scope.question = selection[0];
   $scope.survey = selection[1];
 
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+var DeleteInstanceCtrl = function ($scope, $modalInstance, selection) {
+  $scope.selection = selection;
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };

@@ -204,6 +204,26 @@ def newQuestion(request):
     return HttpResponse(template.render(context))
 
 @login_required()
+def deleteProject(request):
+  if request.method == "POST":
+    projTag = request.POST['project']
+
+    try:
+      p_id = Project.objects.get(shortTag=projTag)
+      # found project to delete
+      messages.success(request, "Success: project '"+projTag+"'was deleted.")
+      p_id.delete()
+    except:
+      # did not find question to delete
+      messages.error(request, "Error: project name '"+projTag+"' was not found!")
+    
+    return HttpResponseRedirect('/editor/')
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+@login_required()
 def deleteQuestion(request):
   if request.method == "POST":
     quesTag = request.POST['question']
