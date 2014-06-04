@@ -10,6 +10,10 @@ Changes made in the new website do not reflect changes on the
 old site. The old site uses some additional component in addition
 to the database.
 
+Recording:
+
+When a question is removed, all page question links are destroyed
+
 ToDo:
 [ ] Make title page change depending on location of website 
 [ ] Include username in navbar signout button: "Sign out of $user_name"
