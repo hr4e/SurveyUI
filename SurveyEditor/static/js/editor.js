@@ -47,7 +47,7 @@ var EditorCtrl = function ($scope, $modal) {
     });
   };
   // Delete modals
-  $scope.deleteProjModal = function(project) {
+  $scope.deleteProjModal = function (project) {
     var modalInstance = $modal.open({
       templateUrl: 'deleteProjectModal.html',
       controller: DeleteInstanceCtrl,
@@ -58,7 +58,7 @@ var EditorCtrl = function ($scope, $modal) {
       }
     });
   };
-  $scope.deleteSurvModal = function(survey) {
+  $scope.deleteSurvModal = function (survey) {
     var modalInstance = $modal.open({
       templateUrl: 'deleteSurveyModal.html',
       controller: DeleteInstanceCtrl,
@@ -69,10 +69,15 @@ var EditorCtrl = function ($scope, $modal) {
       }
     });
   };
-  $scope.deletePageModal = function() {
+  $scope.deletePageModal = function (page) {
     var modalInstance = $modal.open({
       templateUrl: 'deletePageModal.html',
-      controller: StandardInstanceCtrl,
+      controller: DeleteInstanceCtrl,
+      resolve: {
+        selection: function () {
+          return page;
+        }
+      }
     });
   };
   $scope.deleteQuesModal = function (question, survey) {

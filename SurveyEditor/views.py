@@ -244,6 +244,27 @@ def deleteSurvey(request):
     return HttpResponse(template.render(context))
 
 @login_required()
+def deletePage(request):
+  if request.method == "POST":
+    pageTag = request.POST['page']
+    selected_survey = request.POST['survey']
+
+    try:
+      p_id = Page.objects.get(shortTag=pageTag)
+      # found project to delete
+      messages.success(request, "Success: page '"+pageTag+"'was deleted.")
+      p_id.delete()
+    except:
+      # did not find question to delete
+      messages.error(request, "Error: page name '"+pageTag+"' was not found!")
+    
+    return HttpResponseRedirect('/editor/?selected='+selected_survey)
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+@login_required()
 def deleteQuestion(request):
   if request.method == "POST":
     quesTag = request.POST['question']

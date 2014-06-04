@@ -70,7 +70,10 @@
       <accordion close-others="oneAtATime">
         <accordion-group ng-repeat="listQues in allQuestions" is-open="(selectedPage-1)==$index" ng-click="setSelected()">
           <accordion-heading>
-              {% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}
+            {% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}
+            <a ng-click="deletePageModal(listPages[$index].currentPage)">
+              <span class="glyphicon glyphicon-glyphicon glyphicon-trash inline pull-right"></span>
+            </a>
           </accordion-heading>
 
           <!-- Page content: question list start -->
@@ -111,7 +114,9 @@
       <accordion close-others="oneAtATime">
         <!-- Manage Projects Table -->
         <accordion-group heading="Manage Projects" is-open="status=='projects'" ng-click="status='projects'">
-          <table class="table table-bordered table-hover">
+
+          <h1 ng-if="projects.length==0">No projects created</h1>
+          <table ng-if="projects" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th width="36"></th>
@@ -140,7 +145,8 @@
         </accordion-group>
         <!-- Manage Surveys Table -->
         <accordion-group heading="Manage Surveys" is-open="status=='surveys'" ng-click="status='surveys'">
-          <table class="table table-bordered table-hover">
+          <h1 ng-if="surveys.length==0">No surveys created</h1>
+          <table ng-if="surveys" class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th width="36"></th>
@@ -168,7 +174,6 @@
           </table>
         </accordion-group>
       </accordion>
-
 
       {% endverbatim %}{% endif %}
     </div>
@@ -474,17 +479,17 @@
   </script>
 
     <!-- API: delete question modal -->
-  <script type="text/ng-template" id="deleteQuestionModal.html">
+  <script type="text/ng-template" id="deletePageModal.html">
     <div class="modal-header">
-       <h3 class="modal-title">Will delete question {% verbatim %}'{{ question }}'{% endverbatim %}</h3>
+       <h3 class="modal-title">Will delete page {% verbatim %}'{{ selection }}'{% endverbatim %}</h3>
     </div>
     <div class="modal-body">
       <h4>Are you sure?</h4>
-      <form role="form" action="../deleteQuestion/" method="post">{% csrf_token %}
+      <form role="form" action="../deletePage/" method="post">{% csrf_token %}
         {% verbatim %}
-        <input type="hidden" value="{{ question }}" name="question">
-        <input type="hidden" value="{{ survey }}" name="survey">
+        <input type="hidden" value="{{ selection }}" name="page">
         {% endverbatim %}
+        <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="survey">
         <div class="modal-footer">
           <input class="btn btn-primary" type="submit" value="Yes" />
           <button class="btn btn-warning" type="button" ng-click="cancel()">No</button>

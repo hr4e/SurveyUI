@@ -12,27 +12,26 @@
 
     <div class="panel-body">
 
-      <table class="table table-bordered table-hover">
-        <thead>
-          <tr>
-            <th width="36"></th>
-            <th>Name</th>
-            <th>Quick Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="survey in surveys | filter:query" ng-click="setSelectedSurv()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
-            <td>
-              <a ng-show="visible || isSelectedSurv()">
-                <span class="glyphicon glyphicon-ok"></span>
-              </a>
-            </td>
-            <td>{{ survey.shortTag }}</td>
-            <td>{{ survey.desc }}</td>
-            </a>
-          </tr>
-        </tbody>
-      </table>
+      <table ng-if="surveys" class="table table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th width="36"></th>
+                      <th>Name</th>
+                      <th>Quick Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="survey in surveys | filter:query" ng-click="setSelectedSurv()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
+                      <td>
+                        <a ng-show="visible || isSelectedSurv()" href="../editor/?selected={{ selectedSurv }}">
+                          <span class="glyphicon glyphicon-ok"></span>
+                        </a>
+                      </td>
+                      <td>{{ survey.shortTag }}</td>
+                      <td>{{ survey.name }}</td>
+                    </tr>
+                  </tbody>
+                </table>
 
     </div>
     <div>
