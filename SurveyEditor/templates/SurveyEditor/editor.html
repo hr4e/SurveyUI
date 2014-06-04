@@ -127,7 +127,7 @@
               <a href="#" ng-click="unlinkQuesModal(ques.questionTag, listPages[$parent.$index].currentPage)"><span id="deleteTag" class="glyphicon glyphicon-link inline pull-right"></span></a>
               <br><br>
               <div id="quesTextContainer">
-                <pre ng-bind-html="ques.questionText"></pre>
+                <pre ng-bind="ques.questionText"></pre>
               </div>
               <hr ng-if="!$last">
             </div>
