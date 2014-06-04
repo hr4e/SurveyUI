@@ -73,7 +73,7 @@
 	display: inline;
 }
 #editor{
-  margin-left: 20px;
+  margin-left: 0;
   padding-top: 46px;
   padding-bottom: 46px;
 }
@@ -126,4 +126,24 @@
 
 #editor {
   background-color: #fff;
+}
+
+#quesTextContainer{
+  padding-left: 28px;
+  padding-right: 28px;
+}
+#quesTag{
+  padding-left: 10px;
+}
+#deleteTag{
+  margin-right: 5px;
+}
+#contentContainer{
+  margin-left: 100px;
+  margin-right: 100px;
+}
+#pageSelector {
+  margin-left: auto;
+  margin-right: auto;
+  width: 374px;
 }

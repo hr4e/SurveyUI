@@ -8,15 +8,21 @@
   <snap-drawer>
     <br><br><br><br>
     <div>
-    <button class="btn btn-primary btn-lg" ng-click="newProjModal()">Add a new project</button>
-    <button class="btn btn-primary btn-lg" ng-click="newSurvModal()">Add a new survey</button>
-    <button class="btn btn-primary btn-lg" ng-click="newPageModal()">Add a new page</button>
-    <button class="btn btn-primary btn-lg" ng-click="selectProjModal()">Select a project</button>
-    <button class="btn btn-primary btn-lg" ng-click="selectSurvModal()">Select a survey</button>
+      <!-- API: add new project -->
+    <button class="btn btn-primary btn-lg" ng-click="newProjModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-briefcase"></span> New project</button>
+      <!-- API: select project -->
+    <button class="btn btn-primary btn-lg" ng-click="selectProjModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-search"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-briefcase"></span> Select project</button>
+      <!-- API: add new survey -->
+    <button class="btn btn-primary btn-lg" ng-click="newSurvModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-book"></span> New survey</button>
+      <!-- API: select survey -->
+    <button class="btn btn-primary btn-lg" ng-click="selectSurvModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-search"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-book"></span> Select survey</button>
+      <!-- API: add new page -->
+    <button class="btn btn-primary btn-lg" ng-click="newPageModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-list"></span> New page</button>
   </div>
   </snap-drawer>
 
   <snap-content id="editor" snap-id="test" snap-options="opts">
+  <div id="contentContainer">
     <br><br>
     <!-- Django message middleware notification system -->
     {% if messages %}
@@ -59,15 +65,13 @@
 
       {% if listPages %}
         <!-- API: select a page bar -->
-        <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
-
+        <div id="pageSelector">
+          <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+        </div>
 
 
         
         <h1>{{ defaultProject.shortTag }} > {{ selectedSurvey.shortTag }}</h1>
-        <div ng-if="selectedPage!=0">
-          <pre>{% verbatim %}Page: {{selectedPage}} / {{ numPages }}{% endverbatim %}</pre>
-        </div>
         
 
       {% else %}
@@ -78,10 +82,14 @@
       <accordion close-others="oneAtATime">
         <accordion-group ng-repeat="listQues in allQuestions" is-open="(selectedPage-1)==$index" ng-click="setSelected()">
           <accordion-heading>
-            <div ng-bind-html="listPages[$index].currentPage"></div>
-            <a ng-click="deletePageModal(listPages[$index].currentPage)">
-              <span class="glyphicon glyphicon-glyphicon glyphicon-trash inline pull-right"></span>
-            </a>
+            <ul class="list-inline">
+              <li ng-bind-html="listPages[$index].currentPage"></li>
+              <li class="pull-right">
+                <a ng-click="deletePageModal(listPages[$index].currentPage)">
+                  <span class="glyphicon glyphicon-glyphicon glyphicon-trash"></span>
+                </a>
+              </li>
+            </ul>
           </accordion-heading>
 
           <!-- Page content: question list start -->
@@ -97,11 +105,13 @@
                 'imageFileName':ques.imageFileName,
                 'imageFileType':ques.imageFileType
               }, selectedSurvey)"><span class="glyphicon glyphicon-pencil inline"></span></a>
-              <div class="inline" ng-bind-html="ques.questionTag"></div>
-              <a href="#" ng-click="deleteQuesModal(ques.questionTag, selectedSurvey)"><span class="glyphicon glyphicon-remove inline pull-right"></span></a>
-
-              <div ng-model="newQuestionText" ng-bind-html="ques.questionText"></div>
-
+              <div id="quesTag" class="inline" ng-bind-html="ques.questionTag"
+                   required></div>
+              <a href="#" ng-click="deleteQuesModal(ques.questionTag, selectedSurvey)"><span id="deleteTag" class="glyphicon glyphicon-remove inline pull-right"></span></a>
+              <br><br>
+              <div id="quesTextContainer">
+                <pre ng-bind-html="ques.questionText"></pre>
+              </div>
               <hr ng-if="!$last">
             </div>
           <br>
@@ -111,10 +121,10 @@
           </div>
 
           <!-- API: add new question btn -->
-          {% verbatim %}
-          <button class="btn btn-primary btn-lg" ng-click="newQuesModal(listPages[selectedPage-1].currentPage, selectedSurvey)">Add a new question to page {{ selectedPage }}</button>
-          <button class="btn btn-primary btn-lg" ng-click="addExistingQuesModal(listPages[selectedPage-1].currentPage, selectedSurvey)">Add an existing question to page {{ selectedPage }}</button>
-          {% endverbatim %}
+          <button class="btn btn-primary btn-lg" ng-click="newQuesModal(listPages[selectedPage-1].currentPage, selectedSurvey)">New question</button>
+
+          <!-- API: add existing question btn -->
+          <button class="btn btn-primary btn-lg" ng-click="addExistingQuesModal(listPages[selectedPage-1].currentPage, selectedSurvey)">Link existing</button>
 
         <!-- Page content end -->
         </accordion-group>
@@ -154,7 +164,7 @@
         </accordion-group>
         <!-- Manage Surveys Table -->
         <accordion-group heading="Manage Surveys" is-open="status=='surveys'" ng-click="setStatus('surveys')">
-          <h1 ng-if="surveys.length==0">No surveys created</h1>
+          <h1 ng-if="surveys.length==0" ng-init="toggle()">No surveys created</h1>
           <table ng-if="surveys" class="table table-bordered table-hover">
             <thead>
               <tr>
@@ -186,6 +196,7 @@
 
       {% endverbatim %}{% endif %}
     </div>
+  </div>
   </snap-content>
 
 
@@ -229,22 +240,28 @@
       {% endfor %}
 
       <!-- API: 2 way data bind the list of list_questions -->
+      var unsanitize = function (string) {
+        // Accounts for the following cases: ', &, <, >, "
+        return string.replace(/&#39;/g, "'").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"');
+      };
       $scope.allQuestions = [];
       {% for page in allQuestions %}
         $scope.allQuestions.push([]);
         {% for question in page %}
           $scope.allQuestions[{{ forloop.parentloop.counter0 }}].push({
-            questionTag   : '{{ question.questionID.questionTag }}',
-            questionText  : '{{ question.questionID.questionText | linebreaksbr }}',
-            helpText      : '{{ question.questionID.helpText }}',
-            explanation   : '{{ question.questionID.explanation | linebreaksbr }}',
-            language      : '{{ question.questionID.language }}',
-            description   : '{{ question.questionID.description | linebreaksbr }}',
-            imageFileName : '{{ question.questionID.imageFileName }}',
-            imageFileType : '{{ question.questionID.imageFileType }}',
-            });
+            questionTag   : unsanitize('{{ question.questionID.questionTag }}'),
+            questionText  : unsanitize('{{ question.questionID.questionText }}'),
+            helpText      : unsanitize('{{ question.questionID.helpText }}'),
+            explanation   : unsanitize('{{ question.questionID.explanation }}'),
+            language      : unsanitize('{{ question.questionID.language }}'),
+            description   : unsanitize('{{ question.questionID.description }}'),
+            imageFileName : unsanitize('{{ question.questionID.imageFileName }}'),
+            imageFileType : unsanitize('{{ question.questionID.imageFileType }}'),
+          });
         {% endfor %}
       {% endfor %}
+
+
 
       <!-- modal table accordion misc functions -->
       $scope.toggle = function () {
@@ -502,7 +519,7 @@
   <!-- API: delete question modal -->
   <script type="text/ng-template" id="deletePageModal.html">
     <div class="modal-header">
-       <h3 class="modal-title">Will delete page {% verbatim %}'{{ selection }}'{% endverbatim %}</h3>
+       <h3 class="modal-title" ng-bind-html="'Will delete page \''+selection+'\''"></h3>
     </div>
     <div class="modal-body">
       <h4>Are you sure?</h4>

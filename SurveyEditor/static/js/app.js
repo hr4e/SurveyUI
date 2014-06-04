@@ -19,6 +19,3 @@ var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'ngSanitize', 'snap
       });
 
 
-
-
-
