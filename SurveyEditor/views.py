@@ -36,10 +36,23 @@ class PageQuestionForm(ModelForm):
     model = PageQuestion
     fields = ['questionID']
 
+class QuestionnairePageForm(ModelForm):
+  def save(self, surv=None, force_insert=False, force_update=False, commit=True):
+    qp = super(QuestionnairePageForm, self).save(commit=False)
+    qp.questionnaireID = surv
+    if commit:
+      qp.save()
+    return qp
+  class Meta:
+    model = QuestionnairePage
+    fields = ['pageID']
+
 class ProjectForm(ModelForm):
   class Meta:
     model = Project
     fields = '__all__'
+
+
 
 class QuestionnaireForm(ModelForm):
   def save(self, force_insert=False, force_update=False, commit=True):
@@ -129,7 +142,7 @@ def newSurvey(request):
       binding.questionnaireID = new_surv
       binding.save()
       messages.success(request, 'Success: new survey \'' + new_surv.shortTag + '\' added to project \'' + binding.projectID.shortTag + '\'')
-      return HttpResponseRedirect('/editor/' + check)
+      return HttpResponseRedirect('/editor/?selected=' + check)
     else:
       for error in form.errors:
           messages.error(request, 'Error: \'' + error + '\' is required.')
@@ -176,6 +189,57 @@ def newPage(request):
     template = loader.get_template('404.html')
     context = RequestContext(request, {})
     return HttpResponse(template.render(context)) 
+
+@login_required()
+def addExistingPage(request):
+  if request.method == "POST":
+    form = QuestionnairePageForm(request.POST)
+    survey = request.POST['survey']
+
+    try:
+      s_id = Questionnaire.objects.get(shortTag=survey)
+      if form.is_valid():
+        binding = form.save(s_id)
+        messages.success(request, "Success: page '"+binding.pageID.shortTag+"' linked to survey '"+survey+"'")
+        return HttpResponseRedirect('/editor/?selected='+survey)
+      else:
+        for error in form.errors:
+            messages.error(request, 'Error: \'' + error + '\' is required.')
+        return HttpResponseRedirect('/editor/?selected='+survey)
+    except:
+      messages.error(request, "Error: survey '"+survey+"' was not found!")
+      return HttpResponseRedirect('/editor/?selected='+survey)
+
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+@login_required()
+def unlinkPage(request):
+  if request.method == "POST":
+    page = request.POST['page']
+    survey = request.POST['survey']
+
+    try:
+      p_id = Page.objects.get(shortTag=page)
+      s_id = Questionnaire.objects.get(shortTag=survey)
+      try:
+        binding = QuestionnairePage.objects.filter(pageID=p_id, questionnaireID=s_id)
+        binding.delete()
+        messages.success(request, "Success: page '"+page+"' unlinked from survey '"+survey+"'")
+        return HttpResponseRedirect('/editor/?selected='+survey)
+      except:
+        messages.error(request, 'Error: could not find the binding in db.')
+        return HttpResponseRedirect('/editor/?selected='+survey)
+    except:
+      messages.error(request, "Error: survey or page was not found!")
+      return HttpResponseRedirect('/editor/?selected='+survey)
+
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
 
 @login_required()
 def newQuestion(request):
@@ -252,7 +316,7 @@ def unlinkQues(request):
       q_id = Question.objects.get(questionTag=question)
       p_id = Page.objects.get(shortTag=page)
       try:
-        binding = PageQuestion.objects.get(pageID=p_id, questionID=q_id)
+        binding = PageQuestion.objects.filter(pageID=p_id, questionID=q_id)
         binding.delete()
         messages.success(request, "Success: question '"+question+"' unlinked from page '"+page+"'")
         return HttpResponseRedirect('/editor/?selected='+survey)
@@ -446,6 +510,7 @@ def editor(request):
   page_form = PageForm()
   ques_form = QuestionForm()
   pageQues_form = PageQuestionForm()
+  survPage_form = QuestionnairePageForm()
 
   all_projects = Project.objects.all()
   try:
@@ -479,6 +544,7 @@ def editor(request):
     'pageForm' : page_form,
     'quesForm' : ques_form,
     'pageQuesForm' : pageQues_form,
+    'survPageForm' : survPage_form,
     'defaultProject' : default_project,
     'allProjects' : all_projects,
     'selectedSurvey' : q_id,

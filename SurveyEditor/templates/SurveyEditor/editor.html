@@ -70,10 +70,21 @@
         </div>
 
 
-        
-        <h1>{{ defaultProject.shortTag }} > {{ selectedSurvey.shortTag }}</h1>
-        
-
+        <ul class="list-inline">
+          <li class="inline">
+            <h1>{{ defaultProject.shortTag }}</h1>
+          </li>  
+          <li><h1>></h1></li>
+          <li class="inline">
+            <h1>{{ selectedSurvey.shortTag }}</h1>
+          </li>
+          <li class="inline pull-right">
+            <button class="btn btn-primary btn-lg" ng-click="addExistingPageModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-link"></span> Link existing</button>
+          </li>
+          <li class="inline pull-right">
+            <button class="btn btn-primary btn-lg" ng-click="newPageModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-plus"></span> New page</button>
+          </li>
+        </ul>
       {% else %}
         <h1 ng-init="toggle()">No pages created</h1>
       {% endif %}
@@ -437,7 +448,7 @@
        <h3 class="modal-title">Will delete question {% verbatim %}'{{ question }}'{% endverbatim %}</h3>
     </div>
     <div class="modal-body">
-      <h4>Are you sure?</h4>
+      <progressbar class="progress-striped active" max="100" value="50" type="danger"></progressbar><h4>Are you sure?</h4>
       <h4>This will delete all links associated with this question</h4>
       <form role="form" action="../deleteQuestion/" method="post">{% csrf_token %}
         {% verbatim %}
@@ -527,7 +538,8 @@
        <h3 class="modal-title" ng-bind-html="'Will delete page \''+selection+'\''"></h3>
     </div>
     <div class="modal-body">
-      <h4>Are you sure?</h4>
+      <progressbar class="progress-striped active" max="100" value="50" type="danger"></progressbar><h4>Are you sure?</h4>
+      <h4>This will delete all links associated with this page</h4>
       <form role="form" action="../deletePage/" method="post">{% csrf_token %}
         {% verbatim %}
         <input type="hidden" value="{{ selection }}" name="page">
@@ -547,6 +559,7 @@
        <h3 class="modal-title">Add an existing question to page {% verbatim %}'{{ page }}'{% endverbatim %}</h3>
     </div>
     <div class="modal-body">
+      <progressbar class="progress-striped active" max="100" value="50" type="success"></progressbar>
       <form role="form" action="../addExistingQuestion/" method="post">{% csrf_token %}
         {% for field in pageQuesForm %}
           <div class="form-group">
@@ -574,7 +587,7 @@
     {% endverbatim %}
     </div>
     <div class="modal-body">
-      <h4>Are you sure?</h4>
+      <progressbar class="progress-striped active" max="100" value="50" type="danger"></progressbar><h4>Are you sure?</h4>
       <form role="form" action="../unlinkQues/" method="post">{% csrf_token %}
         {% verbatim %}
         <input type="hidden" value="{{ question }}" name="question">
@@ -588,5 +601,51 @@
       </form>
     </div>
   </script>
+
+  <!-- API: unlink page modal -->
+  <script type="text/ng-template" id="unlinkPageModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Will unlink page {% verbatim %}'{{ selection }}'{% endverbatim %} from survey '{{ selectedSurvey.shortTag }}'></h3>
+    </div>
+    <div class="modal-body">
+      <progressbar class="progress-striped active" max="100" value="50" type="danger"></progressbar><h4>Are you sure?</h4>
+      <form role="form" action="../unlinkPage/" method="post">{% csrf_token %}
+        {% verbatim %}
+        <input type="hidden" value="{{ selection }}" name="page">
+        {% endverbatim %}
+        <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="survey">
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Yes" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">No</button>
+        </div>
+      </form>
+    </div>
+  </script>
+
+  <!-- API: add existing page modal -->
+  <script type="text/ng-template" id="addExistingPageModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Add an existing page to survey '{{ selectedSurvey.shortTag }}'</h3>
+    </div>
+    <div class="modal-body">
+      <progressbar class="progress-striped active" max="100" value="50" type="success"></progressbar>
+      <form role="form" action="../addExistingPage/" method="post">{% csrf_token %}
+        {% for field in survPageForm %}
+          <div class="form-group">
+            <label class="fieldName">{{ field.html_name }}</label>
+            <div class="fieldInput">{{ field }}</div>
+          </div>
+        {% endfor %}
+        {% verbatim %}
+        {% endverbatim %}
+        <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="survey">
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Submit" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </script>
+
 </div>
 {% endblock content %}

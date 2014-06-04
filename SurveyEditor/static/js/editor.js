@@ -115,6 +115,12 @@ var EditorCtrl = function ($scope, $modal) {
       }
     });
   };
+  $scope.addExistingPageModal = function() {
+    var modalInstance = $modal.open({
+      templateUrl: 'addExistingPageModal.html',
+      controller: StandardInstanceCtrl,
+    });
+  };
   // Unlink modals
   $scope.unlinkQuesModal = function (question, page) {
     var modalInstance = $modal.open({
@@ -123,6 +129,17 @@ var EditorCtrl = function ($scope, $modal) {
       resolve: {
         selection: function () {
           return [question, page];
+        }
+      }
+    });
+  };
+  $scope.unlinkPageModal = function (page) {
+    var modalInstance = $modal.open({
+      templateUrl: 'unlinkPageModal.html',
+      controller: DeleteInstanceCtrl,
+      resolve: {
+        selection: function () {
+          return page;
         }
       }
     });
