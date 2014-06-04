@@ -13,7 +13,7 @@
 }
 
 #footer{
-  background-color: #ccc;
+  background-color: #222;
 }
 
 /* Login Page Styles */
@@ -99,7 +99,6 @@
 #footer.cover{
     background-color: #222;
     color: #aaa;
-    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.75);
 }
 
 
@@ -124,7 +123,7 @@
 
 
 
-#editor {
+#editor{
   background-color: #fff;
 }
 
@@ -139,11 +138,28 @@
   margin-right: 5px;
 }
 #contentContainer{
-  margin-left: 100px;
-  margin-right: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 700px;
 }
 #pageSelector {
   margin-left: auto;
   margin-right: auto;
   width: 374px;
+}
+#navCog{
+  color: gray;
+  margin-top: 4px;
+}
+#snapDrawer{
+  background-color: #222;
+}
+.sidebtns > button{
+  background:none;
+  border:none;
+  box-shadow:none;
+  color: white; 
+  -webkit-border-radius: 0 !important;
+     -moz-border-radius: 0 !important;
+          border-radius: 0 !important;
 }

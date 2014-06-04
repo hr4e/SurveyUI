@@ -242,6 +242,33 @@ def addExistingQuestion(request):
     return HttpResponse(template.render(context))
 
 @login_required()
+def unlinkQues(request):
+  if request.method == "POST":
+    question = request.POST['question']
+    page = request.POST['page']
+    survey = request.POST['survey']
+
+    try:
+      q_id = Question.objects.get(questionTag=question)
+      p_id = Page.objects.get(shortTag=page)
+      try:
+        binding = PageQuestion.objects.get(pageID=p_id, questionID=q_id)
+        binding.delete()
+        messages.success(request, "Success: question '"+question+"' unlinked from page '"+page+"'")
+        return HttpResponseRedirect('/editor/?selected='+survey)
+      except:
+        messages.error(request, 'Error: could not find the binding in db.')
+        return HttpResponseRedirect('/editor/?selected='+survey)
+    except:
+      messages.error(request, "Error: page or question was not found!")
+      return HttpResponseRedirect('/editor/?selected='+survey)
+
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+@login_required()
 def deleteProject(request):
   if request.method == "POST":
     projTag = request.POST['project']

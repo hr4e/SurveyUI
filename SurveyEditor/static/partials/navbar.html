@@ -13,24 +13,24 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" collapse="isCollapsed">
       <ul class="nav navbar-nav">
+        <li ng-if="!isActive('')">
+          <span snap-toggle="left" id="navCog" class="glyphicon glyphicon-cog btn-lg"></span>
+        </li>
         <li ng-class="{ active: isActive('editor')}">
           <a href="../editor">
             <div ng-if="defaultProject">{{ defaultProject }}</div>
             <div ng-if="!defaultProject">Editor</div>
           </a>
         </li>
-        <li ng-if="selectedSurvey" ng-class="{ active: isActive('survey')}"><a href="../editor/?selected={{ selectedSurvey }}" ng-click="closeAll()">{{ selectedSurvey }}</a></li>
+        <li ng-if="selectedSurvey" ng-class="{ active: isActive('survey')}">
+          <a href="../editor/?selected={{ selectedSurvey }}" ng-click="closeAll()">{{ selectedSurvey }}</a>
+        </li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li>
-          <button ng-if="!isActive('')" snap-toggle="left">Toggle Snap<span class="glyphicon glyphicon-cog inline"></span></button>
-        </li>
-        <li>
-          <form class="nav navbar-nav" action="../logout">
-            <input type="submit" class="btn btn-default navbar-btn" value="Sign out of {{ username }}">
-          </form>
-        </li>
+        <form class="nav navbar-nav" action="../logout">
+          <input type="submit" class="btn btn-default navbar-btn" value="Sign out of {{ username }}">
+        </form>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div>

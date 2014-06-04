@@ -103,6 +103,7 @@ var EditorCtrl = function ($scope, $modal) {
       }
     });
   };
+  // Link modals
   $scope.addExistingQuesModal = function (page, survey) {
     var modalInstance = $modal.open({
       templateUrl: 'addExistingQuestionModal.html',
@@ -110,6 +111,18 @@ var EditorCtrl = function ($scope, $modal) {
       resolve: {
         selection: function () {
           return [page, survey];
+        }
+      }
+    });
+  };
+  // Unlink modals
+  $scope.unlinkQuesModal = function (question, page) {
+    var modalInstance = $modal.open({
+      templateUrl: 'unlinkQuesModal.html',
+      controller: QuestionPageInstanceCtrl,
+      resolve: {
+        selection: function () {
+          return [question, page];
         }
       }
     });
@@ -132,6 +145,14 @@ var NewQuesInstanceCtrl = function ($scope, $modalInstance, selection) {
 var DeleteQuesInstanceCtrl = function ($scope, $modalInstance, selection) {
   $scope.question = selection[0];
   $scope.survey = selection[1];
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+var QuestionPageInstanceCtrl = function ($scope, $modalInstance, selection) {
+  $scope.question = selection[0];
+  $scope.page = selection[1];
 
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');

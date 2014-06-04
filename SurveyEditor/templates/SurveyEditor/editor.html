@@ -5,19 +5,19 @@
 
   <div ng-include="'{{ STATIC_URL }}partials/navbar.html'"></div>
 
-  <snap-drawer>
+  <snap-drawer id="snapDrawer">
     <br><br><br><br>
-    <div>
+    <div class="sidebtns">
       <!-- API: add new project -->
-    <button class="btn btn-primary btn-lg" ng-click="newProjModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-briefcase"></span> New project</button>
+    <button class="btn btn-default btn-lg btn-block" ng-click="newProjModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-briefcase"></span> New project</button>
       <!-- API: select project -->
-    <button class="btn btn-primary btn-lg" ng-click="selectProjModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-search"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-briefcase"></span> Select project</button>
+    <button class="btn btn-default btn-lg btn-block" ng-click="selectProjModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-search"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-briefcase"></span> Select project</button>
       <!-- API: add new survey -->
-    <button class="btn btn-primary btn-lg" ng-click="newSurvModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-book"></span> New survey</button>
+    <button class="btn btn-default btn-lg btn-block" ng-click="newSurvModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-book"></span> New survey</button>
       <!-- API: select survey -->
-    <button class="btn btn-primary btn-lg" ng-click="selectSurvModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-search"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-book"></span> Select survey</button>
+    <button class="btn btn-default btn-lg btn-block" ng-click="selectSurvModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-search"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-book"></span> Select survey</button>
       <!-- API: add new page -->
-    <button class="btn btn-primary btn-lg" ng-click="newPageModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-list"></span> New page</button>
+    <button class="btn btn-default btn-lg btn-block" ng-click="newPageModal()"><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-glyphicon glyphicon glyphicon-list"></span> New page</button>
   </div>
   </snap-drawer>
 
@@ -89,6 +89,11 @@
                   <span class="glyphicon glyphicon-glyphicon glyphicon-trash"></span>
                 </a>
               </li>
+              <li class="pull-right">
+                <a ng-click="unlinkPageModal(listPages[$index].currentPage)">
+                  <span class="glyphicon glyphicon-glyphicon glyphicon-link"></span>
+                </a>
+              </li>
             </ul>
           </accordion-heading>
 
@@ -105,9 +110,10 @@
                 'imageFileName':ques.imageFileName,
                 'imageFileType':ques.imageFileType
               }, selectedSurvey)"><span class="glyphicon glyphicon-pencil inline"></span></a>
-              <div id="quesTag" class="inline" ng-bind-html="ques.questionTag"
-                   required></div>
+              <h5 id="quesTag" class="inline" ng-bind="ques.questionTag"
+                   required></h5>
               <a href="#" ng-click="deleteQuesModal(ques.questionTag, selectedSurvey)"><span id="deleteTag" class="glyphicon glyphicon-remove inline pull-right"></span></a>
+              <a href="#" ng-click="unlinkQuesModal(ques.questionTag, listPages[$parent.$index].currentPage)"><span id="deleteTag" class="glyphicon glyphicon-link inline pull-right"></span></a>
               <br><br>
               <div id="quesTextContainer">
                 <pre ng-bind-html="ques.questionText"></pre>
@@ -209,16 +215,16 @@
       $scope.totalPages = 10 * '{{ numPages }}';
 
       $scope.selectedPage = $cookies.page;
-      $scope.defaultProject = '{{ defaultProject.shortTag }}';
-      $scope.selectedSurvey = '{{ selectedSurvey.shortTag }}';
+      $scope.defaultProject = '{{ defaultProject.shortTag | escapejs }}';
+      $scope.selectedSurvey = '{{ selectedSurvey.shortTag | escapejs }}';
 
       <!-- API: 2 way data bind the list of projects -->
       $scope.visible = false;
       $scope.projects = [];
       {% for project in allProjects %}
         $scope.projects.push({
-          shortTag: '{{project.shortTag}}', 
-          name: '{{project.name}}',
+          shortTag: '{{ project.shortTag | escapejs}}', 
+          name: '{{ project.name | escapejs}}',
         });
       {% endfor %}
 
@@ -226,37 +232,33 @@
       $scope.surveys = [];
       {% for survey in listSurveys %}
         $scope.surveys.push({
-          shortTag: '{{ survey.questionnaireID.shortTag }}', 
-          desc: '{{ survey.questionnaireID.description }}',
+          shortTag: '{{ survey.questionnaireID.shortTag | escapejs }}', 
+          desc: '{{ survey.questionnaireID.description | escapejs }}',
         });
       {% endfor %}
       <!-- API: 2-way data bind the list of pages -->
       $scope.listPages = [];
       {% for page in listPages %}
         $scope.listPages.push({
-          currentPage : '{{ page.pageID.shortTag }}',
-          nextPage : '{{ page.nextPageID.shortTag }}',
+          currentPage : '{{ page.pageID.shortTag | escapejs }}',
+          nextPage : '{{ page.nextPageID.shortTag | escapejs }}',
         });
       {% endfor %}
 
       <!-- API: 2 way data bind the list of list_questions -->
-      var unsanitize = function (string) {
-        // Accounts for the following cases: ', &, <, >, "
-        return string.replace(/&#39;/g, "'").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"');
-      };
       $scope.allQuestions = [];
       {% for page in allQuestions %}
         $scope.allQuestions.push([]);
         {% for question in page %}
           $scope.allQuestions[{{ forloop.parentloop.counter0 }}].push({
-            questionTag   : unsanitize('{{ question.questionID.questionTag }}'),
-            questionText  : unsanitize('{{ question.questionID.questionText }}'),
-            helpText      : unsanitize('{{ question.questionID.helpText }}'),
-            explanation   : unsanitize('{{ question.questionID.explanation }}'),
-            language      : unsanitize('{{ question.questionID.language }}'),
-            description   : unsanitize('{{ question.questionID.description }}'),
-            imageFileName : unsanitize('{{ question.questionID.imageFileName }}'),
-            imageFileType : unsanitize('{{ question.questionID.imageFileType }}'),
+            questionTag   : '{{ question.questionID.questionTag | escapejs }}',
+            questionText  : '{{ question.questionID.questionText | escapejs }}',
+            helpText      : '{{ question.questionID.helpText | escapejs }}',
+            explanation   : '{{ question.questionID.explanation | escapejs }}',
+            language      : '{{ question.questionID.language | escapejs }}',
+            description   : '{{ question.questionID.description | escapejs }}',
+            imageFileName : '{{ question.questionID.imageFileName | escapejs }}',
+            imageFileType : '{{ question.questionID.imageFileType | escapejs }}',
           });
         {% endfor %}
       {% endfor %}
@@ -288,7 +290,10 @@
       $scope.setStatus = function (data) {
         $cookies.status = $scope.status = data;
       }
-      $scope.selectedProj = '{{ defaultProject.shortTag }}';
+      {% if not defaultProject %}
+        $scope.setStatus('projects');
+      {% endif %}
+      $scope.selectedProj = '{{ defaultProject.shortTag | escapejs }}';
       $scope.setSelectedProj = function() {
           $scope.selectedProj = this.project.shortTag;
       };
@@ -561,5 +566,27 @@
     </div>
   </script>
 
+  <!-- API: unlink question modal -->
+  <script type="text/ng-template" id="unlinkQuesModal.html">
+    <div class="modal-header">
+    {% verbatim %}
+       <h3 class="modal-title">Will unlink question '{{ question }}' from page '{{ page }}'></h3>
+    {% endverbatim %}
+    </div>
+    <div class="modal-body">
+      <h4>Are you sure?</h4>
+      <form role="form" action="../unlinkQues/" method="post">{% csrf_token %}
+        {% verbatim %}
+        <input type="hidden" value="{{ question }}" name="question">
+        <input type="hidden" value="{{ page }}" name="page">
+        {% endverbatim %}
+        <input type="hidden" value="{{ selectedSurvey.shortTag }}" name="survey">
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Yes" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">No</button>
+        </div>
+      </form>
+    </div>
+  </script>
 </div>
 {% endblock content %}
