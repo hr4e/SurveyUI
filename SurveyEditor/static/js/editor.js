@@ -58,10 +58,15 @@ var EditorCtrl = function ($scope, $modal) {
       }
     });
   };
-  $scope.deleteSurvModal = function() {
+  $scope.deleteSurvModal = function(survey) {
     var modalInstance = $modal.open({
       templateUrl: 'deleteSurveyModal.html',
-      controller: StandardInstanceCtrl,
+      controller: DeleteInstanceCtrl,
+      resolve: {
+        selection: function () {
+          return survey;
+        }
+      }
     });
   };
   $scope.deletePageModal = function() {

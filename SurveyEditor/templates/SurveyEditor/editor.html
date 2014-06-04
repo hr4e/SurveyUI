@@ -103,26 +103,14 @@
           {% verbatim %}
           <button class="btn btn-primary btn-lg" ng-click="newQuesModal(listPages[selectedPage-1].currentPage, selectedSurvey)">Add a new question to page {{ selectedPage }}</button>
           {% endverbatim %}
-          <div ng-controller="NewQuestionModalCtrl">
-            
-          </div>
+
         <!-- Page content end -->
         </accordion-group>
       </accordion>
       {% else %}{% verbatim %}
-      <div ng-init="selectSurvModal()"></div>
-      <div ng-if="projects.length>0" class="panel panel-default">
-        <div class="panel-heading">
-          <form class="navbar-form navbar-right" role="search">
-            <div class="form-group">
-              <input class="form-control navbar-right projectsearch" placeholder="Type a project name..." ng-model="query">
-            </div>
-          </form>
-          <h1>Select a Project:</h1>
-        </div>
-
-        <div class="panel-body">
-
+      <accordion close-others="oneAtATime">
+        <!-- Manage Projects Table -->
+        <accordion-group heading="Manage Projects" is-open="status=='projects'" ng-click="status='projects'">
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
@@ -135,7 +123,7 @@
             <tbody>
               <tr ng-repeat="project in projects | filter:query" ng-click="setSelectedProj()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
                 <td>
-                  <a ng-show="visible || isSelectedProj()">
+                  <a ng-show="visible || isSelectedProj()" href="../selectProject/?selected={{ selectedProj }}">
                     <span class="glyphicon glyphicon-ok"></span>
                   </a>
                 </td>
@@ -149,20 +137,39 @@
               </tr>
             </tbody>
           </table>
+        </accordion-group>
+        <!-- Manage Surveys Table -->
+        <accordion-group heading="Manage Surveys" is-open="status=='surveys'" ng-click="status='surveys'">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th width="36"></th>
+                <th>Name</th>
+                <th>Quick Description</th>
+                <th width="36">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="survey in surveys | filter:query" ng-click="setSelectedSurv()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
+                <td>
+                  <a ng-show="visible || isSelectedSurv()" href="../editor/?selected={{ selectedSurv }}">
+                    <span class="glyphicon glyphicon-ok"></span>
+                  </a>
+                </td>
+                <td>{{ survey.shortTag }}</td>
+                <td>{{ survey.name }}</td>
+                <td>
+                  <a ng-show="visible || isSelectedSurv()" ng-click="deleteSurvModal(survey.shortTag)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </accordion-group>
+      </accordion>
 
-        </div>
-        <div>
-          <form action="../selectProject/" method="get">
-            <button name="selected" value="{{ selectedProj }}">OK!</button>
-          </form>
-        </div>
-      </div>
 
-      <div ng-if="projects.length<=0" class="panel panel-default">
-        <div class="panel-heading">
-          <h1>No projects created yet!</h1>
-        </div>
-      </div>
       {% endverbatim %}{% endif %}
     </div>
   </snap-content>
@@ -178,11 +185,25 @@
       $scope.selectedPage = 1;
       $scope.defaultProject = '{{ defaultProject.shortTag }}';
       $scope.selectedSurvey = '{{ selectedSurvey.shortTag }}';
-      
-      $scope.status = {
-        isFirstOpen: true,
-        isFirstDisabled: false
-      };
+
+      <!-- API: 2 way data bind the list of projects -->
+      $scope.visible = false;
+      $scope.projects = [];
+      {% for project in allProjects %}
+        $scope.projects.push({
+          shortTag: '{{project.shortTag}}', 
+          name: '{{project.name}}',
+        });
+      {% endfor %}
+
+      <!-- API: 2 way data bind the list of surveys -->
+      $scope.surveys = [];
+      {% for survey in listSurveys %}
+        $scope.surveys.push({
+          shortTag: '{{ survey.questionnaireID.shortTag }}', 
+          desc: '{{ survey.questionnaireID.description }}',
+        });
+      {% endfor %}
       <!-- API: 2-way data bind the list of pages -->
       $scope.listPages = [];
       {% for page in listPages %}
@@ -210,8 +231,9 @@
         {% endfor %}
       {% endfor %}
 
-
+      <!-- modal table accordion misc functions -->
       $scope.oneAtATime = true;
+      $scope.status = "projects";
 
       $scope.setSelected = function() {
         $scope.selectedPage = this.$index + 1;
@@ -224,14 +246,7 @@
         }
       };
 
-      $scope.visible = false;
-      $scope.projects = [];
-      {% for project in allProjects %}
-        $scope.projects.push({
-          shortTag: '{{project.shortTag}}', 
-          name: '{{project.name}}',
-        });
-      {% endfor %}
+      $scope.selectedProj = '{{ defaultProject.shortTag }}';
       $scope.setSelectedProj = function() {
           $scope.selectedProj = this.project.shortTag;
       };
@@ -243,18 +258,11 @@
         }
       };
 
-      $scope.surveys = [];
-      {% for survey in listSurveys %}
-        $scope.surveys.push({
-          name: '{{ survey.questionnaireID.shortTag }}', 
-          desc: '{{ survey.questionnaireID.description }}',
-        });
-      {% endfor %}
       $scope.setSelectedSurv = function() {
-          $scope.selectedSurv = this.survey.name;
+          $scope.selectedSurv = this.survey.shortTag;
       };
       $scope.isSelectedSurv = function() {
-        if (this.survey.name == $scope.selectedSurv)
+        if (this.survey.shortTag == $scope.selectedSurv)
           return true;
         else {
           return false;
@@ -446,17 +454,16 @@
     </div>
   </script>
 
-    <!-- API: delete question modal -->
-  <script type="text/ng-template" id="deleteQuestionModal.html">
+    <!-- API: delete survey modal -->
+  <script type="text/ng-template" id="deleteSurveyModal.html">
     <div class="modal-header">
-       <h3 class="modal-title">Will delete question {% verbatim %}'{{ question }}'{% endverbatim %}</h3>
+       <h3 class="modal-title">Will delete survey {% verbatim %}'{{ selection }}'{% endverbatim %}</h3>
     </div>
     <div class="modal-body">
       <h4>Are you sure?</h4>
-      <form role="form" action="../deleteQuestion/" method="post">{% csrf_token %}
+      <form role="form" action="../deleteSurvey/" method="post">{% csrf_token %}
         {% verbatim %}
-        <input type="hidden" value="{{ question }}" name="question">
-        <input type="hidden" value="{{ survey }}" name="survey">
+        <input type="hidden" value="{{ selection }}" name="survey">
         {% endverbatim %}
         <div class="modal-footer">
           <input class="btn btn-primary" type="submit" value="Yes" />

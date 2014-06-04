@@ -224,6 +224,26 @@ def deleteProject(request):
     return HttpResponse(template.render(context))
 
 @login_required()
+def deleteSurvey(request):
+  if request.method == "POST":
+    survTag = request.POST['survey']
+
+    try:
+      s_id = Questionnaire.objects.get(shortTag=survTag)
+      # found project to delete
+      messages.success(request, "Success: survey '"+survTag+"'was deleted.")
+      s_id.delete()
+    except:
+      # did not find question to delete
+      messages.error(request, "Error: survey name '"+survTag+"' was not found!")
+    
+    return HttpResponseRedirect('/editor/')
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+@login_required()
 def deleteQuestion(request):
   if request.method == "POST":
     quesTag = request.POST['question']
