@@ -114,7 +114,7 @@
       {% else %}{% verbatim %}
       <accordion close-others="oneAtATime">
         <!-- Manage Projects Table -->
-        <accordion-group heading="Manage Projects" is-open="status=='projects'" ng-click="status='projects'">
+        <accordion-group heading="Manage Projects" is-open="status=='projects'" ng-click="setStatus('projects')">
 
           <h1 ng-if="projects.length==0">No projects created</h1>
           <table ng-if="projects" class="table table-bordered table-hover">
@@ -145,7 +145,7 @@
           </table>
         </accordion-group>
         <!-- Manage Surveys Table -->
-        <accordion-group heading="Manage Surveys" is-open="status=='surveys'" ng-click="status='surveys'">
+        <accordion-group heading="Manage Surveys" is-open="status=='surveys'" ng-click="setStatus('surveys')">
           <h1 ng-if="surveys.length==0">No surveys created</h1>
           <table ng-if="surveys" class="table table-bordered table-hover">
             <thead>
@@ -185,10 +185,11 @@
   <!-- Django-Angular Script -->
 
   <script type="text/javascript">
-    var SelectPageCtrl = function ($scope, $sce) {
+    var SelectPageCtrl = function ($scope, $sce, $cookies) {
       $scope.maxSize = 5;
       $scope.totalPages = 10 * '{{ numPages }}';
-      $scope.selectedPage = 1;
+
+      $scope.selectedPage = $cookies.page;
       $scope.defaultProject = '{{ defaultProject.shortTag }}';
       $scope.selectedSurvey = '{{ selectedSurvey.shortTag }}';
 
@@ -239,10 +240,14 @@
 
       <!-- modal table accordion misc functions -->
       $scope.oneAtATime = true;
-      $scope.status = "projects";
+      if ($cookies.status == undefined) {
+        $scope.status = "projects";
+      } else {
+        $scope.status = $cookies.status;
+      }
 
       $scope.setSelected = function() {
-        $scope.selectedPage = this.$index + 1;
+        $cookies.page = $scope.selectedPage = this.$index + 1;
       };
       $scope.isSelected = function() {
         if (this.$index+1 == $scope.selectedPage)
@@ -251,6 +256,10 @@
           return false;
         }
       };
+
+      $scope.setStatus = function (data) {
+        $cookies.status = $scope.status = data;
+      }
 
       $scope.selectedProj = '{{ defaultProject.shortTag }}';
       $scope.setSelectedProj = function() {
@@ -397,6 +406,7 @@
     </div>
     <div class="modal-body">
       <h4>Are you sure?</h4>
+      <h4>This will delete all links associated with this question</h4>
       <form role="form" action="../deleteQuestion/" method="post">{% csrf_token %}
         {% verbatim %}
         <input type="hidden" value="{{ question }}" name="question">
