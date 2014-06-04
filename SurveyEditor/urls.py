@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^newPage/', views.newPage, name='newPage'),
     url(r'^deletePage/', views.deletePage, name='deletePage'),
     url(r'^newQuestion/', views.newQuestion, name='newQuestion'),
+    url(r'^addExistingQuestion/', views.addExistingQuestion, name='addExistingQuestion'),
     url(r'^deleteQuestion/', views.deleteQuestion, name='deleteQuestion'),
     url(r'^updateQuestion/', views.updateQuestion, name='updateQuestion'),
 

@@ -103,7 +103,17 @@ var EditorCtrl = function ($scope, $modal) {
       }
     });
   };
-
+  $scope.addExistingQuesModal = function (page, survey) {
+    var modalInstance = $modal.open({
+      templateUrl: 'addExistingQuestionModal.html',
+      controller: NewQuesInstanceCtrl, // need more generic name
+      resolve: {
+        selection: function () {
+          return [page, survey];
+        }
+      }
+    });
+  };
 };
 
 

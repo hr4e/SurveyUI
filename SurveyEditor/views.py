@@ -25,6 +25,17 @@ class UserProjectForm(ModelForm):
     model = UserProject
     fields = ['projectID']
 
+class PageQuestionForm(ModelForm):
+  def save(self, page=None, force_insert=False, force_update=False, commit=True):
+    pq = super(PageQuestionForm, self).save(commit=False)
+    pq.pageID = page
+    if commit:
+      pq.save()
+    return pq
+  class Meta:
+    model = PageQuestion
+    fields = ['questionID']
+
 class ProjectForm(ModelForm):
   class Meta:
     model = Project
@@ -198,6 +209,33 @@ def newQuestion(request):
       for error in form.errors:
           messages.error(request, 'Error: \'' + error + '\' is required.')
     return HttpResponseRedirect('/editor/?selected='+selected_survey)
+  else:
+    template = loader.get_template('404.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+@login_required()
+def addExistingQuestion(request):
+  if request.method == "POST":
+    form = PageQuestionForm(request.POST)
+
+    page = request.POST['page']
+    survey = request.POST['survey']
+
+    try:
+      p_id = Page.objects.get(shortTag=page)
+      if form.is_valid():
+        pq = form.save(p_id)
+        messages.success(request, "Success: question '"+pq.questionID.questionTag+"' linked to page '"+page+"'")
+        return HttpResponseRedirect('/editor/?selected='+survey)
+      else:
+        for error in form.errors:
+            messages.error(request, 'Error: \'' + error + '\' is required.')
+        return HttpResponseRedirect('/editor/?selected='+survey)
+    except:
+      messages.error(request, "Error: page '"+page+"' was not found!")
+      return HttpResponseRedirect('/editor/?selected='+survey)
+
   else:
     template = loader.get_template('404.html')
     context = RequestContext(request, {})
@@ -380,6 +418,7 @@ def editor(request):
   surv_form = QuestionnaireForm()
   page_form = PageForm()
   ques_form = QuestionForm()
+  pageQues_form = PageQuestionForm()
 
   all_projects = Project.objects.all()
   try:
@@ -412,6 +451,7 @@ def editor(request):
     'survForm' : surv_form,
     'pageForm' : page_form,
     'quesForm' : ques_form,
+    'pageQuesForm' : pageQues_form,
     'defaultProject' : default_project,
     'allProjects' : all_projects,
     'selectedSurvey' : q_id,

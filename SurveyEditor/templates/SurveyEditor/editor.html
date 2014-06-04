@@ -105,6 +105,7 @@
           <!-- API: add new question btn -->
           {% verbatim %}
           <button class="btn btn-primary btn-lg" ng-click="newQuesModal(listPages[selectedPage-1].currentPage, selectedSurvey)">Add a new question to page {{ selectedPage }}</button>
+          <button class="btn btn-primary btn-lg" ng-click="addExistingQuesModal(listPages[selectedPage-1].currentPage, selectedSurvey)">Add an existing question to page {{ selectedPage }}</button>
           {% endverbatim %}
 
         <!-- Page content end -->
@@ -459,7 +460,7 @@
     </div>
   </script>
 
-    <!-- API: delete survey modal -->
+  <!-- API: delete survey modal -->
   <script type="text/ng-template" id="deleteSurveyModal.html">
     <div class="modal-header">
        <h3 class="modal-title">Will delete survey {% verbatim %}'{{ selection }}'{% endverbatim %}</h3>
@@ -478,7 +479,7 @@
     </div>
   </script>
 
-    <!-- API: delete question modal -->
+  <!-- API: delete question modal -->
   <script type="text/ng-template" id="deletePageModal.html">
     <div class="modal-header">
        <h3 class="modal-title">Will delete page {% verbatim %}'{{ selection }}'{% endverbatim %}</h3>
@@ -498,6 +499,30 @@
     </div>
   </script>
 
+  <!-- API: add existing question modal -->
+  <script type="text/ng-template" id="addExistingQuestionModal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Add an existing question to page {% verbatim %}'{{ page }}'{% endverbatim %}</h3>
+    </div>
+    <div class="modal-body">
+      <form role="form" action="../addExistingQuestion/" method="post">{% csrf_token %}
+        {% for field in pageQuesForm %}
+          <div class="form-group">
+            <label class="fieldName">{{ field.html_name }}</label>
+            <div class="fieldInput">{{ field }}</div>
+          </div>
+        {% endfor %}
+        {% verbatim %}
+        <input type="hidden" value="{{ page }}" name="page">
+        <input type="hidden" value="{{ survey }}" name="survey">
+        {% endverbatim %}
+        <div class="modal-footer">
+          <input class="btn btn-primary" type="submit" value="Submit" />
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </script>
 
 </div>
 {% endblock content %}
