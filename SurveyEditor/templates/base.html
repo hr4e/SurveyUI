@@ -13,7 +13,7 @@
   <body>
     <!-- Django-Angular Script -->
     <script type="text/javascript">
-    var NavbarCtrl = function ($scope, $location) {
+    var NavbarCtrl = function ($scope, $location, $cookies) {
       $scope.username = '{{ user }}'
       $scope.isCollapsed = true;
       $scope.isActive = function(path) {
@@ -22,6 +22,10 @@
         } else {
           return ''
         }
+      };
+      $scope.closeAll = function () {
+        $cookies.page = 0;
+        location.reload();
       };
     };
     </script>
@@ -33,7 +37,7 @@
     {% block footer %}
     <div id="footer" class="navbar navbar-fixed-bottom">
       <div class="container">
-	<span class="navbar-text pull-left"><a href="#">About</a> | <a href="https://github.com/hr4e">GitHub</a></span>
+	<span class="navbar-text pull-left"><a href="https://github.com/hr4e/SurveyUI/wiki/Project-Summary-Report">About</a> | <a href="https://github.com/hr4e">GitHub</a></span>
 	<p class="navbar-text pull-right">&copy; 2014 Health Records For Everyone</p>
       </div>
     </div>
@@ -42,6 +46,7 @@
     {% block javascript %}
     <script src="{{ STATIC_URL }}js/lib/angular.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/angular-sanitize.js"></script>
+    <script src="{{ STATIC_URL }}js/lib/angular-cookies.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/angular-snap.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/snap.min.js"></script>
     <script src="{{ STATIC_URL }}js/lib/ui-bootstrap-tpls-0.11.0.min.js"></script>
