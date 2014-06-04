@@ -19,7 +19,7 @@
             <div ng-if="!defaultProject">Editor</div>
           </a>
         </li>
-        <li ng-if="selectedSurvey" ng-class="{ active: isActive('survey')}"><a href="../editor">{{ selectedSurvey }}</a></li>
+        <li ng-if="selectedSurvey" ng-class="{ active: isActive('survey')}"><a href="../editor/?selected={{ selectedSurvey }}" ng-click="closeAll()">{{ selectedSurvey }}</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">

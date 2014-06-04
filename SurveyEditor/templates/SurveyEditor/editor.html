@@ -56,21 +56,29 @@
 
     <div ng-controller="SelectPageCtrl">
       {% if selectedSurvey %}
-      <!-- API: select a page bar -->
-      <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+
+      {% if listPages %}
+        <!-- API: select a page bar -->
+        <pagination total-items="totalPages" ng-model="selectedPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
 
 
-      {% verbatim %}
-      <h1>Default Project: {{ defaultProject }}</h1>
-      <h2>Selected Survey: {{ selectedSurvey }}</h2>
-      <pre>Page: {{selectedPage}} / {{ numPages }}</pre>
-      {% endverbatim %}
+
+        
+        <h1>{{ defaultProject.shortTag }} > {{ selectedSurvey.shortTag }}</h1>
+        <div ng-if="selectedPage!=0">
+          <pre>{% verbatim %}Page: {{selectedPage}} / {{ numPages }}{% endverbatim %}</pre>
+        </div>
+        
+
+      {% else %}
+        <h1 ng-init="toggle()">No pages created</h1>
+      {% endif %}
       <hr />
 
       <accordion close-others="oneAtATime">
         <accordion-group ng-repeat="listQues in allQuestions" is-open="(selectedPage-1)==$index" ng-click="setSelected()">
           <accordion-heading>
-            {% verbatim %}{{ listPages[$index].currentPage }}{% endverbatim %}
+            <div ng-bind-html="listPages[$index].currentPage"></div>
             <a ng-click="deletePageModal(listPages[$index].currentPage)">
               <span class="glyphicon glyphicon-glyphicon glyphicon-trash inline pull-right"></span>
             </a>
@@ -89,7 +97,7 @@
                 'imageFileName':ques.imageFileName,
                 'imageFileType':ques.imageFileType
               }, selectedSurvey)"><span class="glyphicon glyphicon-pencil inline"></span></a>
-              <div contenteditable class="inline" ng-bind-html="ques.questionTag"></div>
+              <div class="inline" ng-bind-html="ques.questionTag"></div>
               <a href="#" ng-click="deleteQuesModal(ques.questionTag, selectedSurvey)"><span class="glyphicon glyphicon-remove inline pull-right"></span></a>
 
               <div ng-model="newQuestionText" ng-bind-html="ques.questionText"></div>
@@ -129,7 +137,7 @@
             <tbody>
               <tr ng-repeat="project in projects | filter:query" ng-click="setSelectedProj()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
                 <td>
-                  <a ng-show="visible || isSelectedProj()" href="../selectProject/?selected={{ selectedProj }}">
+                  <a ng-show="visible || isSelectedProj()" href="../selectProject/?selected={{ selectedProj }}" ng-click="setStatus('surveys')">
                     <span class="glyphicon glyphicon-ok"></span>
                   </a>
                 </td>
@@ -185,7 +193,7 @@
   <!-- Django-Angular Script -->
 
   <script type="text/javascript">
-    var SelectPageCtrl = function ($scope, $sce, $cookies) {
+    var SelectPageCtrl = function ($scope, $sce, $cookies, snapRemote) {
       $scope.maxSize = 5;
       $scope.totalPages = 10 * '{{ numPages }}';
 
@@ -239,6 +247,10 @@
       {% endfor %}
 
       <!-- modal table accordion misc functions -->
+      $scope.toggle = function () {
+        snapRemote.toggle('left');
+      }
+
       $scope.oneAtATime = true;
       if ($cookies.status == undefined) {
         $scope.status = "projects";
@@ -256,11 +268,9 @@
           return false;
         }
       };
-
       $scope.setStatus = function (data) {
         $cookies.status = $scope.status = data;
       }
-
       $scope.selectedProj = '{{ defaultProject.shortTag }}';
       $scope.setSelectedProj = function() {
           $scope.selectedProj = this.project.shortTag;

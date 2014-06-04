@@ -13,7 +13,7 @@
   <body>
     <!-- Django-Angular Script -->
     <script type="text/javascript">
-    var NavbarCtrl = function ($scope, $location) {
+    var NavbarCtrl = function ($scope, $location, $cookies) {
       $scope.username = '{{ user }}'
       $scope.isCollapsed = true;
       $scope.isActive = function(path) {
@@ -22,6 +22,10 @@
         } else {
           return ''
         }
+      };
+      $scope.closeAll = function () {
+        $cookies.page = 0;
+        location.reload();
       };
     };
     </script>
