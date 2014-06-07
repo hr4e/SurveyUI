@@ -23,7 +23,7 @@
         <tbody>
           <tr ng-repeat="project in projects | filter:query" ng-click="setSelectedProj()" ng-mouseenter="visible=true" ng-mouseleave="visible=false">
             <td>
-              <a ng-show="visible || isSelectedProj()">
+              <a ng-show="visible || isSelectedProj()" href="../selectProject/?selected={{ selectedProj }}">
                 <span class="glyphicon glyphicon-ok"></span>
               </a>
             </td>
@@ -36,9 +36,11 @@
 
     </div>
     <div>
+      <!-- removed
       <form action="../selectProject/" method="get">
         <button name="selected" value="{{ selectedProj }}">OK!</button>
       </form>
+      -->
     </div>
   </div>
 
